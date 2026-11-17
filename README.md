@@ -10,7 +10,7 @@ Two recurring challenges with handwritten  and manual computer entries or manufa
 
 | **Time spent recording information** | **Human error from manual entry** |
 | --- | --- |
-| Operators repeatedly copy serial numbers, lot numbers, equipment IDs and results instead of assembling or testing the device. | Mistyped identifiers, missing records, duplicate entries and incorrect device-to-test associations undermine traceability. |
+| Operators repeatedly copy serial numbers, lot numbers, equipment IDs and results which costs time instead of focusing this effort on assembling or testing the device. | Mistyped identifiers, missing records, duplicate entries and incorrect device-to-test associations undermine traceability. |
 
 ## The solution
 
