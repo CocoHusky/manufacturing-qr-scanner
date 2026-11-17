@@ -6,6 +6,25 @@ Low-cost optical manufacturing documentation station for part and lot identifica
 
 > Prototype only. Not yet production-qualified or standalone. The browser performs recognition. The board has exhibited excessive heating; disconnect power if uncomfortably hot and do not operate unattended. Private pending public-release review.
 
+## Prototype photographs and demonstration
+
+<p align="center">
+<img src="docs/media/prototype-front.jpg" alt="Front of assembled ESP32-CAM scanner showing lens, heatsink and white illumination" width="300">
+<img src="docs/media/prototype-side.jpg" alt="Side of compact scanner showing USB programmer stack and illuminated housing" width="300">
+</p>
+
+The actual prototype uses the OV5640 camera, a compact white housing, an attached heatsink and adjustable white illumination. These photographs document the assembled prototype, not a production enclosure.
+
+[![Handheld scan demonstration](docs/media/demo-preview.jpg)](docs/media/demo-density-scanning.mp4)
+
+Short demonstration clips (silent H.264 MP4; download or open in a compatible player):
+
+- [Information-density test](docs/media/demo-density-scanning.mp4)
+- [Compact marking comparison](docs/media/demo-compact-marking.mp4)
+- [QR size ladder](docs/media/demo-qr-ladder.mp4)
+
+The clips show the handheld scanner being presented to printed test targets and its illumination during operation. They are cropped to omit personal surroundings and computer-screen content where practical. Hand and work surface remain visible. They illustrate the operating workflow, not a controlled timing or decode-success benchmark. Original personal media, audio and camera metadata are excluded from the repository.
+
 ## Intended manufacturing workflow
 
 Use one optical station to identify a component or board, link its serial/part/lot identifiers to manufacturing records, and document inspection findings. Compact QR or Data Matrix identifiers serve as keys into a future manufacturing execution system (MES), rather than embedding an entire device history in a tiny symbol.
