@@ -33,6 +33,22 @@ Manual recording creates two common problems:
 
 Scan existing instructions, component labels and instrument results instead of transcribing them. The scanner checks the expected workflow, provides immediate audible and visual feedback, and stores structured records. After sign-on, Embedded mode does not require a connected computer for each scan.
 
+### How it works
+
+```mermaid
+flowchart LR
+ A[Sign on] --> B[Scan recipe header]
+ B --> C[Present required label]
+ C --> D{Valid for current step?}
+ D -->|No| E[Warning tone; retry]
+ E --> C
+ D -->|Yes| F[Save event; chirp]
+ F --> G{All steps complete?}
+ G -->|No| C
+ G -->|Yes| H[Completion melody]
+ H --> I[Export traceability]
+```
+
 
 
 ### What the prototype improves
@@ -102,20 +118,6 @@ QR and Data Matrix work in both decoding modes. Code 128 starts workflows in Emb
 [Supported formats, payload examples and parser details](docs/barcodes/README.md)
 
 ## Operator experience
-
-```mermaid
-flowchart LR
- A[Sign on] --> B[Scan recipe header]
- B --> C[Present required label]
- C --> D{Valid for current step?}
- D -->|No| E[Warning tone; retry]
- E --> C
- D -->|Yes| F[Save event; chirp]
- F --> G{All steps complete?}
- G -->|No| C
- G -->|Yes| H[Completion melody]
- H --> I[Export traceability]
-```
 
 ### 1. Operator sign-on
 
