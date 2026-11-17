@@ -37,12 +37,14 @@ Scan existing instructions, component labels and instrument results instead of t
 
 ### What the prototype improves
 
-| Prototype capability | Improvement |
+| Prototype capability | Why it matters in manufacturing and testing |
 | --- | --- |
-| Scan device, component, and lot labels | Capture identifiers without retyping each one |
-| Check recipe, sequence, and duplicate scans | Flag unexpected or repeated labels and prevent premature completion |
-| Record bench, operator, result, and timestamp | Keep test context linked to the device record |
-| Save a local journal and export JSON | Retain records offline and export them when connected |
+| Scan device, component and lot labels | Know exactly which parts went into each device without manually writing down their information. |
+| Verify procedure steps and detect duplicates | Check that the required component labels are scanned and required scan steps are not skipped. |
+| Record test equipment, operator, results and timestamps | Know what was tested, who tested it, when it was tested and whether it passed or failed. |
+| Save and export structured records | Retrieve a device's manufacturing and testing history when investigating failures. |
+| Provide audible and visual feedback | Let operators work without constantly looking at a computer screen. |
+| Capture and annotate macro images | Document visible defects, component placement issues and suspected failures for later review. |
 
 These are prototype capabilities; production cycle-time and error-rate improvements have not yet been measured.
 
