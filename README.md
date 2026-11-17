@@ -29,9 +29,9 @@ Barcode scanning, preview-frame capture and circle/label annotation are implemen
 
 ## Manufacturing data parsing
 
-![ISO/IEC 15434 Data Matrix parsing](docs/media/manufacturing-parser-redacted.png)
+![ISO/IEC 15434 Data Matrix parsing](docs/media/manufacturing-parser.png)
 
-ISO/IEC 15434 Format 06 fields extracted from a component label. Original payload and identifiers redacted.
+ISO/IEC 15434 Format 06 fields extracted from a component label. The decoded component fields appear alongside the camera view.
 
 ## PCB inspection
 
