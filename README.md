@@ -15,13 +15,14 @@ Low-cost optical manufacturing documentation station for part and lot identifica
 
 The actual prototype uses the OV5640 camera, a compact white housing, an attached heatsink and adjustable white illumination. These photographs document the assembled prototype, not a production enclosure.
 
-[![Handheld scan demonstration](docs/media/demo-preview.jpg)](docs/media/demo-density-scanning.mp4)
+### Live scanning demonstrations
 
-Short demonstration clips (silent H.264 MP4; download or open in a compatible player):
+| Information-density test | Compact marking comparison | QR size ladder |
+| :---: | :---: | :---: |
+| ![Density scanning](docs/media/demo-density-scanning.gif) | ![Compact markings](docs/media/demo-compact-marking.gif) | ![QR ladder](docs/media/demo-qr-ladder.gif) |
+| [MP4](docs/media/demo-density-scanning.mp4) | [MP4](docs/media/demo-compact-marking.mp4) | [MP4](docs/media/demo-qr-ladder.mp4) |
 
-- [Information-density test](docs/media/demo-density-scanning.mp4)
-- [Compact marking comparison](docs/media/demo-compact-marking.mp4)
-- [QR size ladder](docs/media/demo-qr-ladder.mp4)
+Animated GIFs loop directly in the README; original privacy-cropped silent MP4 versions remain available.
 
 The clips show the handheld scanner being presented to printed test targets and its illumination during operation. They are cropped to omit personal surroundings and computer-screen content where practical. Hand and work surface remain visible. They illustrate the operating workflow, not a controlled timing or decode-success benchmark. Original personal media, audio and camera metadata are excluded from the repository.
 
