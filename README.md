@@ -32,7 +32,7 @@ Manual recording creates two common problems:
 
 Scan existing instructions, component labels and instrument results instead of transcribing them. The scanner checks the expected workflow, provides immediate audible and visual feedback, and stores structured records. After sign-on, Embedded mode does not require a connected computer for each scan.
 
-![Circular scan-guided workflow: start a procedure, scan the device and parts, record test details, and save a local traceability record](docs/figures/solution-workflow.png)
+
 
 ### What the prototype improves
 
