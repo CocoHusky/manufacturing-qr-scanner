@@ -32,20 +32,38 @@ Manual recording creates two common problems:
 
 ## The solution
 
-Scan existing instructions, component labels and instrument results instead of transcribing them. The scanner checks the expected workflow, provides immediate audible and visual feedback, and stores structured records. After sign-on, Embedded mode does not require a connected computer for each scan.
+A low-cost, scan-driven traceability system designed to improve manufacturing and testing by reducing manual data entry, verifying required scan steps and capturing structured records.
 
-### What the prototype improves
+### Business objectives
 
-| Prototype capability | Why it matters in manufacturing and testing |
+| Objective | Business value |
 | --- | --- |
-| Scan device, component and lot labels | Record which component labels were associated with each device without manually writing down their information. |
-| Verify procedure steps and detect duplicates | Check that the required component labels are scanned and required scan steps are not skipped. |
-| Record test equipment, operator, results and timestamps | Know what was tested, who tested it, when it was tested and whether it passed or failed. |
-| Save and export structured records | Retrieve a device's manufacturing and testing history when investigating failures. |
-| Provide audible and visual feedback | Let operators work without constantly looking at a computer screen. |
-| Capture and annotate macro images | Document visible defects, component placement issues and suspected failures for later review. |
+| **Efficiency** | Spend less time recording information and more time building and testing devices. |
+| **Data integrity** | Reduce transcription errors, missing records and incorrect associations. |
+| **Quality management** | Improve procedure adherence and record consistency. |
+| **Failure investigation** | Trace issues to affected devices, component lots, equipment and test results. |
 
-These are prototype capabilities.
+### Manufacturing and testing applications
+
+| Manufacturing | Testing |
+| --- | --- |
+| Device serial number, lot and revision | Device under test and procedure revision |
+| Component part numbers, lots and serial numbers | Test benches, fixtures, probes and power supplies |
+| Required component verification and assembly confirmation | Test sequence, exposure timing and device confirmation |
+| Visual inspection and manufacturing history | Measurements, PASS/FAIL, failure reasons and data references |
+
+### Shared capabilities
+
+| Capability | How it supports manufacturing and testing |
+| --- | --- |
+| Data capture | Barcode recognition, operator information and automatic timestamps. |
+| Workflow verification | Required scan steps, duplicate detection and prevention of premature closure. |
+| Operator feedback | Audible and visual confirmation of progress, errors and completion. |
+| Visual documentation | Low-cost macro imaging and manual defect annotation. |
+| Standalone operation | Embedded scanning and local record storage without a continuously connected browser. |
+| Structured data export | Device history, failure investigation and future QMS integration. |
+
+The prototype verifies scanned information and records reported test outcomes; physical assembly and instrument accuracy are not independently verified.
 
 <p align="center">
 <img src="docs/media/prototype-front.jpg" width="275" alt="Scanner front">
