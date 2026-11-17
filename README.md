@@ -44,7 +44,19 @@ For a six-component assembly traveler (device identification, six part/lot/seria
 | Record and check identifiers | 3–5 min | 2–4 min | 10–60 s |
 | Investigate a missing or incorrect identifier (per incident) | 10–60 min | 1–30 min | 0 min |
 
-These are illustrative engineering estimates from experience, not measured comparisons.
+### Estimated documentation effort — 100 devices
+
+| Activity | Handwritten | Manual computer entry | Embedded scanning |
+| --- | ---: | ---: | ---: |
+| Record and check identifiers (100 devices) | 5–8 hr 20 min | 3 hr 20 min–6 hr 40 min | 17 min–1 hr 40 min |
+| Investigate 10 manual-entry incidents | 1 hr 40 min–10 hr | 10 min–5 hr | 0 min* |
+| **Combined estimated time** | **6 hr 40 min–18 hr 20 min** | **3 hr 30 min–11 hr 40 min** | **17 min–1 hr 40 min** |
+
+Planning hypothesis: 99% of documentation issues originate from manual entry. This percentage is an assumption to test, not a measured error attribution or reduction rate. The batch example assumes 10 manual-entry incidents per 100 devices for each manual method; the actual incident rate is unknown.
+
+*Zero investigation time applies only to manual transcription errors assumed eliminated by scanning. Incorrect source labels, scan retries and other errors still require investigation. Estimates exclude physical assembly, initial setup and label creation.
+
+These are illustrative engineering estimates from experience, not measured comparisons. See the [comparative validation protocol](docs/validation/README.md).
 
 The intended benefits are less documentation overhead and fewer manual-entry errors.
 
