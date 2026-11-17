@@ -1,6 +1,13 @@
 # Changelog
 
-## Development
+## Workflow prototype
+- Operator sign-on, compact scanner and workflow tabs, JSON export.
+- Full-frame QR/Data Matrix decoding in both modes; Embedded transfers decoded stills.
+- Four device-side recipes, one-based steps, duplicate and identity checks, timed confirmation.
+- Motor warnings only for workflow errors; numeric confirmation settings.
+- Mixed-format pipeline test PDF and firmware state-machine regression tests.
+
+## Earlier development
 - Dual-slot OTA layout and gzip browser decoder assets.
 - Simple test sign-in, required signature and acknowledgment, compact record QR and archive lookup.
 - Simplified Browser and Embedded selector.

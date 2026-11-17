@@ -2,15 +2,15 @@
 
 - Browser and Embedded modes are available in the dashboard. Embedded uses a FreeRTOS worker; target FPS is a ceiling.
 - Standby shuts down the camera and LED. Browser mode enters standby after 15 seconds without frame requests. Wake restores the configured resolution and autofocus.
-- Capture UXGA for a full-resolution JPEG. Export the unmodified original separately from annotated PNG.
+- Capture the current preview or last decoded Embedded image; annotate and export original or marked images. Saved inspection images are browser-local.
 - Archive: LittleFS NDJSON, 192 KiB limit. Export before clearing; no automatic overwrite. Initialize only an empty or backed-up partition.
 - Native timestamps use NTP when available; otherwise record uptime and boot ID. Browser timestamps come from the client.
 
-## Test sign-in
+## Operator sign-on and workflows
 
-Open `/sign` on a phone or computer. Enter user name, department and test, draw a signature, and accept the test declaration. The scanner stores a timestamped record and returns a compact record QR with a nominal 15 mm display footprint including quiet zone. Scan the QR to retrieve the record from the same device archive. The reference is not a self-contained copy of the record; export and retain the archive.
+Open the scanner and enter name, department and test. Select Scanner for general identification or Workflows to start a recipe. Scan the printed labels in order, starting at Step 1. Correct scans flash the white LED; workflow errors activate the motor and red status LED. Correct an erroneous label and continue, or cancel an expired run. Export workflow records as JSON before clearing the journal.
 
-The archive must be initialized before creating a sign-in. Screen scaling affects the actual physical QR size. No password is required for this self-reported form.
+[Workflow diagrams](workflows/README.md) · [Test sheets](test-sheets/manufacturing-pipeline.pdf)
 
 ## OTA
 
@@ -20,6 +20,6 @@ Use the USB console command `OTAKEY` to retrieve the device-specific OTA passwor
 
 ## Limitations
 
-Trusted LAN only: HTTP is unencrypted, operator state is station-wide, and the archive is not an authenticated audit ledger. Handwritten sign-off is not a cryptographic signature. Do not publish real operator records or credentials.
+Trusted LAN only: HTTP is unencrypted, operator state is station-wide, and the archive is not an authenticated audit ledger. Sign-on is not an authenticated identity or regulated signature. Do not publish real operator records or credentials.
 
 Native decoder self-test: GET `/selftest` with standalone scanning stopped. Synthetic matrices test the decoder, not lens performance. Optical repeatability, thermal performance, physical trigger and calibrated inspection remain hardware validation tasks.

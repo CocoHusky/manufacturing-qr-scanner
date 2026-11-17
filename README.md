@@ -1,130 +1,109 @@
-# Manufacturing QR & Data Matrix Scanner
+# Manufacturing Test Scanner
 
-ESP32-CAM and OV5640 scanner for component identification, lot traceability and PCB inspection. Supports browser and native ESP32 decoding over a local network.
+A compact ESP32-CAM station for identifying components, verifying assembly and test sequences, and recording traceability data without manual transcription.
 
 <p align="center">
-<img src="docs/media/prototype-front.jpg" alt="Scanner front" width="280">
-<img src="docs/media/prototype-side.jpg" alt="Scanner side" width="280">
+<img src="docs/media/prototype-front.jpg" width="280" alt="Scanner front">
+<img src="docs/media/prototype-side.jpg" width="280" alt="Scanner side">
 </p>
 
-| Information density | Compact markings | QR size ladder |
-| :---: | :---: | :---: |
-| ![Density scanning](docs/media/demo-density-scanning.gif) | ![Compact markings](docs/media/demo-compact-marking.gif) | ![QR ladder](docs/media/demo-qr-ladder.gif) |
-| [MP4](docs/media/demo-density-scanning.mp4) | [MP4](docs/media/demo-compact-marking.mp4) | [MP4](docs/media/demo-qr-ladder.mp4) |
+## Operator workflow
 
-## Features
+| Sign on | Scan and identify |
+| :---: | :---: |
+| <img src="docs/media/operator-sign-on.png" width="250" alt="Operator sign-on"> | <img src="docs/media/manufacturing-parser.png" width="550" alt="Manufacturing label parsing"> |
 
-- QR and Data Matrix recognition in the browser.
-- Embedded QR and Data Matrix decoding using ZXing-C++.
-- Browser and Embedded operating modes, searchable manufacturing history, JSON export and local part lookup.
-- Operator sign-on with name, department and test context.
-- Persistent local archive, camera standby and dual-slot firmware update layout.
-- Adjustable color JPEG resolution, scan rate, CPU frequency, Wi-Fi power saving and LED PWM.
-
-## Manufacturing workflow
-
-Scan a part, serial or lot number; associate it with a manufacturing record; capture and annotate PCB photographs. The workflow engine checks label order, component uniqueness, equipment and result identity, and confirmation timing.
-
-The device includes four demonstration recipes; see [workflow diagrams and printable labels](docs/workflows/README.md). These validate scanned information rather than automatically controlling equipment. Active runs are held in RAM; event records are persisted to the device journal.
-
-| Example | Verification |
-|---|---|
-| Assembly | Six required unique parts and original device confirmation |
-| Functional testing | Device, bench, matching result and 60-second confirmation |
-| Thermal setup | Fixture, device, accessories and matching result |
-| Aging | Chamber, load/open/unload events and minimum dwell |
-
-## Manufacturing data parsing
-
-![ISO/IEC 15434 Data Matrix parsing](docs/media/manufacturing-parser.png)
-
-ISO/IEC 15434 Format 06 fields extracted from a component label. The decoded component fields appear alongside the camera view.
-
-## PCB inspection
-
-[![Annotated PCB finding](docs/inspection/pcb-annotated.png)](docs/inspection/README.md)
-
-Operator-reported capacitor short; electrical verification required. [Original image](docs/inspection/pcb-original.png).
-
-## Bench results
-
-| Marking | Footprint | Payload |
-|---|---:|---:|
-| Smallest reported QR | 5 × 5 mm | 16 characters |
-| Smallest reported Data Matrix | 4 × 4 mm | 16 characters |
-| Data Matrix density | 8 × 8 mm | 96 characters |
-| QR density candidate | 8–12 mm | 96 characters; retest required |
-
-The 128-character QR failed. Dimensions include quiet zones. Results are from printed targets, not production reliability tests.
-
-![Payload capacity](docs/figures/capacity.svg)
-
-## Hardware
-
-| Component | Specification |
-|---|---|
-| MCU | ESP32, 4 MB flash, 4 MB PSRAM detected |
-| Camera | OV5640, color JPEG up to 1600 × 1200 |
-| Illumination | GPIO4, 20 kHz PWM |
-| Haptic confirmation | GPIO13, active-high motor driver |
-| Browser decoder | ZXing-WASM 3.1.7 |
-| Native decoder | ZXing-C++ 2.2.1 |
-
-## Decoder modes
-
-| Mode | Processing |
-|---|---|
-| Browser | ZXing-WASM on PC or phone |
-| Embedded | Native QR/Data Matrix on ESP32 |
-
-Embedded recognition uses the full frame at the selected resolution (640 × 480 default) and transfers images after successful decoding rather than continuous video. Native recent history holds 50 entries in RAM; both engines can append raw records to the device archive. Native physical read limits remain unverified. Manufacturing rules and the part lookup are saved in browser storage.
-
-## Setup
-
-1. Install PlatformIO Core and connect the USB serial programmer.
-2. Build with `pio run`.
-3. Identify the USB port with `pio device list`, then run `pio run -t upload --upload-port <port>`.
-4. Open the serial monitor at 115200 baud. For initial setup, join the scanner AP using the password printed in the monitor and configure Wi-Fi at 192.168.4.1.
-5. Open the assigned scanner IP in a browser and select the decoder mode.
-
-Prototype runs hot during continuous capture. Stop if excessively hot; use only on a trusted local network.
-
-## Operator and firmware updates
-
-[Operating instructions](docs/OPERATIONS.md) cover device setup and password-protected dual-slot OTA. The current dashboard uses self-reported operator sign-on.
-
-## Documentation
-
-- [Hardware and firmware](docs/HARDWARE_AND_FIRMWARE.md)
-- [Test report](docs/TEST_REPORT.md) · [Per-target results](docs/MARKED_RESULTS.md) · [Observations CSV](test/observations.csv)
-- Test sheets: [Mixed barcodes](docs/test-sheets/manufacturing_barcode_test.pdf) · [QR density](docs/test-sheets/QR_information_density_test.pdf) · [Data Matrix / PCB](docs/test-sheets/PCB_Data_Matrix_and_QR_Test.pdf)
-- [Verification plan](docs/VERIFICATION_PLAN.md) · [Trial template](test/trial_template.csv) · [Validation CSV](test/validation_template.csv)
-- [Changelog](CHANGELOG.md)
-- [Third-party licenses](docs/THIRD_PARTY.md) · [Superseded report](docs/archive/Scanner_System_Validation_SUPERSEDED.pdf)
-
-## Roadmap: manufacturing test automation
-
-The scanner is intended to identify the unit under test, associate it with a test procedure, trigger the appropriate fixture, and preserve measurements and inspection evidence under one traceable record.
+Enter operator, department and test; scan labels in the Scanner tab or select a defined recipe in Workflows. Successful scans flash the white LED. Workflow errors trigger vibration and the red status LED. Inspect records and export JSON.
 
 ```mermaid
 flowchart LR
- A[Operator sign-in] --> B[Scan unit serial or lot]
- B --> C[Resolve test recipe]
- C --> D[Trigger test fixture]
- D --> E[Acquire measurements]
- E --> F[Evaluate acceptance criteria]
- F --> G[Save result and inspection evidence]
- G --> H[Sync to manufacturing database]
+ A[Operator sign-on] --> B[Scan QR or Data Matrix]
+ B --> C{Active workflow?}
+ C -->|No| D[Record identifier]
+ C -->|Yes| E{Expected step and identity?}
+ E -->|Yes| F[Advance or complete]
+ E -->|No| G[Vibrate and show correction]
+ G --> B
+ D --> H[JSON export]
+ F --> H
 ```
 
-| Priority | Planned capability | Automation benefit |
-|---|---|---|
-| 1 | Fixed camera mount, controlled illumination and physical trigger | Repeatable identification and hands-free acquisition |
-| 2 | Unit ID, test ID, fixture ID and run ID | Link each measurement and image to a specific unit and test run |
-| 3 | Versioned test recipes and fixture API (HTTP, serial or MQTT) | Automatically select and execute the correct procedure |
-| 4 | Test limits, calibration status and pass/fail rules | Consistent decisions with recorded evidence |
-| 5 | External database, image storage and offline sync | Durable manufacturing history and MES integration |
-| 6 | Automated retries, interlocks and exception handling | Safe recovery, rework routing and duplicate prevention |
-| 7 | Validation, throughput and reliability testing | Quantify repeatability before deployment |
+## Manufacturing and test pipelines
 
-Future work also includes thermal and power characterization, optical qualification on production markings, measured scan latency, verified OTA recovery and production access controls. The sign-in acknowledgment is self-reported; it is not authenticated identity or a regulated electronic signature. The roadmap describes planned functionality, not implemented fixture control.
+| Recipe | Verification |
+|---|---|
+| Assembly | Six required unique components; confirm original device |
+| Functional test | Device, bench, result reference; confirm within 60 seconds |
+| Thermal setup | Fixture, device, bag, supply, probe, result and confirmation |
+| Aging | Chamber, loading, opening and removal; 24-hour example dwell |
+
+[Four workflow diagrams and instructions](docs/workflows/README.md) · [Printable mixed-format pipeline tests (PDF)](docs/test-sheets/manufacturing-pipeline.pdf)
+
+## Optical feasibility
+
+| Compact markings | QR density | Size ladder |
+| :---: | :---: | :---: |
+| ![Compact marking](docs/media/demo-compact-marking.gif) | ![Density](docs/media/demo-density-scanning.gif) | ![Size ladder](docs/media/demo-qr-ladder.gif) |
+
+| Marking | Reported bench read |
+|---|---|
+| QR | 5 × 5 mm, 16 characters |
+| Data Matrix | 4 × 4 mm, 16 characters |
+| Data Matrix | 8 × 8 mm, 96 characters |
+| QR | 10–12 mm, 96 characters remains a candidate; 128-character attempt failed |
+
+![Payload capacity](docs/figures/capacity.svg)
+
+These observations include quiet zones and are not qualified operating limits. Repeatability, working distance, print quality, lighting and maximum reliable payload remain uncharacterized. See [test report](docs/TEST_REPORT.md), [per-target evidence](docs/MARKED_RESULTS.md) and [verification plan](docs/VERIFICATION_PLAN.md).
+
+## Architecture
+
+```mermaid
+flowchart TD
+ A[OV5640 full frame] --> B{Decoder mode}
+ B -->|Browser| C[JPEG preview and ZXing WASM]
+ B -->|Embedded| D[ESP32 ZXing C++ worker]
+ D --> E[Last decoded image]
+ C --> F[Device workflow engine]
+ D --> F
+ F --> G[Local journal]
+ F --> H[LED / workflow warning]
+ G --> I[JSON export]
+```
+
+![Decoder field of view](docs/figures/scan-area.svg)
+
+- Both decoders: QR and Data Matrix; VGA default, up to 1600 × 1200. No intentional center crop.
+- Browser: live preview. Embedded: standalone recognition and last decoded still image.
+- 192 KiB flash journal; 50 recent native records in RAM; browser-local rules and annotated images.
+- GPIO4 illumination, GPIO33 status LED, GPIO13 motor driver. Password-protected dual-slot OTA.
+
+[Hardware and firmware](docs/HARDWARE_AND_FIRMWARE.md) · [Operating instructions](docs/OPERATIONS.md) · [PCB inspection example](docs/inspection/README.md)
+
+## Build
+
+```sh
+pio run
+pio run -t upload --upload-port PORT
+```
+
+Configure Wi-Fi using the device setup AP if needed, then open the scanner address. USB upload: 460800 baud; serial monitor: 115200 baud.
+
+## Repository
+
+| Path | Contents |
+|---|---|
+| `src/` | ESP32 firmware, camera, workflow engine and HTTP API |
+| `web/` | Dashboard, sign-on, parsing and recipe presentation |
+| `test/` | Regression tests and optical observations |
+| `docs/workflows/` | Process diagrams and printable label examples |
+| `docs/test-sheets/` | Optical and pipeline test PDFs |
+| `docs/media/` | Prototype photographs and demonstrations |
+
+## Limits and next steps
+
+Engineering prototype, not production-qualified. Workflow verification checks scanned identifiers, not physical assembly, instrument readings or test execution. Active runs are lost on reboot; the aging example tracks one device per run. Operator sign-on is self-reported; use trusted LAN only. Continuous operation has caused heating. Linear barcodes on the pipeline sheet are capability targets, not enabled formats.
+
+Next: fixture API, measurement association, durable run recovery, external storage and timed operator studies. No measured productivity improvement is claimed.
+
+[Changelog](CHANGELOG.md) · [Third-party notices](docs/THIRD_PARTY.md)

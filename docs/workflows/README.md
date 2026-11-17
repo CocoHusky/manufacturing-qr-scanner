@@ -2,6 +2,8 @@
 
 The ESP32 checks label sequence and identity in both decoder modes. Select **Workflows**, start a run, and scan the labels. Rejected scans retain the current step and trigger a warning. Cancel an expired run before restarting. The device records accepted and rejected events in its local journal; export runs as JSON before clearing records.
 
+[Print the four-page mixed-format test PDF](../test-sheets/manufacturing-pipeline.pdf) at 100% scale. Linear codes are capability checks only.
+
 All examples use semicolon-separated fields: `WF` (recipe ID), `STEP` (label entry step, starting at 1), `TYPE`, and `SN` or `ID`. The same device label is reused at final confirmation. Use the printable labels externally; the dashboard displays process progress rather than QR examples.
 
 ## ASM-01 — component assembly

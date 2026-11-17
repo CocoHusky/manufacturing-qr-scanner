@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="250" viewBox="0 0 760 250">
+ <rect width="760" height="250" rx="8" fill="#f5f7f8"/>
+ <g font-family="Arial,sans-serif" fill="#20313b" font-size="14">
+ <text x="190" y="24" text-anchor="middle" font-weight="bold">Browser</text><text x="570" y="24" text-anchor="middle" font-weight="bold">Embedded</text>
+ <g fill="#e4f1ed" stroke="#17665d" stroke-width="2"><rect x="82" y="38" width="216" height="162" rx="4"/><rect x="462" y="38" width="216" height="162" rx="4"/></g>
+ <g fill="#17665d"><rect x="92" y="48" width="12" height="12"/><rect x="276" y="178" width="12" height="12"/><rect x="472" y="48" width="12" height="12"/><rect x="656" y="178" width="12" height="12"/></g>
+ <g text-anchor="middle"><text x="190" y="112">Full selected frame</text><text x="190" y="132">Decoded on client</text><text x="570" y="112">Full selected frame</text><text x="570" y="132">Decoded on ESP32</text><text x="190" y="222" font-size="12">Live JPEG preview</text><text x="570" y="222" font-size="12">Last decoded still image</text></g>
+ </g>
+</svg>

@@ -14,6 +14,8 @@ jobs:
         with:
           node-version: 22
       - run: node test/unit/test_parser.js
+      - run: node test/unit/test_workflows.js
+      - run: c++ -std=c++17 -Itest/unit/host test/unit/test_workflow_engine.cpp -o /tmp/workflow-test && /tmp/workflow-test
       - run: python tools/embed_web.py && git diff --exit-code src/web_assets.h
       - run: pio run
       - uses: actions/upload-artifact@v4
