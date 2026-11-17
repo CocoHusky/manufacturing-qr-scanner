@@ -1,5 +1,7 @@
 #pragma once
 #include <ReadBarcode.h>
+#include <atomic>
+static std::atomic<bool> nativeAllowStart{true};
 #include "native_fixtures.h"
 #include <ReaderOptions.h>
 #include <esp_jpg_decode.h>
@@ -35,7 +37,8 @@ static NativeResult decodeFrame(camera_fb_t *f){NativeResult result;
  GrayJPEG a{f,g,(int)f->width,(int)f->height,w,h};memset(g,255,w*h);
  if(esp_jpg_decode(f->len,JPG_SCALE_NONE,jpegRead,jpegWrite,&a)!=ESP_OK)result.error="JPEG conversion failed";
  else try{
- auto opts=ZXing::ReaderOptions().setFormats(ZXing::BarcodeFormat::QRCode|ZXing::BarcodeFormat::DataMatrix).setTryHarder(false).setTryRotate(true).setTryDownscale(false).setMaxNumberOfSymbols(1);
+ auto formats=ZXing::BarcodeFormat::QRCode|ZXing::BarcodeFormat::DataMatrix;if(nativeAllowStart.load())formats|=ZXing::BarcodeFormat::Code128;
+ auto opts=ZXing::ReaderOptions().setFormats(formats).setTryHarder(false).setTryRotate(true).setTryDownscale(false).setMaxNumberOfSymbols(1);
  auto r=decodePolarities(g,w,h,opts);
  if(r.isValid()){
  result.format=ZXing::ToString(r.format()).c_str();auto b=r.bytes();for(auto c:b)result.value+=(char)c;

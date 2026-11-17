@@ -8,7 +8,11 @@
 
 ## Operator sign-on and workflows
 
-Open the scanner and enter name, department and test. Select Scanner for general identification or Workflows to start a recipe. Scan the printed labels in order, starting at Step 1. Correct scans flash the white LED; workflow errors activate the motor and red status LED. Correct an erroneous label and continue, or cancel an expired run. Export workflow records as JSON before clearing the journal.
+Open the scanner and enter name, department and test. Scan the four-digit Code 128 header on the printed instruction sheet to select and start its recipe, or start it from Workflows. Then present each required label individually. Remove a label from the camera view before rescanning it.
+
+Correct scan: one white LED flash. Invalid workflow scan: one vibration and red status LED; correct the label and continue. Confirmation timeout: two vibrations and a failed run. Completed records: a slow white LED fade and final flash. A completed FAIL measurement is a valid traceability record; the dashboard and JSON export retain its result, failure reason and data reference. Scan the same device for final confirmation regardless of measurement disposition.
+
+The benchtop and aging confirmation deadlines are 60 seconds. Aging timing begins at the first chamber scan; rescan the same chamber after at least five seconds. Network time is synchronized with NTP; elapsed time uses a monotonic clock. Export records before clearing the journal.
 
 [Workflow diagrams](workflows/README.md) · [Test sheets](test-sheets/manufacturing-pipeline.pdf)
 

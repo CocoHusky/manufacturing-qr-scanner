@@ -8,4 +8,6 @@ assert.equal(T.parse('{"part":"ABC","lot":"L1"}').fields.lot,'L1');
 assert(T.parse('part=X;qty=bad').warnings.includes('Invalid quantity'));
 assert(T.parse('[)>\x1e06\x1d1PX').warnings.includes('Missing message terminator'));
 assert(T.csv([{raw:'=1+1',parsed:T.parse('=1+1')}]).includes("'=1+1"));
-console.log('8 parser regression checks passed');
+assert.deepEqual(T.parse('WF=TEST-01;STEP=1;TYPE=DEVICE;SN=TEST-DEV-02').warnings,[]);
+assert.equal(T.parse('TYPE=RESULT;ID=R;STATUS=FAIL;V=4.51V;I=62mA;REASON=OUTPUT_LOW').fields.failureReason,'OUTPUT_LOW');
+console.log('10 parser regression checks passed');

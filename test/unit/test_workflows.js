@@ -1,6 +1,11 @@
-const assert=require('node:assert/strict'),w=require('../../web/workflows');
+const assert=require('node:assert/strict'),{readFileSync}=require('node:fs'),w=require('../../web/workflows');
+const labels=readFileSync('test/fixtures/pipeline-labels.tsv','utf8').trim().split(/\r?\n/);
+assert.equal(labels.length,29);
 for(const [id,recipe] of Object.entries(w.recipes)){
- const labels=w.labels(id);assert(labels.length>=3);
- for(const raw of labels){assert(raw.startsWith('WF='+id+';STEP='));assert(raw.includes('TYPE='));assert(raw.includes('SN=')||raw.includes('ID='))}
+ assert(labels.includes(recipe.start));
+ const rows=labels.filter(s=>s.startsWith('WF='+id+';'));
+ assert(rows.every(s=>/;STEP=[1-7];TYPE=/.test(s)));
+ assert.equal(rows.filter(s=>s.includes('TYPE=RESULT')).length,id==='TEST-01'||id==='THERM-01'?2:0);
 }
-console.log('4 example label sets passed');
+for(const pn of w.required)assert(labels.some(s=>s.includes('PN='+pn+';')));
+console.log('29 decoded PDF symbols; 4 recipe mappings and 4 result alternatives verified');

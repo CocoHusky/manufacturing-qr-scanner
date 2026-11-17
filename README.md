@@ -13,11 +13,12 @@ A compact ESP32-CAM station for identifying components, verifying assembly and t
 | :---: | :---: |
 | <img src="docs/media/operator-sign-on.png" width="250" alt="Operator sign-on"> | <img src="docs/media/manufacturing-parser.png" width="550" alt="Manufacturing label parsing"> |
 
-Enter operator, department and test; scan labels in the Scanner tab or select a defined recipe in Workflows. Successful scans flash the white LED. Workflow errors trigger vibration and the red status LED. Inspect records and export JSON.
+Sign on, then scan the instruction-sheet header to launch its recipe or use Scanner for general identification. Correct scans flash the white LED; sequence errors vibrate. The final device scan closes the traceability record, including failed measurements. Export JSON for review.
 
 ```mermaid
 flowchart LR
- A[Operator sign-on] --> B[Scan QR or Data Matrix]
+ A[Operator sign-on] --> S[Scan workflow header or select Scanner]
+ S --> B[Scan item label]
  B --> C{Active workflow?}
  C -->|No| D[Record identifier]
  C -->|Yes| E{Expected step and identity?}
@@ -33,11 +34,11 @@ flowchart LR
 | Recipe | Verification |
 |---|---|
 | Assembly | Six required unique components; confirm original device |
-| Functional test | Device, bench, result reference; confirm within 60 seconds |
-| Thermal setup | Fixture, device, bag, supply, probe, result and confirmation |
-| Aging | Chamber, loading, opening and removal; 24-hour example dwell |
+| Functional test | Device, bench, PASS/FAIL measurements; confirm within 60 seconds |
+| Thermal setup | Fixture, device, bag, supply, probe, PASS/FAIL temperature result and confirmation |
+| Aging | Device, chamber start and stop, device confirmation; exposure timing |
 
-[Four workflow diagrams and instructions](docs/workflows/README.md) · [Printable mixed-format pipeline tests (PDF)](docs/test-sheets/manufacturing-pipeline.pdf)
+[Four workflow diagrams and instructions](docs/workflows/README.md) · [Four-page operator instructions — revision 02 (PDF)](docs/test-sheets/manufacturing-pipeline.pdf)
 
 ## Optical feasibility
 
@@ -73,7 +74,7 @@ flowchart TD
 
 ![Decoder field of view](docs/figures/scan-area.svg)
 
-- Both decoders: QR and Data Matrix; VGA default, up to 1600 × 1200. No intentional center crop.
+- Both decoders: QR and Data Matrix; Code 128 workflow headers while idle. Browser also supports Code 39. VGA default, up to 1600 × 1200. No intentional center crop.
 - Browser: live preview. Embedded: standalone recognition and last decoded still image.
 - 192 KiB flash journal; 50 recent native records in RAM; browser-local rules and annotated images.
 - GPIO4 illumination, GPIO33 status LED, GPIO13 motor driver. Password-protected dual-slot OTA.
@@ -96,14 +97,14 @@ Configure Wi-Fi using the device setup AP if needed, then open the scanner addre
 | `src/` | ESP32 firmware, camera, workflow engine and HTTP API |
 | `web/` | Dashboard, sign-on, parsing and recipe presentation |
 | `test/` | Regression tests and optical observations |
-| `docs/workflows/` | Process diagrams and printable label examples |
+| `docs/workflows/` | Process diagrams and recipe details |
 | `docs/test-sheets/` | Optical and pipeline test PDFs |
-| `docs/media/` | Prototype photographs and demonstrations |
+| `docs/media/` | Prototype photographs, demonstrations and equipment illustrations |
 
 ## Limits and next steps
 
-Engineering prototype, not production-qualified. Workflow verification checks scanned identifiers, not physical assembly, instrument readings or test execution. Active runs are lost on reboot; the aging example tracks one device per run. Operator sign-on is self-reported; use trusted LAN only. Continuous operation has caused heating. Linear barcodes on the pipeline sheet are capability targets, not enabled formats.
+Engineering prototype, not production-qualified. Workflow verification checks scanned identifiers, not physical assembly, instrument readings or test execution. Active runs are lost on reboot; the aging example tracks one device per run. Operator sign-on is self-reported; use trusted LAN only. Continuous operation has caused heating. Browser mode reads QR, Data Matrix, Code 128 and Code 39. Embedded mode recognizes Code 128 workflow headers while idle, then uses QR and Data Matrix during an active run. Small printed marks still require physical verification.
 
-Next: fixture API, measurement association, durable run recovery, external storage and timed operator studies. No measured productivity improvement is claimed.
+Next: fixture API, automated measurement integration, durable run recovery, external storage and timed operator studies. No measured productivity improvement is claimed.
 
 [Changelog](CHANGELOG.md) · [Third-party notices](docs/THIRD_PARTY.md)

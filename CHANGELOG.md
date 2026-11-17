@@ -1,5 +1,11 @@
 # Changelog
 
+## Instruction revision 02
+- Versioned Code 128 start labels; no PC interaction required after sign-on.
+- PASS/FAIL result disposition, measurement fields, failure reason and data reference.
+- Timed two-pulse vibration on timeout; completion fade and final flash.
+- Four-page operator PDF, separate equipment icons and decoded-label test fixtures.
+
 ## Workflow prototype
 - Operator sign-on, compact scanner and workflow tabs, JSON export.
 - Full-frame QR/Data Matrix decoding in both modes; Embedded transfers decoded stills.

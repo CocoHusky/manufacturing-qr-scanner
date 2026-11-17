@@ -110,11 +110,9 @@ void loop(){
 
  uint8_t done=0;if(workerBusy&&xQueueReceive(decodeDone,&done,0)==pdTRUE){if(decodeMode=="device"&&!scanningPaused){if(asyncResult.value.length()&&asyncResult.value!=lastNative&&!asyncResult.value.startsWith("op=")&&completedFrame){auto *image=(uint8_t*)heap_caps_realloc(scanImage,completedFrame->len,MALLOC_CAP_SPIRAM|MALLOC_CAP_8BIT);if(image){scanImage=image;scanImageLength=completedFrame->len;memcpy(scanImage,completedFrame->buf,scanImageLength);scanImageSequence++;}}commitNative(asyncResult);}if(completedFrame){esp_camera_fb_return(completedFrame);completedFrame=nullptr;}workerBusy=false;nativeDoneAt=millis();}
  if(!otaActive)applyPendingResolution();
- if(!otaTrial&&!otaActive&&decodeMode=="device"&&!scanningPaused&&camStatus=="Ready"&&!asleep&&!workerBusy&&!whiteUntil&&millis()-nativeLast>=nativePeriod){nativeLast=millis();auto *f=esp_camera_fb_get();if(f){if(workerAvailable){workerBusy=true;if(xQueueSend(decodeJobs,&f,0)!=pdTRUE){workerBusy=false;esp_camera_fb_return(f);}}else{nativeDecode(f);esp_camera_fb_return(f);}}}
+ if(!otaTrial&&!otaActive&&decodeMode=="device"&&!scanningPaused&&camStatus=="Ready"&&!asleep&&!workerBusy&&!whiteUntil&&millis()-nativeLast>=nativePeriod){nativeLast=millis();nativeAllowStart.store(!workflow.active||workflow.complete||workflow.expired);auto *f=esp_camera_fb_get();if(f){if(workerAvailable){workerBusy=true;if(xQueueSend(decodeJobs,&f,0)!=pdTRUE){workerBusy=false;esp_camera_fb_return(f);}}else{nativeDecode(f);esp_camera_fb_return(f);}}}
  if(!otaTrial&&!otaActive&&autoStandby&&decodeMode!="device"&&!workerBusy&&!asleep&&millis()-lastActivity>=standbyDelay)cameraSleep();
- if(buzzerUntil&&(int32_t)(millis()-buzzerUntil)>=0){digitalWrite(buzzerPin,LOW);buzzerUntil=0;}
- if(redUntil&&(int32_t)(millis()-redUntil)>=0){digitalWrite(33,HIGH);redUntil=0;}
- if(whiteUntil&&(int32_t)(millis()-whiteUntil)>=0){whiteUntil=0;applyBrightness(ledOn?idleBrightness:0);}
+ feedbackTick();
  if(focusRequested&&!workerBusy&&!asleep){focusRequested=false;focusNow();}
  delay(2);
 }

@@ -2,8 +2,8 @@
 static const char TRACE_JS[] PROGMEM=R"WEB((function(root){
 'use strict';
 const ids={'1P':'part','P':'part','1T':'lot','T':'lot','S':'serial','Q':'quantity','10D':'dateCode','4L':'country','V':'supplier','1V':'supplier'};
-const keys={part:'part',pn:'part',lot:'lot',batch:'lot',sn:'serial',serial:'serial',qty:'quantity',quantity:'quantity',date:'dateCode',mfg:'dateCode',datecode:'dateCode',country:'country',rev:'revision',revision:'revision',supplier:'supplier',operator:'operator',department:'department',test:'test',action:'action',timestamp:'timestamp',signature:'signature',id:'id',wf:'workflow',step:'step',type:'labelType',device:'device',bench:'equipment',chamber:'chamber',data:'dataReference'};
-const fields=['part','lot','serial','quantity','dateCode','country','revision','supplier','operator','department','test','action','timestamp','signature','id','workflow','step','labelType','device','equipment','chamber','dataReference'];
+const keys={part:'part',pn:'part',lot:'lot',batch:'lot',sn:'serial',serial:'serial',qty:'quantity',quantity:'quantity',date:'dateCode',mfg:'dateCode',datecode:'dateCode',country:'country',rev:'revision',revision:'revision',supplier:'supplier',operator:'operator',department:'department',test:'test',action:'action',timestamp:'timestamp',signature:'signature',id:'id',wf:'workflow',step:'step',type:'labelType',device:'device',bench:'equipment',chamber:'chamber',data:'dataReference',status:'resultStatus',reason:'failureReason',v:'voltage',i:'current',t:'temperature'};
+const fields=['part','lot','serial','quantity','dateCode','country','revision','supplier','operator','department','test','action','timestamp','signature','id','workflow','step','labelType','device','equipment','chamber','dataReference','resultStatus','failureReason','voltage','current','temperature'];
 function normalize(raw){return String(raw).replace(/␞/g,'\x1e').replace(/␝/g,'\x1d').replace(/␄/g,'\x04')}
 function parse(raw,rules=[]){
  raw=String(raw);const s=normalize(raw),f={},unknown=[],warnings=[];let type='Plain identifier';
@@ -16,7 +16,7 @@ function parse(raw,rules=[]){
  }else if(s.startsWith('{')){try{let obj=JSON.parse(s);if(!obj||Array.isArray(obj)||typeof obj!=='object')throw Error();type='JSON';for(const [k,v] of Object.entries(obj)){let field=keys[k.toLowerCase()];if(field&&['string','number'].includes(typeof v))set(field,v);else unknown.push(k)}}catch(e){warnings.push('Invalid JSON')}}
  else if(/^[A-Za-z][\w-]*=/.test(s)){type='Key/value';for(const token of s.split(';')){let i=token.indexOf('=');if(i<1){unknown.push(token);continue}let k=keys[token.slice(0,i).toLowerCase()];if(k)set(k,token.slice(i+1));else unknown.push(token)}}
  else{for(const r of rules){if(!r||typeof r.prefix!=='string'||!r.prefix||!Array.isArray(r.fields)||typeof r.separator!=='string'||!r.separator)continue;if(!s.startsWith(r.prefix))continue;type='Custom: '+r.prefix;let parts=s.slice(r.prefix.length).split(r.separator);if(parts.length!==r.fields.length)warnings.push('Unexpected field count');r.fields.forEach((k,i)=>{if(i<parts.length)set(k,parts[i])});break}if(type==='Plain identifier')set('id',s)}
- if(type!=='Plain identifier'&&!f.part&&!f.id&&!f.operator)warnings.push('Missing part or identifier');if(type==='ISO/IEC 15434 / 06'&&!f.lot&&!f.serial)warnings.push('Missing lot or serial');
+ if(type!=='Plain identifier'&&!f.part&&!f.id&&!f.serial&&!f.operator)warnings.push('Missing part or identifier');if(type==='ISO/IEC 15434 / 06'&&!f.lot&&!f.serial)warnings.push('Missing lot or serial');
  if('quantity' in f&&!/^\d+(\.\d+)?$/.test(f.quantity))warnings.push('Invalid quantity');
  if('country' in f&&!/^[A-Z]{2}$/.test(f.country))warnings.push('Invalid country code');
  if('dateCode' in f&&/^\d{4}$/.test(f.dateCode)){let week=Number(f.dateCode.slice(2));if(week<1||week>53)warnings.push('Invalid YYWW date code')}
@@ -35,7 +35,7 @@ function loadLocal(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{
 const exampleRule={prefix:'MFG:',separator:'/',fields:['part','revision','lot','serial']},examplePart={'PCB-DEMO-001':'Example control PCB'};
 let rules=[exampleRule,...loadLocal('scanner.rules',[]).filter(r=>r.prefix!==exampleRule.prefix)],parts={...loadLocal('scanner.parts',{}),...examplePart},nativeSeen=new Set(),nativeBoot='',nativeLastCount=0,nativeFrameCount=0;
 let trials=[],trial=null;
-function parseRecord(r){let p=T.parse(r.raw,rules),id=p.fields.part||p.fields.id||'';let desc=Object.prototype.hasOwnProperty.call(parts,id)?parts[id]:'';return {...r,parsed:p,description:typeof desc==='string'?desc:''}}
+function parseRecord(r){let p=T.parse(r.raw,rules);const startCode=Object.keys(Workflows.recipes).find(k=>Workflows.recipes[k].start===r.raw&&r.format==='Code128');if(startCode)p={type:'Workflow start',fields:{workflow:startCode,recipeRevision:'01'},warnings:[],unknown:[]};let id=p.fields.part||p.fields.id||'';let desc=Object.prototype.hasOwnProperty.call(parts,id)?parts[id]:'';return {...r,parsed:p,description:typeof desc==='string'?desc:''}}
 let loggedOperator='';
 async function addRecord(r){
  if(r.raw.startsWith('op=')){let q=await fetch('/operator-scan',{method:'POST',body:new URLSearchParams({raw:r.raw})});if(!q.ok)$('info').textContent=await q.text();return}
@@ -87,7 +87,7 @@ async function setStandby(q){try{let r=await fetch('/standby?'+q,{method:'POST'}
 function updateDiagnostics(d){if(session&&!d.operator){sessionStorage.removeItem('scanner.session');location.replace('/sign');return}running=!d.paused;$('pause').textContent=running?'Pause':'Resume';deviceMac=d.deviceMac||'';loggedOperator=session?.name||'';$('operatorStatus').textContent=session?session.name+' · '+session.department:'No operator';$('deviceInfo').textContent='Device '+deviceMac+' | '+d.ip+' | '+d.appSlot+' | OTA '+(d.otaReady?'ready':'unavailable');$('initStorage').hidden=d.journalReady;if(!diagLoaded){$('autoStandby').checked=d.autoStandby;$('rate').value=d.nativePeriod?String(Math.round(1000/d.nativePeriod)):'0';diagLoaded=true}$('diagnostics').textContent=(d.asleep?'Standby':'Camera active')+' | Heap '+d.heap+' B | PSRAM '+d.psram+' B | Uptime '+Math.round(d.uptime/1000)+' s | '+(d.journalReady?'Archive ready':'Archive unavailable')+(d.journalError?' | '+d.journalError:'')}
 
 async function readPolarities(im,effort){
- return ZXingWASM.readBarcodes(im,{formats:['QRCode','DataMatrix'],tryHarder:effort!=='fast',tryRotate:true,tryInvert:true,tryDownscale:effort==='deep',maxNumberOfSymbols:1});
+ return ZXingWASM.readBarcodes(im,{formats:['QRCode','DataMatrix','Code128','Code39'],tryHarder:effort!=='fast',tryRotate:true,tryInvert:true,tryDownscale:effort==='deep',maxNumberOfSymbols:1});
 }
 
 function persistLogs(){try{localStorage.setItem('scanner.logs',JSON.stringify(logs))}catch(e){$('diagnostics').textContent='Browser storage full; export logs'}}
@@ -104,44 +104,75 @@ function configureWorkflows(){
  const recipe=$('recipe');for(const [id,r] of Object.entries(Workflows.recipes)){let o=document.createElement('option');o.value=id;o.textContent=r.name;recipe.append(o)}
  function tab(work){$('scannerPanel').hidden=work;$('workflowPanel').hidden=!work;$('scanTab').setAttribute('aria-pressed',String(!work));$('workflowTab').setAttribute('aria-pressed',String(work))}
  $('scanTab').onclick=()=>tab(false);$('workflowTab').onclick=()=>tab(true);
- recipe.onchange=()=>renderComponentList(null);renderComponentList(null);
+ recipe.onchange=()=>{lastWorkflowRender='';renderWorkflow(workflow||{active:false})};renderWorkflow({active:false});
  $('startWorkflow').onclick=()=>workflowRequest('start',recipe.value).catch(e=>$('workflowStatus').textContent=e.message);
  $('resetWorkflow').onclick=()=>{if(workflow?.active&&confirm('Cancel active workflow?'))workflowRequest('cancel').catch(e=>$('workflowStatus').textContent=e.message)};
  $('exportWorkflow').onclick=async()=>{try{let r=await fetch('/journal');if(!r.ok)throw Error(await r.text());let records=(await r.text()).split('\n').filter(Boolean).map(JSON.parse).filter(x=>x.engine==='Workflow');downloadFile('workflow-runs.json',JSON.stringify({operator:session,deviceMac,records,active:workflow},null,2),'application/json')}catch(e){$('workflowStatus').textContent=e.message}};
  refreshWorkflow();setInterval(refreshWorkflow,750);
 }
 async function refreshWorkflow(){if(workflowPolling)return;workflowPolling=true;try{let r=await fetch('/workflow',{cache:'no-store'});if(r.ok)renderWorkflow(await r.json())}catch(e){}finally{workflowPolling=false}}
+const workflowFieldNames={SN:'Serial number',ID:'Identifier',PN:'Part number',LOT:'Lot',REV:'Revision',DATE:'Date',MFG:'Manufactured',DEVICE:'Device serial',BENCH:'Equipment ID',DATA:'Data reference',CHAMBER:'Chamber ID',TYPE:'Label type',STATUS:'Test result',REASON:'Failure reason',V:'Output voltage',I:'Supply current',T:'Temperature'};
+function workflowFields(raw){
+ const fields=[];for(const segment of (raw||'').split(';')){const pos=segment.indexOf('=');if(pos<1)continue;const key=segment.slice(0,pos);if(key==='WF'||key==='STEP'||key==='TYPE')continue;fields.push([workflowFieldNames[key]||key,segment.slice(pos+1)])}return fields;
+}
+function fieldDetails(raw){
+ const details=document.createElement('dl');details.className='workflow-fields';
+ for(const [key,value] of workflowFields(raw)){const dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=key;dd.textContent=value;if(key==='Test result'){dd.style.color=value==='FAIL'?'#a12424':'#176440'}details.append(dt,dd)}return details;
+}
 function renderComponentList(state){
  const id=state?.active?state.id:$('recipe').value;
  $('workflowParts').hidden=id!=='ASM-01';
  const list=$('componentList');list.replaceChildren();
  if(id!=='ASM-01')return;
  const names=['Main PCB','Battery','Sensor','Housing','Antenna','Seal'];
- Workflows.required.forEach((part,i)=>{let row=document.createElement('div'),name=document.createElement('span'),status=document.createElement('small');let done=!!((state?.partMask||0)&(1<<i));row.className='part-check';row.dataset.done=String(done);name.textContent=names[i]+' · '+part;status.textContent=done?'Verified':'Required';row.append(name,status);list.append(row)});
+ Workflows.required.forEach((part,i)=>{
+  const row=document.createElement('div'),head=document.createElement('div'),name=document.createElement('strong'),status=document.createElement('span');
+  const done=!!((state?.partMask||0)&(1<<i));row.className='part-check';row.dataset.done=String(done);head.className='part-head';name.textContent=names[i]+' · '+part;status.className='workflow-tag';status.textContent=done?'Verified':'Required';head.append(name,status);row.append(head);
+  if(done&&state.partLabels?.[i]){row.append(fieldDetails(state.partLabels[i]));const stamp=document.createElement('small');stamp.textContent=state.partTimes?.[i]?'Recorded '+new Date(state.partTimes[i]).toLocaleString():'Recorded without network time';row.append(stamp)}
+  list.append(row);
+ });
 }
-function renderWorkflow(state){workflow=state;let recipe=$('recipe');if(state.active&&!state.complete&&recipe.value!==state.id){recipe.value=state.id}recipe.disabled=state.active&&!state.complete;renderComponentList(state);
+let lastWorkflowRender='';
+function renderWorkflow(state){
+ const newRun=state.active&&state.run&&state.run!==workflow?.run;workflow=state;const recipe=$('recipe');
+ if(newRun){recipe.value=state.id;$('workflowTab').click()}
+ if((state.complete||state.expired)&&recipe.value!==state.id)state={active:false};
+ if(state.active&&!state.complete&&!state.expired&&recipe.value!==state.id)recipe.value=state.id;
+ recipe.disabled=state.active&&!state.complete&&!state.expired;
  $('startWorkflow').disabled=recipe.disabled;$('resetWorkflow').disabled=!state.active||state.complete;
- $('workflowStatus').textContent=state.active?state.message:'Select a workflow';$('workflowStatus').dataset.error=String(state.error);
- $('workflowBanner').hidden=!state.active;$('workflowBanner').textContent=state.active?Workflows.recipes[state.id].name+' · '+state.message:'';$('workflowBanner').dataset.error=String(state.error);
- $('workflowTimer').textContent=state.remainingMs?'Confirmation remaining: '+Math.ceil(state.remainingMs/1000)+' s':state.dwellSeconds?'Dwell: '+state.dwellSeconds+' s':'';
- $('workflowSteps').replaceChildren();if(!state.active)return;for(const [i,step] of Workflows.recipes[state.id].steps.entries()){let li=document.createElement('li');li.textContent=(state.complete||i+1<state.step?'Done · ':i+1===state.step?'Next · ':'Pending · ')+step;if(!state.complete&&i+1===state.step&&state.id==='ASM-01'&&i===1)li.textContent+=' ('+state.partCount+'/6)';$('workflowSteps').append(li)}
+ const mood=(state.error||state.disposition==='FAIL')?'error':state.complete?'done':state.active?'next':'pending';
+ for(const id of ['workflowStatus','workflowBanner']){$(id).dataset.state=mood;$(id).dataset.error=String(state.error)}
+ $('workflowStatus').textContent=state.active?state.message+(state.disposition==='FAIL'&&state.reason?' · '+state.reason:''):'Scan the workflow header or start a run.';
+ $('workflowBanner').hidden=!state.active;$('workflowBanner').textContent=state.active?Workflows.recipes[state.id].name+' · '+state.message+(state.disposition==='FAIL'&&state.reason?' · '+state.reason:''):'';
+ $('workflowTimer').textContent=[state.id==='AGE-01'&&state.active&&state.step>=3?'Elapsed exposure: '+Math.floor(state.dwellSeconds/3600)+'h '+Math.floor(state.dwellSeconds%3600/60)+'m '+state.dwellSeconds%60+'s':'',state.id==='AGE-01'&&state.step===3&&state.dwellSeconds<5?'Rescan chamber in '+(5-state.dwellSeconds)+' s':'',state.remainingMs?'Confirmation remaining: '+Math.ceil(state.remainingMs/1000)+' s':'',state.active?(state.clockSynced?'Clock synchronized':'Clock not yet synchronized'):''].filter(Boolean).join(' · ');
+ const key=JSON.stringify([recipe.value,state.run,state.step,state.complete,state.error,state.partMask,state.stepLabels,state.partLabels,state.stepTimes,state.partTimes,state.disposition,state.expired]);
+ if(key===lastWorkflowRender)return;lastWorkflowRender=key;
+ renderComponentList(state);
+ const root=$('workflowSteps');root.replaceChildren();
+ const steps=Workflows.recipes[state.active?state.id:recipe.value]?.steps||[];
+ $('workflowProgress').textContent=state.active?(state.complete?steps.length:state.step-1)+' / '+steps.length+' steps verified':'Not started';
+ $('workflowProgressBar').value=state.active?(state.complete?steps.length:state.step-1):0;$('workflowProgressBar').max=steps.length||1;
+ for(const [i,step] of steps.entries()){
+  const n=i+1,done=state.active&&(state.complete||n<state.step),current=state.active&&!state.complete&&n===state.step;
+  const row=document.createElement('li'),head=document.createElement('div'),label=document.createElement('strong'),tag=document.createElement('span');
+  row.className='workflow-step';row.dataset.state=done?'done':current?(state.error?'error':'next'):'pending';
+  head.className='workflow-step-head';label.textContent=step;tag.className='workflow-tag';tag.textContent=done?'Verified':current?(state.expired?'Timed out':state.error?'Correction required':'Next'):'Pending';head.append(label,tag);row.append(head);
+  if(state.active&&state.id==='ASM-01'&&n===2){const p=document.createElement('small');p.textContent=state.partCount+' / 6 required components verified';row.append(p)}
+  if(state.active&&state.stepLabels?.[i]){row.append(fieldDetails(state.stepLabels[i]));const stamp=document.createElement('small');stamp.textContent=state.stepTimes?.[i]?'Recorded '+new Date(state.stepTimes[i]).toLocaleString()+' (local time)':'Recorded without network time';row.append(stamp)}
+  root.append(row);
+ }
 }
 )WEB";
 static const char WORKFLOW_JS[] PROGMEM=R"WEB((function(root){
 'use strict';
 const recipes={
- 'ASM-01':{name:'Component assembly',steps:['Device traveler','Six unique components','Confirm device']},
- 'TEST-01':{name:'Benchtop functional test',steps:['Device','Bench','Test result','Confirm device (60 s)']},
- 'THERM-01':{name:'Thermal fixture setup',steps:['Fixture','Device','Bag','Power supply','Probe','Test result','Confirm device']},
- 'AGE-01':{name:'Environmental aging',steps:['Chamber','Load device','Opening event','Unload device (60 s)']}
+ 'ASM-01':{start:'0101',name:'Component assembly',steps:['Device traveler','Six unique components','Confirm device']},
+ 'TEST-01':{start:'0201',name:'Benchtop functional test',steps:['Device','Bench','Test result','Confirm device (60 s)']},
+ 'THERM-01':{start:'0301',name:'Thermal fixture setup',steps:['Fixture','Device','Bag','Power supply','Probe','Test result','Confirm device']},
+ 'AGE-01':{start:'0401',name:'Environmental aging',steps:['Identify device','Load chamber — start timer','Rescan chamber — stop timer (min. 5 s)','Confirm removed device (60 s)']}
 };
 const required=['PCB-001','BAT-001','SNS-001','HSG-001','ANT-001','SEL-001'];
-function labels(id){
- const d='TYPE=DEVICE;SN=DEV-0001;LOT=L261117;REV=A', f=x=>'WF='+id+';'+x;
- const rows=id==='ASM-01'?[d,...required.map((pn,i)=>'TYPE=PART;PN='+pn+';LOT=L261101;SN=C-'+(i+1))]:id==='TEST-01'?[d,'TYPE=BENCH;ID=BENCH-003','TYPE=RESULT;ID=RUN-0042;DEVICE=DEV-0001;BENCH=BENCH-003;DATA=RUN-0042']:id==='THERM-01'?['TYPE=FIXTURE;ID=THERM-003',d,'TYPE=BAG;ID=BAG-001','TYPE=POWER;ID=PSU-001','TYPE=PROBE;ID=TC-001','TYPE=RESULT;ID=RUN-0043;DEVICE=DEV-0001;BENCH=THERM-003;DATA=RUN-0043']:['TYPE=CHAMBER;ID=AGE-001',d,'TYPE=OPEN;ID=OPEN-001;CHAMBER=AGE-001'];
- return rows.map((raw,i)=>f('STEP='+(id==='ASM-01'?(i?2:1):i+1)+';'+raw))
-}
-const api={recipes,required,labels};if(typeof module!=='undefined')module.exports=api;else root.Workflows=api
+const api={recipes,required};if(typeof module!=='undefined')module.exports=api;else root.Workflows=api
 })(typeof globalThis!=='undefined'?globalThis:this);
 )WEB";
 static const char QR_JS[] PROGMEM=R"WEB(//---------------------------------------------------------------------
