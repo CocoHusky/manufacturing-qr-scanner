@@ -84,4 +84,4 @@ Higher print fidelity may improve small-code recognition, but does not eliminate
 
 ## Limitations and next decision
 
-Unmeasured: repeatability, false reads, motion, focus range, sensor FPS, power and temperature. Retest 128-character QR and 10 mm Data Matrix. See [verification plan](VERIFICATION_PLAN.md) for acceptance criteria.
+See [verification plan](VERIFICATION_PLAN.md) for acceptance criteria.
