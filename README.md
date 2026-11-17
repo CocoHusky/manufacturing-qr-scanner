@@ -4,13 +4,14 @@ An ESP32-CAM scanner for validating assembly and test steps, capturing traceabil
 
 ## The problem
 
-Quality management depends on knowing where a device came from, which components and lots were used, what tests it completed, and where its results can be found.
+For every device, teams need to connect its identity, component lots, test setup, and result.
 
 Manual recording creates two common problems:
 
-| **Time spent recording information** | **Human error from manual entry** |
+| **Time spent recording information** | **Errors in manual records** |
 | --- | --- |
-| Operators spend time copying serial numbers, lot numbers, equipment IDs, and results instead of assembling or testing devices. | Mistyped identifiers, missing records, duplicate entries and incorrect device-to-test associations undermine traceability. |
+| ![Operator copying device and lot details onto a paper traveler at a test bench](docs/media/problem-manual-time.jpg) | ![Operator reviewing a paper test record with a duplicate entry highlighted](docs/media/problem-manual-errors.jpg) |
+| Operators copy serial numbers, lots, equipment IDs, and results instead of assembling or testing devices. | Mistyped identifiers, missing records, and duplicate entries can break the link between a device and its test. |
 
 ## The solution
 
@@ -183,11 +184,15 @@ USB upload: 460800 baud. Serial monitor: 115200 baud. Sign on, select Embedded, 
 
 [Detailed operation and OTA](docs/OPERATIONS.md) · [Verification plan](docs/VERIFICATION_PLAN.md)
 
-## Limits and next steps
+## Production readiness
 
-This is an engineering prototype, not a qualified manufacturing or regulated QMS system. It checks labels, sequence, and reported outcomes, not physical installation or instrument accuracy. Active runs are lost on reboot; archive capacity is finite; sign-on is self-reported; and thermal performance requires validation. The dashboard uses unencrypted HTTP on a trusted local network. Phones must connect to the scanner’s Wi-Fi or the same LAN; cellular data alone is not supported.
+This is an engineering prototype, not a qualified manufacturing or regulated QMS system.
 
-Next: timed comparisons of manual and scanned workflows, controlled optical and reliability tests, durable run recovery, actual instrument integration and authenticated QMS connectivity.
+**Demonstrated:** on-device scan decoding and workflow checks, operator feedback, local event journaling, JSON export, and browser access from a phone or computer on the scanner’s Wi-Fi/LAN. The scan loop can continue without internet access.
+
+**Gaps before production use:** operator sign-on is self-reported; HTTP is unencrypted; active runs do not recover after reboot; local archive capacity is limited; and scans do not prove physical assembly or instrument accuracy. Instrument control, raw-data capture, and live QMS/MES or cloud sync are not implemented. Cellular data alone cannot reach the scanner.
+
+**Next validation work:** measure cycle time and entry-error rates in a controlled comparison; characterize decode reliability across label sizes, print quality, lighting, and placement; verify restart recovery and archive retention; then add authenticated access, protected transport, instrument/data-system integration, and a supported record backup path.
 
 [Comparative validation protocol](docs/validation/README.md) · [Changelog](CHANGELOG.md) · [Third-party notices](docs/THIRD_PARTY.md)
 
