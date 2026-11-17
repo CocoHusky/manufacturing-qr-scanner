@@ -96,6 +96,7 @@ For a six-component assembly traveler (device identification, six part/lot/seria
 | **Combined estimated time** | **6 hr 40 min–18 hr 20 min** | **3 hr 30 min–11 hr 40 min** | **17 min–1 hr 40 min** |
 
 Engineering estimates assume 10 manual-entry incidents per 100 devices. *The scanning scenario models elimination of transcription-related investigations. See the [comparative validation protocol](docs/validation/README.md).
+*This represents time where issues do not come from incorrect data entery.
 
 ## What the scanner records
 
