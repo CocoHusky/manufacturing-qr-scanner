@@ -103,6 +103,18 @@ flowchart LR
 
 [All workflow details and acceptance criteria](docs/workflows/README.md)
 
+## Macro inspection and defect documentation
+
+The scanner also captures close-up PCB images for manual inspection and annotation. Preserve the original image and export the marked copy for test review.
+
+| Original macro image | Operator-marked image |
+| --- | --- |
+| ![Original macro image](docs/inspection/macro-original.jpg) | ![Annotated macro image](docs/inspection/macro-annotated.png) |
+
+[Inspection procedure and examples](docs/inspection/README.md) · [Scanner settings, Wi-Fi and OTA guide](docs/settings/README.md)
+
+Inspection images are browser-local; association with a device or test record is currently manual.
+
 ## From device history to failure investigation
 
 A device serial connects component genealogy and test history. The scanner records the equipment identifier, measurement disposition and data reference, alongside operator and time information. In a production integration, the bench would upload raw measurements to a data repository and display a result code with the matching reference. The QMS or MES could join both records to investigate recurring failures by component lot, equipment or hardware revision.
@@ -188,4 +200,4 @@ and preservation of the license terms. Corporate evaluation requires written
 permission; internal commercial use and commercial deployment require a
 separate license.
 
-[Software license](LICENSE) · [Evaluation and commercial licensing](COMMERCIAL_LICENSE.md) · [Documentation and media rights](LICENSE-DOCS.md) · [Third-party notices](docs/THIRD_PARTY.md)
+[Project license](LICENSE) · [Commercial licensing inquiries](COMMERCIAL_LICENSE.md) · [Third-party notices](docs/THIRD_PARTY.md)
