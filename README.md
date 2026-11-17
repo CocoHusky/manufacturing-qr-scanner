@@ -14,18 +14,25 @@ ESP32-CAM and OV5640 scanner for component identification, lot traceability and 
 
 ## Features
 
-- QR, Data Matrix and linear barcode recognition in the browser.
+- QR and Data Matrix recognition in the browser.
 - Embedded QR and Data Matrix decoding using ZXing-C++.
-- Browser and Embedded operating modes, searchable manufacturing history, CSV/JSON export and local part lookup.
-- Test sign-in with name, department, test, handwritten signature, acknowledgment and compact 15 mm record QR.
+- Browser and Embedded operating modes, searchable manufacturing history, JSON export and local part lookup.
+- Operator sign-on with name, department and test context.
 - Persistent local archive, camera standby and dual-slot firmware update layout.
 - Adjustable color JPEG resolution, scan rate, CPU frequency, Wi-Fi power saving and LED PWM.
 
 ## Manufacturing workflow
 
-Scan a part, serial or lot number; associate it with the manufacturing record; capture close-up PCB photographs; circle defects and add notes for inspection, rework and nonconformance reports.
+Scan a part, serial or lot number; associate it with a manufacturing record; capture and annotate PCB photographs. The workflow engine checks label order, component uniqueness, equipment and result identity, and confirmation timing.
 
-Barcode scanning, preview-frame capture and circle/label annotation are implemented. Persistent local records are supported; MES integration and calibrated macro optics remain planned.
+The device includes four demonstration recipes; see [workflow diagrams and printable labels](docs/workflows/README.md). These validate scanned information rather than automatically controlling equipment. Active runs are held in RAM; event records are persisted to the device journal.
+
+| Example | Verification |
+|---|---|
+| Assembly | Six required unique parts and original device confirmation |
+| Functional testing | Device, bench, matching result and 60-second confirmation |
+| Thermal setup | Fixture, device, accessories and matching result |
+| Aging | Chamber, load/open/unload events and minimum dwell |
 
 ## Manufacturing data parsing
 
@@ -59,6 +66,7 @@ The 128-character QR failed. Dimensions include quiet zones. Results are from pr
 | MCU | ESP32, 4 MB flash, 4 MB PSRAM detected |
 | Camera | OV5640, color JPEG up to 1600 × 1200 |
 | Illumination | GPIO4, 20 kHz PWM |
+| Haptic confirmation | GPIO13, active-high motor driver |
 | Browser decoder | ZXing-WASM 3.1.7 |
 | Native decoder | ZXing-C++ 2.2.1 |
 
@@ -69,7 +77,7 @@ The 128-character QR failed. Dimensions include quiet zones. Results are from pr
 | Browser | ZXing-WASM on PC or phone |
 | Embedded | Native QR/Data Matrix on ESP32 |
 
-Embedded recognition uses the full camera field of view, downsampled to at most 640 × 480 pixels. Native recent history holds 50 entries in RAM; both engines can append raw records to the device archive. Native physical read limits remain unverified. Manufacturing rules and the part lookup are saved in browser storage.
+Embedded recognition uses the full frame at the selected resolution (640 × 480 default) and transfers images after successful decoding rather than continuous video. Native recent history holds 50 entries in RAM; both engines can append raw records to the device archive. Native physical read limits remain unverified. Manufacturing rules and the part lookup are saved in browser storage.
 
 ## Setup
 
@@ -83,7 +91,7 @@ Prototype runs hot during continuous capture. Stop if excessively hot; use only 
 
 ## Operator and firmware updates
 
-[Operating instructions](docs/OPERATIONS.md) cover test sign-in, signed inspection records and password-protected dual-slot OTA.
+[Operating instructions](docs/OPERATIONS.md) cover device setup and password-protected dual-slot OTA. The current dashboard uses self-reported operator sign-on.
 
 ## Documentation
 

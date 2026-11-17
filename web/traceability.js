@@ -1,8 +1,8 @@
 (function(root){
 'use strict';
 const ids={'1P':'part','P':'part','1T':'lot','T':'lot','S':'serial','Q':'quantity','10D':'dateCode','4L':'country','V':'supplier','1V':'supplier'};
-const keys={part:'part',pn:'part',lot:'lot',batch:'lot',sn:'serial',serial:'serial',qty:'quantity',quantity:'quantity',date:'dateCode',mfg:'dateCode',datecode:'dateCode',country:'country',rev:'revision',revision:'revision',supplier:'supplier',operator:'operator',department:'department',test:'test',action:'action',timestamp:'timestamp',signature:'signature',id:'id'};
-const fields=['part','lot','serial','quantity','dateCode','country','revision','supplier','operator','department','test','action','timestamp','signature','id'];
+const keys={part:'part',pn:'part',lot:'lot',batch:'lot',sn:'serial',serial:'serial',qty:'quantity',quantity:'quantity',date:'dateCode',mfg:'dateCode',datecode:'dateCode',country:'country',rev:'revision',revision:'revision',supplier:'supplier',operator:'operator',department:'department',test:'test',action:'action',timestamp:'timestamp',signature:'signature',id:'id',wf:'workflow',step:'step',type:'labelType',device:'device',bench:'equipment',chamber:'chamber',data:'dataReference'};
+const fields=['part','lot','serial','quantity','dateCode','country','revision','supplier','operator','department','test','action','timestamp','signature','id','workflow','step','labelType','device','equipment','chamber','dataReference'];
 function normalize(raw){return String(raw).replace(/␞/g,'\x1e').replace(/␝/g,'\x1d').replace(/␄/g,'\x04')}
 function parse(raw,rules=[]){
  raw=String(raw);const s=normalize(raw),f={},unknown=[],warnings=[];let type='Plain identifier';

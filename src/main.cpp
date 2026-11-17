@@ -39,7 +39,7 @@ static bool fresh(const String &s) {
   seen.push_back({s,now}); return true;
 }
 void setup(){
- Serial.begin(115200);esp_ota_img_states_t state;if(esp_ota_get_state_partition(esp_ota_get_running_partition(),&state)==ESP_OK&&state==ESP_OTA_IMG_PENDING_VERIFY){otaTrial=true;trialStart=millis();} pinMode(33,OUTPUT);digitalWrite(33,HIGH);ledcSetup(whitePWMChannel,20000,10);ledcAttachPin(4,whitePWMChannel);setLight(true);pinMode(13,INPUT_PULLUP);delay(1000);
+ Serial.begin(115200);esp_ota_img_states_t state;if(esp_ota_get_state_partition(esp_ota_get_running_partition(),&state)==ESP_OK&&state==ESP_OTA_IMG_PENDING_VERIFY){otaTrial=true;trialStart=millis();} pinMode(33,OUTPUT);digitalWrite(33,HIGH);ledcSetup(whitePWMChannel,20000,10);ledcAttachPin(4,whitePWMChannel);setLight(true);digitalWrite(buzzerPin,LOW);pinMode(buzzerPin,OUTPUT);delay(1000);
  Serial.printf("\nQR scanner | PSRAM %u bytes\n",ESP.getPsramSize());
  auto &c=cameraCfg;
  c.ledc_channel=LEDC_CHANNEL_0;c.ledc_timer=LEDC_TIMER_0;
@@ -51,7 +51,7 @@ void setup(){
  c.grab_mode=CAMERA_GRAB_LATEST;
  esp_err_t e=esp_camera_init(&c);if(e!=ESP_OK){esp_camera_deinit();c.fb_count=1;c.grab_mode=CAMERA_GRAB_WHEN_EMPTY;e=esp_camera_init(&c);}
  if(e!=ESP_OK){camStatus="Camera failed: "+String(e,HEX);Serial.println(camStatus);networkSetup();return;}
- sensor_t *sensor=esp_camera_sensor_get(); sensor->set_vflip(sensor,1);sensor->set_hmirror(sensor,0); sensor->set_sharpness(sensor,2);sensor->set_framesize(sensor,FRAMESIZE_XGA);
+ sensor_t *sensor=esp_camera_sensor_get(); sensor->set_vflip(sensor,1);sensor->set_hmirror(sensor,0); sensor->set_sharpness(sensor,2);sensor->set_framesize(sensor,FRAMESIZE_VGA);
  camSensor=sensor;
  Serial.printf("Sensor PID: 0x%x\n",sensor->id.PID);
  if(af.start(sensor)){focusState="Loading autofocus";afReady=af.focusInit()==0;focusState=afReady?"AF firmware ready":"AF firmware failed";}else focusState="Not OV5640";
@@ -108,10 +108,11 @@ void loop(){
  checkOtaTrial();
  static String cmd;while(Serial.available()){char c=Serial.read();if(c=='\n'||c=='\r'){if(cmd=="OTAKEY")Serial.println("OTAKEY="+otaPassword);else if(cmd.startsWith("OPADD ")){int split=cmd.indexOf(' ',6);if(split>6&&!registerOperator(cmd.substring(6,split),cmd.substring(split+1)))Serial.println("Operator registration failed");}else if(cmd.startsWith("OPDEL ")){String id=cmd.substring(6);if(validOperatorId(id)){prefs.remove(("n"+id).c_str());prefs.remove(("k"+id).c_str());if(activeOperator==id){activeOperator="";activeOperatorName="";}Serial.println("Operator revoked");}}cmd="";}else if(cmd.length()<120)cmd+=c;}
 
- uint8_t done=0;if(workerBusy&&xQueueReceive(decodeDone,&done,0)==pdTRUE){commitNative(asyncResult);workerBusy=false;nativeDoneAt=millis();}
+ uint8_t done=0;if(workerBusy&&xQueueReceive(decodeDone,&done,0)==pdTRUE){if(decodeMode=="device"&&!scanningPaused){if(asyncResult.value.length()&&asyncResult.value!=lastNative&&!asyncResult.value.startsWith("op=")&&completedFrame){auto *image=(uint8_t*)heap_caps_realloc(scanImage,completedFrame->len,MALLOC_CAP_SPIRAM|MALLOC_CAP_8BIT);if(image){scanImage=image;scanImageLength=completedFrame->len;memcpy(scanImage,completedFrame->buf,scanImageLength);scanImageSequence++;}}commitNative(asyncResult);}if(completedFrame){esp_camera_fb_return(completedFrame);completedFrame=nullptr;}workerBusy=false;nativeDoneAt=millis();}
  if(!otaActive)applyPendingResolution();
- if(!otaTrial&&!otaActive&&decodeMode=="device"&&camStatus=="Ready"&&!asleep&&!workerBusy&&!whiteUntil&&millis()-nativeLast>=nativePeriod&&millis()-nativeDoneAt>=80){nativeLast=millis();auto *f=esp_camera_fb_get();if(f){if(workerAvailable){workerBusy=true;if(xQueueSend(decodeJobs,&f,0)!=pdTRUE){workerBusy=false;esp_camera_fb_return(f);}}else{nativeDecode(f);esp_camera_fb_return(f);}}}
+ if(!otaTrial&&!otaActive&&decodeMode=="device"&&!scanningPaused&&camStatus=="Ready"&&!asleep&&!workerBusy&&!whiteUntil&&millis()-nativeLast>=nativePeriod){nativeLast=millis();auto *f=esp_camera_fb_get();if(f){if(workerAvailable){workerBusy=true;if(xQueueSend(decodeJobs,&f,0)!=pdTRUE){workerBusy=false;esp_camera_fb_return(f);}}else{nativeDecode(f);esp_camera_fb_return(f);}}}
  if(!otaTrial&&!otaActive&&autoStandby&&decodeMode!="device"&&!workerBusy&&!asleep&&millis()-lastActivity>=standbyDelay)cameraSleep();
+ if(buzzerUntil&&(int32_t)(millis()-buzzerUntil)>=0){digitalWrite(buzzerPin,LOW);buzzerUntil=0;}
  if(redUntil&&(int32_t)(millis()-redUntil)>=0){digitalWrite(33,HIGH);redUntil=0;}
  if(whiteUntil&&(int32_t)(millis()-whiteUntil)>=0){whiteUntil=0;applyBrightness(ledOn?idleBrightness:0);}
  if(focusRequested&&!workerBusy&&!asleep){focusRequested=false;focusNow();}

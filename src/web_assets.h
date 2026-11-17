@@ -2,8 +2,8 @@
 static const char TRACE_JS[] PROGMEM=R"WEB((function(root){
 'use strict';
 const ids={'1P':'part','P':'part','1T':'lot','T':'lot','S':'serial','Q':'quantity','10D':'dateCode','4L':'country','V':'supplier','1V':'supplier'};
-const keys={part:'part',pn:'part',lot:'lot',batch:'lot',sn:'serial',serial:'serial',qty:'quantity',quantity:'quantity',date:'dateCode',mfg:'dateCode',datecode:'dateCode',country:'country',rev:'revision',revision:'revision',supplier:'supplier',operator:'operator',department:'department',test:'test',action:'action',timestamp:'timestamp',signature:'signature',id:'id'};
-const fields=['part','lot','serial','quantity','dateCode','country','revision','supplier','operator','department','test','action','timestamp','signature','id'];
+const keys={part:'part',pn:'part',lot:'lot',batch:'lot',sn:'serial',serial:'serial',qty:'quantity',quantity:'quantity',date:'dateCode',mfg:'dateCode',datecode:'dateCode',country:'country',rev:'revision',revision:'revision',supplier:'supplier',operator:'operator',department:'department',test:'test',action:'action',timestamp:'timestamp',signature:'signature',id:'id',wf:'workflow',step:'step',type:'labelType',device:'device',bench:'equipment',chamber:'chamber',data:'dataReference'};
+const fields=['part','lot','serial','quantity','dateCode','country','revision','supplier','operator','department','test','action','timestamp','signature','id','workflow','step','labelType','device','equipment','chamber','dataReference'];
 function normalize(raw){return String(raw).replace(/␞/g,'\x1e').replace(/␝/g,'\x1d').replace(/␄/g,'\x04')}
 function parse(raw,rules=[]){
  raw=String(raw);const s=normalize(raw),f={},unknown=[],warnings=[];let type='Plain identifier';
@@ -30,13 +30,19 @@ const api={parse,normalize,csv,fields};if(typeof module!=='undefined')module.exp
 })(typeof globalThis!=='undefined'?globalThis:this);
 )WEB";
 static const char DASH_JS[] PROGMEM=R"WEB(const T=Traceability;
+const session=JSON.parse(sessionStorage.getItem("scanner.session")||"null");let deviceMac="",flipped=false;
 function loadLocal(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}}
-let rules=loadLocal('scanner.rules',[]),parts=loadLocal('scanner.parts',{}),nativeSeen=new Set(),nativeBoot='',nativeLastCount=0,nativeFrameCount=0;
+const exampleRule={prefix:'MFG:',separator:'/',fields:['part','revision','lot','serial']},examplePart={'PCB-DEMO-001':'Example control PCB'};
+let rules=[exampleRule,...loadLocal('scanner.rules',[]).filter(r=>r.prefix!==exampleRule.prefix)],parts={...loadLocal('scanner.parts',{}),...examplePart},nativeSeen=new Set(),nativeBoot='',nativeLastCount=0,nativeFrameCount=0;
 let trials=[],trial=null;
 function parseRecord(r){let p=T.parse(r.raw,rules),id=p.fields.part||p.fields.id||'';let desc=Object.prototype.hasOwnProperty.call(parts,id)?parts[id]:'';return {...r,parsed:p,description:typeof desc==='string'?desc:''}}
 let loggedOperator='';
-function addRecord(r){if(r.raw.startsWith('op=')){fetch('/operator-scan',{method:'POST',body:new URLSearchParams({raw:r.raw})}).then(async q=>{if(!q.ok)$('info').textContent=await q.text();await controls()});return}r.operator=r.operator||loggedOperator;logs.unshift(parseRecord(r));scanTotal++;renderLog();if(r.engine==='Browser')fetch('/record',{method:'POST',body:new URLSearchParams({raw:r.raw,format:r.format,time:r.time})}).then(async q=>{if(!q.ok)$('diagnostics').textContent='Archive: '+await q.text()}).catch(e=>$('diagnostics').textContent='Archive write failed')}
-function item(r){let li=document.createElement('li'),head=document.createElement('strong');head.textContent=(r.time?new Date(r.time).toLocaleString():'Device uptime '+r.uptime+' ms')+' | '+r.engine+' | '+r.format;li.append(head);
+async function addRecord(r){
+ if(r.raw.startsWith('op=')){let q=await fetch('/operator-scan',{method:'POST',body:new URLSearchParams({raw:r.raw})});if(!q.ok)$('info').textContent=await q.text();return}
+ if(r.engine==='Browser'){r.operator=session.name;r.session=session;try{let q=await fetch('/record',{method:'POST',body:new URLSearchParams({raw:r.raw,format:r.format,time:r.time})});let outcome=await q.json();r.accepted=q.ok&&outcome.accepted;r.reason=outcome.message;r.run=outcome.run;await refreshWorkflow()}catch(e){r.accepted=false;r.reason='Record not saved: '+e.message}}
+ r.deviceMac=deviceMac;logs.unshift(parseRecord(r));if(r.accepted!==false)scanTotal++;persistLogs();renderLog();
+}
+function item(r){let li=document.createElement('li'),head=document.createElement('strong');head.textContent=(r.time?new Date(r.time).toLocaleString():'Device uptime '+r.uptime+' ms')+' | '+r.engine+' | '+r.format;li.append(head);if(r.accepted===false){let w=document.createElement('div');w.textContent='Rejected — '+(r.reason||'Check workflow');w.style.color='#9b2727';li.append(w)}
  let p=r.parsed;for(const [k,v] of Object.entries(p.fields)){let row=document.createElement('div');row.textContent=k+' — '+v;li.append(row)}
  if(r.operator){let row=document.createElement('div');row.textContent='Operator — '+r.operator;li.append(row)}if(r.description){let row=document.createElement('div');row.textContent=r.description;li.append(row)}
  if(p.warnings.length){let w=document.createElement('div');w.style.color='#a65a00';w.textContent=p.warnings.join('; ');li.append(w)}
@@ -44,43 +50,99 @@ function item(r){let li=document.createElement('li'),head=document.createElement
 function renderStructured(){const q=$('searchLog').value.toLowerCase();$('scanTotal').textContent=scanTotal;$('scanLog').replaceChildren(...logs.filter(r=>JSON.stringify(r).toLowerCase().includes(q)).slice(0,100).map(item))}
 function downloadFile(name,content,type){let u=URL.createObjectURL(new Blob([content],{type})),a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)}
 function syncNative(d){if(d.boot!==nativeBoot||d.count<nativeLastCount){nativeSeen.clear();nativeBoot=d.boot}nativeLastCount=d.count;nativeFrameCount=d.nativeFrames;
- for(const r of (d.records||[]).slice().reverse()){let k=d.boot+':'+r.id;if(nativeSeen.has(k))continue;nativeSeen.add(k);addRecord({engine:'ESP32',format:r.format,raw:r.raw,time:r.time||null,uptime:r.uptime,operator:r.operator})}
+ for(const r of (d.records||[]).slice().reverse()){let k=d.boot+':'+r.id;if(nativeSeen.has(k)||logs.some(x=>x.recordKey===k))continue;nativeSeen.add(k);addRecord({recordKey:k,engine:'Embedded',format:r.format,raw:r.raw,time:r.time||null,uptime:r.uptime,operator:r.operator,accepted:r.accepted,reason:r.reason,run:r.run,session:{name:r.operator,department:r.department,test:r.test,startedAt:r.sessionStarted}})}
  if(nativeSeen.size>500){nativeSeen=new Set((d.records||[]).map(r=>d.boot+':'+r.id))}
 }
-function configureTrace(){
+function configureTrace(){configureWorkflows();
  $('searchLog').oninput=renderLog;
- $('operatorLogout').onclick=async()=>{await fetch('/operator-logout',{method:'POST'});await controls()};
+ $('operatorLogout').onclick=async()=>{await fetch('/operator-logout',{method:'POST'});sessionStorage.removeItem('scanner.session');location.replace('/sign')};
+ logs=loadLocal('scanner.logs',[]).map(parseRecord);scanTotal=logs.filter(r=>r.accepted!==false).length;renderLog();
  $('initStorage').onclick=async()=>{if(!confirm('Initialize the unmounted archive partition? Existing data in that partition may be erased.'))return;let r=await fetch('/storage-init',{method:'POST',body:new URLSearchParams({confirm:'INITIALIZE'})});if(!r.ok)$('diagnostics').textContent=await r.text();else await controls()};
  $('autoStandby').onchange=()=>setStandby('auto='+($('autoStandby').checked?'1':'0'));
- $('nativeRate').onchange=()=>setStandby('fps='+$('nativeRate').value);
+
  $('sleepNow').onclick=async()=>{running=false;$('pause').textContent='Resume';await setStandby('mode=sleep')};
  $('wakeNow').onclick=async()=>{await setStandby('mode=wake');running=true;$('pause').textContent='Pause'};
- $('highPhoto').onclick=async()=>{let was=running;running=false;try{let r=await fetch('/photo?size=uxga');if(!r.ok)throw Error(await r.text());photoBlob=await r.blob();$('snapshot').click()}catch(e){$('diagnostics').textContent=e.message}finally{running=was}};
+ $('captureNow').onclick=async()=>{try{if($('engine').value==='device'){let r=await fetch('/scan-image',{cache:'no-store'});if(!r.ok)throw Error('Scan a code first');photoBlob=await r.blob()}if(!photoBlob)throw Error('No camera image yet');photoOriginal=photoBlob;let im=new Image();im.onload=()=>{let c=$('photo');c.width=im.width;c.height=im.height;photoImage=im;marks=[];redrawPhoto();URL.revokeObjectURL(im.src);$('editor').showModal()};im.src=URL.createObjectURL(photoBlob)}catch(e){$('info').textContent=e.message}};
+ $('flip').onclick=()=>{flipped=!flipped;$('flip').textContent=flipped?'Unflip':'Flip';lastImageKey='';};
+ $('closeEditor').onclick=()=>$('editor').close();
  $('rules').value=JSON.stringify(rules,null,2);$('parts').value=JSON.stringify(parts,null,2);
- $('saveRules').onclick=()=>{try{let r=JSON.parse($('rules').value),p=JSON.parse($('parts').value);if(!Array.isArray(r)||r.some(x=>!x||typeof x.prefix!=='string'||!x.prefix||typeof x.separator!=='string'||!x.separator||!Array.isArray(x.fields)||x.fields.some(k=>!T.fields.includes(k))))throw Error('Invalid custom rule');if(!p||typeof p!=='object'||Array.isArray(p)||Object.values(p).some(x=>typeof x!=='string'))throw Error('Part database must map identifiers to descriptions');localStorage.setItem('scanner.rules',JSON.stringify(r));localStorage.setItem('scanner.parts',JSON.stringify(p));rules=r;parts=p;logs=logs.map(parseRecord);renderLog();$('rulesMsg').textContent='Saved locally'}catch(e){$('rulesMsg').textContent=e.message}};
- $('exportJSON').onclick=()=>downloadFile('scans.json',JSON.stringify(logs.slice().reverse(),null,2),'application/json');
- $('rescan').onclick=async()=>{lastCodes='';missingSince=0;lastSignal=0;await fetch('/rearm',{method:'POST'})};
- $('startTrial').onclick=()=>{if(trial)return;let expected=$('expected').value;if(!expected||!$('sampleId').value){$('trialStatus').textContent='Enter sample ID and expected payload';return}trial={expected:T.normalize(expected),symbol_id:$('sampleId').value,start:performance.now(),engine:$('engine').value,results:{},nativeStart:nativeFrameCount};$('trialStatus').textContent='Present target now';$('startTrial').disabled=true;let tr=trial;tr.timer=setTimeout(()=>finishTrial(),5000)};
- $('exportTrials').onclick=()=>downloadFile('validation.csv',['engine,symbol_id,outcome,latency_ms',...trials.map(r=>[r.engine,r.symbol_id,r.outcome,r.latency_ms].map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(','))].join('\r\n'),'text/csv');
- $('snapshot').onclick=()=>{if(!photoBlob)return;photoOriginal=photoBlob;$('photoEditor').hidden=false;let im=new Image();im.onload=()=>{let c=$('photo');c.width=im.width;c.height=im.height;photoImage=im;marks=[];redrawPhoto();URL.revokeObjectURL(im.src)};im.src=URL.createObjectURL(photoBlob)};
+ $('saveRules').onclick=()=>{try{let r=JSON.parse($('rules').value),p=JSON.parse($('parts').value);if(!Array.isArray(r)||r.some(x=>!x||typeof x.prefix!=='string'||!x.prefix||typeof x.separator!=='string'||!x.separator||!Array.isArray(x.fields)||x.fields.some(k=>!T.fields.includes(k))))throw Error('Invalid custom rule');if(!p||typeof p!=='object'||Array.isArray(p)||Object.values(p).some(x=>typeof x!=='string'))throw Error('Part database must map identifiers to descriptions');r=[exampleRule,...r.filter(x=>x.prefix!==exampleRule.prefix)];p={...p,...examplePart};localStorage.setItem('scanner.rules',JSON.stringify(r));localStorage.setItem('scanner.parts',JSON.stringify(p));rules=r;parts=p;$('rules').value=JSON.stringify(rules,null,2);$('parts').value=JSON.stringify(parts,null,2);logs=logs.map(parseRecord);renderLog();$('rulesMsg').textContent='Saved locally'}catch(e){$('rulesMsg').textContent=e.message}};
+ $('exportJSON').onclick=()=>downloadFile('scans.json',JSON.stringify({schemaVersion:1,device:{mac:deviceMac,id:'scanner-'+deviceMac.replace(/:/g,'')},operator:session,exportedAt:new Date().toISOString(),records:logs.slice().reverse(),inspectionImages:loadLocal('scanner.images',[])},null,2),'application/json');
+ $('rescan').onclick=async()=>{lastCodes='';missingSince=0;lastSignal=0;let r=await fetch('/rearm',{method:'POST'});$('rescan').textContent=r.ok?'Ready to rescan':'Retry rescan';setTimeout(()=>$('rescan').textContent='Rescan',1200)};
  let c=$('photo'),start=null;function point(e){let b=c.getBoundingClientRect();return [(e.clientX-b.left)*c.width/b.width,(e.clientY-b.top)*c.height/b.height]}
  c.onpointerdown=e=>{if(!photoImage)return;start=point(e);c.setPointerCapture(e.pointerId)};
- c.onpointerup=e=>{if(!start)return;let end=point(e);marks.push({a:start,b:end,label:$('markLabel').value});start=null;redrawPhoto()};
- $('undoMark').onclick=()=>{marks.pop();redrawPhoto()};$('savePhoto').onclick=()=>c.toBlob(b=>{let u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='inspection-annotated.png';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)});
+ c.onpointerup=e=>{if(!start)return;let end=point(e);marks.push({a:start,b:end,label:$('markLabel').value,shape:$('markShape').value});start=null;redrawPhoto()};
+ $('undoMark').onclick=()=>{marks.pop();redrawPhoto()};$('savePhoto').onclick=async()=>{try{let original=await blobData(photoOriginal),annotated=c.toDataURL('image/jpeg',.85);let images=loadLocal('scanner.images',[]);images.push({id:Date.now(),time:new Date().toISOString(),operator:session,deviceMac,original,annotated,marks});localStorage.setItem('scanner.images',JSON.stringify(images));renderImages();$('photoMsg').textContent='Saved in this browser'}catch(e){$('photoMsg').textContent='Storage full or unavailable; export the image instead'}};
+ $('exportImage').onclick=()=>c.toBlob(b=>{let a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='inspection-annotated.png';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)});
+ renderImages();
  $('saveOriginal').onclick=()=>{if(!photoOriginal)return;let u=URL.createObjectURL(photoOriginal),a=document.createElement('a');a.href=u;a.download='inspection-original.jpg';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)};
 }
 let photoBlob=null,photoOriginal=null,photoImage=null,marks=[];
-function redrawPhoto(){if(!photoImage)return;let c=$('photo'),g=c.getContext('2d');g.drawImage(photoImage,0,0);g.strokeStyle='#ff3030';g.fillStyle='#ff3030';g.lineWidth=Math.max(3,c.width/300);g.font=Math.max(14,c.width/50)+'px sans-serif';for(const m of marks){let x=(m.a[0]+m.b[0])/2,y=(m.a[1]+m.b[1])/2;g.beginPath();g.ellipse(x,y,Math.max(1,Math.abs(m.a[0]-m.b[0])/2),Math.max(1,Math.abs(m.a[1]-m.b[1])/2),0,0,2*Math.PI);g.stroke();g.fillText(m.label,Math.min(m.a[0],m.b[0]),Math.max(20,Math.min(m.a[1],m.b[1])-5))}}
+function redrawPhoto(){if(!photoImage)return;let c=$('photo'),g=c.getContext('2d');g.drawImage(photoImage,0,0);g.strokeStyle='#ff3030';g.fillStyle='#ff3030';g.lineWidth=Math.max(3,c.width/300);g.font=Math.max(14,c.width/50)+'px sans-serif';for(const m of marks){let x=(m.a[0]+m.b[0])/2,y=(m.a[1]+m.b[1])/2;g.beginPath();if(m.shape==='square')g.rect(Math.min(m.a[0],m.b[0]),Math.min(m.a[1],m.b[1]),Math.abs(m.a[0]-m.b[0]),Math.abs(m.a[1]-m.b[1]));else g.ellipse(x,y,Math.max(1,Math.abs(m.a[0]-m.b[0])/2),Math.max(1,Math.abs(m.a[1]-m.b[1])/2),0,0,2*Math.PI);g.stroke();g.fillText(m.label,Math.min(m.a[0],m.b[0]),Math.max(20,Math.min(m.a[1],m.b[1])-5))}}
 function trialObserve(engine,raw){if(!trial||trial.results[engine]||!raw)return;trial.results[engine]={outcome:T.normalize(raw)===trial.expected?'correct':'wrong',latency_ms:Math.round(performance.now()-trial.start)};let want=trial.engine==='compare'?['browser','native']:[trial.engine==='device'?'native':'browser'];if(want.every(k=>trial.results[k]))finishTrial()}
 function finishTrial(){if(!trial)return;clearTimeout(trial.timer);let want=trial.engine==='compare'?['browser','native']:[trial.engine==='device'?'native':'browser'];for(let engine of want)trials.push({engine,symbol_id:trial.symbol_id,...(trial.results[engine]||{outcome:'timeout',latency_ms:''})});$('trialStatus').textContent=want.map(k=>k+': '+(trial.results[k]?.outcome||'timeout')).join(' | ')+' · '+trials.length+' observations';trial=null;$('startTrial').disabled=false}
 
 let diagLoaded=false;
 async function setStandby(q){try{let r=await fetch('/standby?'+q,{method:'POST'});if(!r.ok)throw Error(await r.text());diagLoaded=false;await controls()}catch(e){$('diagnostics').textContent=e.message}}
-function updateDiagnostics(d){loggedOperator=d.operator||'';$('operatorStatus').textContent=d.operatorName?'Operator: '+d.operatorName:'No operator';$('initStorage').hidden=d.journalReady;if(!diagLoaded){$('autoStandby').checked=d.autoStandby;$('nativeRate').value=Math.round(1000/d.nativePeriod);diagLoaded=true}$('diagnostics').textContent=(d.asleep?'Standby':'Camera active')+' | Heap '+d.heap+' B | PSRAM '+d.psram+' B | Uptime '+Math.round(d.uptime/1000)+' s | '+(d.journalReady?'Archive ready':'Archive unavailable')+(d.journalError?' | '+d.journalError:'')}
+function updateDiagnostics(d){if(session&&!d.operator){sessionStorage.removeItem('scanner.session');location.replace('/sign');return}running=!d.paused;$('pause').textContent=running?'Pause':'Resume';deviceMac=d.deviceMac||'';loggedOperator=session?.name||'';$('operatorStatus').textContent=session?session.name+' · '+session.department:'No operator';$('deviceInfo').textContent='Device '+deviceMac+' | '+d.ip+' | '+d.appSlot+' | OTA '+(d.otaReady?'ready':'unavailable');$('initStorage').hidden=d.journalReady;if(!diagLoaded){$('autoStandby').checked=d.autoStandby;$('rate').value=d.nativePeriod?String(Math.round(1000/d.nativePeriod)):'0';diagLoaded=true}$('diagnostics').textContent=(d.asleep?'Standby':'Camera active')+' | Heap '+d.heap+' B | PSRAM '+d.psram+' B | Uptime '+Math.round(d.uptime/1000)+' s | '+(d.journalReady?'Archive ready':'Archive unavailable')+(d.journalError?' | '+d.journalError:'')}
 
 async function readPolarities(im,effort){
- return ZXingWASM.readBarcodes(im,{formats:[],tryHarder:effort!=='fast',tryRotate:true,tryInvert:true,tryDownscale:effort==='deep',maxNumberOfSymbols:1});
+ return ZXingWASM.readBarcodes(im,{formats:['QRCode','DataMatrix'],tryHarder:effort!=='fast',tryRotate:true,tryInvert:true,tryDownscale:effort==='deep',maxNumberOfSymbols:1});
 }
+
+function persistLogs(){try{localStorage.setItem('scanner.logs',JSON.stringify(logs))}catch(e){$('diagnostics').textContent='Browser storage full; export logs'}}
+function blobData(b){return new Promise((resolve,reject)=>{let r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(b)})}
+function renderImages(){let root=$('savedImages');root.replaceChildren();for(let im of loadLocal('scanner.images',[])){let row=document.createElement('p'),a=document.createElement('a');a.href=im.annotated;a.download='inspection-'+im.id+'.jpg';a.textContent=new Date(im.time).toLocaleString()+' · Export image';row.append(a);root.append(row)}}
+
+
+let workflow=null,workflowPolling=false;
+async function workflowRequest(action,id=''){
+ const r=await fetch('/workflow',{method:'POST',body:new URLSearchParams({action,id})});
+ if(!r.ok)throw Error(await r.text());renderWorkflow(await r.json());lastCodes='';missingSince=0;lastSignal=0;
+}
+function configureWorkflows(){
+ const recipe=$('recipe');for(const [id,r] of Object.entries(Workflows.recipes)){let o=document.createElement('option');o.value=id;o.textContent=r.name;recipe.append(o)}
+ function tab(work){$('scannerPanel').hidden=work;$('workflowPanel').hidden=!work;$('scanTab').setAttribute('aria-pressed',String(!work));$('workflowTab').setAttribute('aria-pressed',String(work))}
+ $('scanTab').onclick=()=>tab(false);$('workflowTab').onclick=()=>tab(true);
+ recipe.onchange=()=>renderComponentList(null);renderComponentList(null);
+ $('startWorkflow').onclick=()=>workflowRequest('start',recipe.value).catch(e=>$('workflowStatus').textContent=e.message);
+ $('resetWorkflow').onclick=()=>{if(workflow?.active&&confirm('Cancel active workflow?'))workflowRequest('cancel').catch(e=>$('workflowStatus').textContent=e.message)};
+ $('exportWorkflow').onclick=async()=>{try{let r=await fetch('/journal');if(!r.ok)throw Error(await r.text());let records=(await r.text()).split('\n').filter(Boolean).map(JSON.parse).filter(x=>x.engine==='Workflow');downloadFile('workflow-runs.json',JSON.stringify({operator:session,deviceMac,records,active:workflow},null,2),'application/json')}catch(e){$('workflowStatus').textContent=e.message}};
+ refreshWorkflow();setInterval(refreshWorkflow,750);
+}
+async function refreshWorkflow(){if(workflowPolling)return;workflowPolling=true;try{let r=await fetch('/workflow',{cache:'no-store'});if(r.ok)renderWorkflow(await r.json())}catch(e){}finally{workflowPolling=false}}
+function renderComponentList(state){
+ const id=state?.active?state.id:$('recipe').value;
+ $('workflowParts').hidden=id!=='ASM-01';
+ const list=$('componentList');list.replaceChildren();
+ if(id!=='ASM-01')return;
+ const names=['Main PCB','Battery','Sensor','Housing','Antenna','Seal'];
+ Workflows.required.forEach((part,i)=>{let row=document.createElement('div'),name=document.createElement('span'),status=document.createElement('small');let done=!!((state?.partMask||0)&(1<<i));row.className='part-check';row.dataset.done=String(done);name.textContent=names[i]+' · '+part;status.textContent=done?'Verified':'Required';row.append(name,status);list.append(row)});
+}
+function renderWorkflow(state){workflow=state;let recipe=$('recipe');if(state.active&&!state.complete&&recipe.value!==state.id){recipe.value=state.id}recipe.disabled=state.active&&!state.complete;renderComponentList(state);
+ $('startWorkflow').disabled=recipe.disabled;$('resetWorkflow').disabled=!state.active||state.complete;
+ $('workflowStatus').textContent=state.active?state.message:'Select a workflow';$('workflowStatus').dataset.error=String(state.error);
+ $('workflowBanner').hidden=!state.active;$('workflowBanner').textContent=state.active?Workflows.recipes[state.id].name+' · '+state.message:'';$('workflowBanner').dataset.error=String(state.error);
+ $('workflowTimer').textContent=state.remainingMs?'Confirmation remaining: '+Math.ceil(state.remainingMs/1000)+' s':state.dwellSeconds?'Dwell: '+state.dwellSeconds+' s':'';
+ $('workflowSteps').replaceChildren();if(!state.active)return;for(const [i,step] of Workflows.recipes[state.id].steps.entries()){let li=document.createElement('li');li.textContent=(state.complete||i+1<state.step?'Done · ':i+1===state.step?'Next · ':'Pending · ')+step;if(!state.complete&&i+1===state.step&&state.id==='ASM-01'&&i===1)li.textContent+=' ('+state.partCount+'/6)';$('workflowSteps').append(li)}
+}
+)WEB";
+static const char WORKFLOW_JS[] PROGMEM=R"WEB((function(root){
+'use strict';
+const recipes={
+ 'ASM-01':{name:'Component assembly',steps:['Device traveler','Six unique components','Confirm device']},
+ 'TEST-01':{name:'Benchtop functional test',steps:['Device','Bench','Test result','Confirm device (60 s)']},
+ 'THERM-01':{name:'Thermal fixture setup',steps:['Fixture','Device','Bag','Power supply','Probe','Test result','Confirm device']},
+ 'AGE-01':{name:'Environmental aging',steps:['Chamber','Load device','Opening event','Unload device (60 s)']}
+};
+const required=['PCB-001','BAT-001','SNS-001','HSG-001','ANT-001','SEL-001'];
+function labels(id){
+ const d='TYPE=DEVICE;SN=DEV-0001;LOT=L261117;REV=A', f=x=>'WF='+id+';'+x;
+ const rows=id==='ASM-01'?[d,...required.map((pn,i)=>'TYPE=PART;PN='+pn+';LOT=L261101;SN=C-'+(i+1))]:id==='TEST-01'?[d,'TYPE=BENCH;ID=BENCH-003','TYPE=RESULT;ID=RUN-0042;DEVICE=DEV-0001;BENCH=BENCH-003;DATA=RUN-0042']:id==='THERM-01'?['TYPE=FIXTURE;ID=THERM-003',d,'TYPE=BAG;ID=BAG-001','TYPE=POWER;ID=PSU-001','TYPE=PROBE;ID=TC-001','TYPE=RESULT;ID=RUN-0043;DEVICE=DEV-0001;BENCH=THERM-003;DATA=RUN-0043']:['TYPE=CHAMBER;ID=AGE-001',d,'TYPE=OPEN;ID=OPEN-001;CHAMBER=AGE-001'];
+ return rows.map((raw,i)=>f('STEP='+(id==='ASM-01'?(i?2:1):i+1)+';'+raw))
+}
+const api={recipes,required,labels};if(typeof module!=='undefined')module.exports=api;else root.Workflows=api
+})(typeof globalThis!=='undefined'?globalThis:this);
 )WEB";
 static const char QR_JS[] PROGMEM=R"WEB(//---------------------------------------------------------------------
 //
@@ -2380,11 +2442,6 @@ var qrcode = function() {
     return qrcode;
 }));
 )WEB";
-static const char SIGN_HTML[] PROGMEM=R"WEB(<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Test sign-in</title><style>
-*{box-sizing:border-box}body{font:16px system-ui;background:#f4f6f8;color:#182330;margin:0}main{max-width:520px;margin:24px auto;padding:24px;background:white;border:1px solid #dce1e7;border-radius:14px}h1{margin-top:0;font-size:25px}label{display:block;font-weight:600;margin:16px 0 6px}input,button{font:inherit;padding:12px;border:1px solid #ccd4df;border-radius:8px}input{width:100%}button{cursor:pointer;background:white}button.primary{background:#183e68;color:white;width:100%;margin-top:18px}canvas{display:block;width:100%;border:1px solid #ccd4df;border-radius:8px;touch-action:none}#qr{text-align:center;background:white}#qr img{width:15mm;height:15mm;image-rendering:pixelated;display:inline-block}#accept{width:auto;margin-right:8px}#terms{font-size:14px;line-height:1.5;background:#f4f6f8;padding:12px;border-radius:8px}small{color:#677485}details{margin-top:18px}#status{overflow-wrap:anywhere}
-</style></head><body><main><h1>Test sign-in</h1><form id="form"><label for="name">User name</label><input id="name" required maxlength="40" autocomplete="name"><label for="department">Department</label><input id="department" required maxlength="32" placeholder="e.g. Quality"><label for="test">Test</label><input id="test" required maxlength="48" placeholder="e.g. PCB inspection"><label>Signature (required)</label><canvas id="sig" width="400" height="120"></canvas><button type="button" id="clear">Clear signature</button><p id="terms">I agree to perform the identified test to the best of my ability, follow applicable procedures, record results accurately and impartially, and disclose deviations, limitations, or issues. I understand that this sign-off records my acknowledgment and does not certify a passing result.</p><label><input type="checkbox" id="accept" required> I accept these terms and confirm my signature.</label><button class="primary" type="submit">Generate QR code</button></form><p id="status" role="status"></p><div id="qr"></div><p><small>Self-reported test sign-in, not identity authentication.</small></p><a href="/">Scanner dashboard</a></main><script src="/qrcode.js"></script><script>
-
-const $=id=>document.getElementById(id),c=$('sig'),g=c.getContext('2d');let drawing=false,signed=false;g.lineWidth=2;g.lineCap='round';function point(e){let r=c.getBoundingClientRect();return [(e.clientX-r.left)*c.width/r.width,(e.clientY-r.top)*c.height/r.height]}c.onpointerdown=e=>{drawing=true;$('accept').checked=false;$('qr').replaceChildren();c.setPointerCapture(e.pointerId);g.beginPath();g.moveTo(...point(e))};c.onpointermove=e=>{if(drawing){g.lineTo(...point(e));g.stroke();signed=true}};c.onpointerup=c.onpointercancel=()=>drawing=false;$('clear').onclick=()=>{g.clearRect(0,0,c.width,c.height);signed=false;$('accept').checked=false;$('qr').replaceChildren()};
-$('form').onsubmit=async e=>{e.preventDefault();$('qr').replaceChildren();let operator=$('name').value.trim(),department=$('department').value.trim(),test=$('test').value.trim();if(!operator||!department||!test||!signed||!$('accept').checked){$('status').textContent='Complete all fields, sign, and accept the terms.';return}let btn=e.submitter;btn.disabled=true;try{let timestamp=new Date().toISOString(),r=await fetch('/test-signin',{method:'POST',body:new URLSearchParams({operator,department,test,timestamp,accepted:'1',terms:'TEST-1',signature:c.toDataURL('image/png')})});if(!r.ok)throw Error(await r.text());let id=await r.text(),q=qrcode(1,'M');q.addData(id,'Alphanumeric');q.make();$('qr').innerHTML=q.createImgTag(4,16);$('status').textContent='Signed and saved · '+id+' · '+new Date(timestamp).toLocaleString()}catch(err){$('status').textContent='Unable to save: '+err.message}finally{btn.disabled=false}};
-</script></body></html>
-)WEB";
+static const char SIGN_HTML[] PROGMEM=R"WEB(<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Operator sign-on</title><style>*{box-sizing:border-box}body{margin:0;background:#f4f6f7;color:#202b33;font:13px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{max-width:360px;margin:48px auto;padding:18px;background:white;border:1px solid #dfe4e8;border-radius:8px}h1{font-size:20px;font-weight:650;letter-spacing:-.025em;margin:0 0 14px}label{display:block;font-size:12px;font-weight:550;margin:10px 0 4px}input,button{font:inherit;border:1px solid #dfe4e8;border-radius:5px;padding:7px 9px;min-height:32px}input{width:100%}button{cursor:pointer}button.primary{width:100%;margin-top:14px;background:#17665d;color:#fff;border-color:#17665d;font-weight:600}small{font-size:11px;color:#65717c}#status{overflow-wrap:anywhere}input:focus-visible,button:focus-visible{outline:2px solid #17665d;outline-offset:1px}@media(max-width:420px){main{margin:20px 10px}}</style></head><body><main><h1>Operator sign-on</h1><form id="form"><label for="name">User name</label><input id="name" required maxlength="40" autocomplete="name"><label for="department">Department</label><input id="department" required maxlength="32" placeholder="e.g. Quality"><label for="test">Test</label><input id="test" required maxlength="48" placeholder="e.g. PCB inspection"><button class="primary" type="submit">Start scanning</button></form><p id="status" role="status"></p><div id="qr"></div><p><small>Self-reported test sign-in, not identity authentication.</small></p></main><script>
+document.getElementById('form').onsubmit=async e=>{e.preventDefault();let name=document.getElementById('name').value.trim(),department=document.getElementById('department').value.trim(),test=document.getElementById('test').value.trim();if(!name||!department||!test)return;let session={name,department,test,startedAt:new Date().toISOString()};try{let r=await fetch('/session',{method:'POST',body:new URLSearchParams(session)});if(!r.ok)throw Error(await r.text());sessionStorage.setItem('scanner.session',JSON.stringify(session));location.replace('/')}catch(e){document.getElementById('status').textContent=e.message}};
+</script></body></html>)WEB";

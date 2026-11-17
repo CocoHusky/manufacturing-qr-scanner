@@ -18,7 +18,7 @@ static bool jpegWrite(void *arg,uint16_t x,uint16_t y,uint16_t w,uint16_t h,uint
  if(!data)return true;auto *a=(GrayJPEG*)arg;
  for(int j=0;j<h;j++)for(int i=0;i<w;i++){
  int xx=x+i,yy=y+j;if(xx>=a->x||yy>=a->y)continue;
- int dx=xx*a->w/a->x,dy=yy*a->h/a->y;
+ int dx=xx,dy=yy;
  auto *p=data+3*(j*w+i);a->gray[dy*a->w+dx]=(77*p[0]+150*p[1]+29*p[2])>>8;
  }return true;
 }
@@ -28,14 +28,14 @@ static ZXing::Result decodePolarities(uint8_t *g,int w,int h,const ZXing::Reader
 }
 static NativeResult decodeFrame(camera_fb_t *f){NativeResult result;
  uint32_t t=millis();
- // Preserve full field of view; downsample to bound decoder memory.
- int w=min((int)f->width,640),h=min((int)f->height,480);
+ // Decode the full frame at the selected camera resolution.
+ int w=f->width,h=f->height;
  if(nativeCapacity<(size_t)(w*h)){free(nativeGray);nativeGray=(uint8_t*)heap_caps_malloc(w*h,MALLOC_CAP_SPIRAM|MALLOC_CAP_8BIT);nativeCapacity=nativeGray?w*h:0;}uint8_t *g=nativeGray;
  if(!g){result.error="PSRAM allocation failed";result.ms=millis()-t;return result;}
  GrayJPEG a{f,g,(int)f->width,(int)f->height,w,h};memset(g,255,w*h);
  if(esp_jpg_decode(f->len,JPG_SCALE_NONE,jpegRead,jpegWrite,&a)!=ESP_OK)result.error="JPEG conversion failed";
  else try{
- auto opts=ZXing::ReaderOptions().setFormats(ZXing::BarcodeFormat::QRCode|ZXing::BarcodeFormat::DataMatrix).setTryHarder(true).setTryRotate(true).setTryDownscale(false).setMaxNumberOfSymbols(1);
+ auto opts=ZXing::ReaderOptions().setFormats(ZXing::BarcodeFormat::QRCode|ZXing::BarcodeFormat::DataMatrix).setTryHarder(false).setTryRotate(true).setTryDownscale(false).setMaxNumberOfSymbols(1);
  auto r=decodePolarities(g,w,h,opts);
  if(r.isValid()){
  result.format=ZXing::ToString(r.format()).c_str();auto b=r.bytes();for(auto c:b)result.value+=(char)c;
@@ -47,13 +47,17 @@ static NativeResult decodeFrame(camera_fb_t *f){NativeResult result;
 static void commitNative(const NativeResult& r){
  nativeFrames++;nativeValue=r.value.startsWith("op=")?"":r.value;nativeFormat=r.format;nativeError=r.error;nativeMs=r.ms;
  if(r.value.startsWith("op=")){if(r.value!=lastNative){lastNative=r.value;if(identifyOperator(r.value))signalScan();else nativeError="Invalid or expired operator badge";}return;}
- if(r.value.length()){nativeMissing=0;if(r.value!=lastNative){lastNative=r.value;recordNative(r.format,r.value);if(decodeMode=="device")signalScan();}}
+ if(r.value.length()){nativeMissing=0;if(r.value!=lastNative){lastNative=r.value;if(recordNative(r.format,r.value)&&decodeMode=="device")signalScan();}}
  else{if(!nativeMissing)nativeMissing=millis();if(millis()-nativeMissing>750)lastNative="";}
 }
 static void nativeDecode(camera_fb_t *f){commitNative(decodeFrame(f));}
 static QueueHandle_t decodeJobs=nullptr,decodeDone=nullptr;
 static NativeResult asyncResult;
-static void decodeWorker(void*){camera_fb_t *f;for(;;){if(xQueueReceive(decodeJobs,&f,portMAX_DELAY)==pdTRUE){asyncResult=decodeFrame(f);esp_camera_fb_return(f);uint8_t done=1;xQueueSend(decodeDone,&done,portMAX_DELAY);}}}
+static uint8_t *scanImage=nullptr;
+static size_t scanImageLength=0;
+static uint32_t scanImageSequence=0;
+static camera_fb_t *completedFrame=nullptr;
+static void decodeWorker(void*){camera_fb_t *f;for(;;){if(xQueueReceive(decodeJobs,&f,portMAX_DELAY)==pdTRUE){asyncResult=decodeFrame(f);completedFrame=f;uint8_t done=1;xQueueSend(decodeDone,&done,portMAX_DELAY);}}}
 static bool startWorker(){decodeJobs=xQueueCreate(1,sizeof(camera_fb_t*));decodeDone=xQueueCreate(1,sizeof(uint8_t));return decodeJobs&&decodeDone&&xTaskCreatePinnedToCore(decodeWorker,"native",12288,nullptr,1,nullptr,0)==pdPASS;}
 
 static String nativeSelfTest(){
