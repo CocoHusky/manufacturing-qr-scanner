@@ -62,7 +62,7 @@ flowchart LR
 | Provide audible and visual feedback | Let operators work without constantly looking at a computer screen. |
 | Capture and annotate macro images | Document visible defects, component placement issues and suspected failures for later review. |
 
-These are prototype capabilities; production cycle-time and error-rate improvements have not yet been measured.
+These are prototype capabilities.
 
 
 
