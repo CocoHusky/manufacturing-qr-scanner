@@ -238,10 +238,6 @@ This feedback is designed to reduce screen dependence, uncertainty and missed er
 
 The modified close-focus camera also captures macro-level PCB images for manual inspection and annotation. Preserve the original image and export the marked copy for test review.
 
-| Original macro image | Operator-marked image |
-| --- | --- |
-| ![Original macro image](docs/inspection/macro-original.jpg) | ![Annotated macro image](docs/inspection/macro-annotated.png) |
-
 [Inspection procedure and examples](docs/inspection/README.md) · [Scanner settings, Wi-Fi and OTA guide](docs/settings/README.md)
 
 ![Inspection capture interface with manual annotations](docs/media/screenshots/inspection-capture.png)
