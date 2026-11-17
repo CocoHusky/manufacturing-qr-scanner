@@ -1,5 +1,3 @@
-# Manufacturing & Test Traceability Scanner
-
 ![Manufacturing and test traceability scanner — product overview](docs/media/manufacturing-traceability-overview.png)
 
 Reduce manual data entry, guide manufacturing and test workflows, and capture traceable records.
