@@ -25,6 +25,12 @@ Scan a part, serial or lot number; associate it with the manufacturing record; c
 
 Barcode scanning and live imaging are implemented. Persistent MES records, calibrated macro optics, still-image capture and non-destructive annotation are planned.
 
+## PCB inspection
+
+[![Annotated PCB finding](docs/inspection/pcb-annotated.png)](docs/inspection/README.md)
+
+Operator-reported capacitor short; electrical verification required. [Original image](docs/inspection/pcb-original.png).
+
 ## Bench results
 
 | Marking | Footprint | Payload |
@@ -73,7 +79,8 @@ Prototype runs hot during continuous capture. Stop if excessively hot; use only 
 - [Hardware and firmware](docs/HARDWARE_AND_FIRMWARE.md)
 - [Test report](docs/TEST_REPORT.md) · [Per-target results](docs/MARKED_RESULTS.md) · [Observations CSV](test/observations.csv)
 - Test sheets: [Mixed barcodes](docs/test-sheets/manufacturing_barcode_test.pdf) · [QR density](docs/test-sheets/QR_information_density_test.pdf) · [Data Matrix / PCB](docs/test-sheets/PCB_Data_Matrix_and_QR_Test.pdf)
-- [Verification plan](docs/VERIFICATION_PLAN.md) · [Trial template](test/trial_template.csv)
+- [Verification plan](docs/VERIFICATION_PLAN.md) · [Trial template](test/trial_template.csv) · [Validation CSV](test/validation_template.csv)
+- [Changelog](CHANGELOG.md)
 - [Third-party licenses](docs/THIRD_PARTY.md) · [Superseded report](docs/archive/Scanner_System_Validation_SUPERSEDED.pdf)
 
 ## Next steps
