@@ -29,13 +29,13 @@ coincident=defaultdict(list)
 for i,n in enumerate(names):
     for x,y in groups[n]:coincident[x,y].append(i)
 for i,n in enumerate(names):
-    a.append(f'<polyline points="{" ".join(f"{X(x)},{Y(y)}" for x,y in groups[n])}" fill="none" stroke="{colors[i]}" stroke-width="{7-i*1.6}" stroke-linejoin="round" stroke-linecap="round"/>')
+    a.append(f'<polyline points="{" ".join(f"{X(x)},{Y(y)}" for x,y in groups[n])}" fill="none" stroke="{colors[i]}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>')
 for (x,y),ids in coincident.items():
     for j,i in enumerate(ids):
         dx=(j-(len(ids)-1)/2)*13
         a.append(f'<g><title>{escape(names[i])}: {x} mm, {y} characters</title>{marker(i,X(x)+dx,Y(y))}</g>')
 for i,n in enumerate(names):
     y=148+31*i
-    a.append(f'<path d="M638 {y}H674" stroke="{colors[i]}" stroke-width="3"/>{marker(i,656,y)}<text x="685" y="{y+4}">{escape(n)}</text>')
+    a.append(f'<path d="M638 {y}H674" stroke="{colors[i]}" stroke-width="1.5"/>{marker(i,656,y)}<text x="685" y="{y+4}">{escape(n)}</text>')
 a.append('</g></svg>')
 (root/'docs/figures/capacity.svg').write_text(''.join(a)+'\n')
