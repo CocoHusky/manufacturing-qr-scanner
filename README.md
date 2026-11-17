@@ -22,6 +22,15 @@ Scan existing instructions, component labels and instrument results instead of t
 | Manual review of sequence and duplicates | Depends on application validation | Built-in recipe and duplicate checks |
 | Physical records need digitization | Digital records | Timestamped local journal and JSON export |
 
+For a six-component assembly traveler (device identification, six part/lot/serial records and final confirmation), a rough planning estimate is:
+
+| Documentation activity | Handwritten | Manual computer entry | Embedded scanning |
+| --- | ---: | ---: | ---: |
+| Record and check identifiers | 3–5 min | 2–4 min | 30–60 s |
+| Investigate a missing or incorrect identifier (per incident) | 5–15 min | 2–10 min | 1–5 min if detected at scan; longer for incorrect source labels |
+
+These are illustrative engineering estimates, not measured comparisons. Physical assembly, initial sign-on and label creation are excluded. Investigation time depends on record availability and labeling quality; an incorrect source label can still compromise scan-based traceability. The 47-second recorded demonstration provides a qualitative scanning reference.
+
 The intended benefits are less documentation overhead and fewer manual-entry errors. Comparative time savings and error rates have not yet been measured.
 
 <p align="center">
@@ -33,16 +42,27 @@ The prototype combines an ESP32-CAM, OV5640 camera, controlled white illuminatio
 
 ## Operator experience
 
-| Sign on | Monitor scans |
-| :---: | :---: |
-| <img src="docs/media/operator-sign-on.png" width="230" alt="Operator sign-on"> | Scan the workflow or device code; the dashboard displays the current step, accepted records and corrections. |
+### 1. Operator sign-on
 
-1. Sign on from a computer or mobile browser.
-2. Scan the procedure's Code 128 header to start a recipe.
-3. Follow the printed or digital instructions; present each required item individually.
-4. Listen for acceptance or rejection; correct errors before continuing.
-5. Confirm the original device and close the record.
-6. Export the journal for review or downstream integration.
+<img src="docs/media/operator-sign-on.png" width="300" alt="Operator sign-on">
+
+Enter the operator, department and test context from a computer or mobile browser.
+
+### 2. Start the procedure
+
+Scan the four-digit Code 128 header from the [shared instruction sheet](docs/workflows/instructions.pdf). The station selects the recipe and displays the required steps.
+
+### 3. Verify components
+
+Present each required label. The station captures part numbers, lots, serials and timestamps; accepted components are marked verified. Embedded mode requires no browser interaction between scans.
+
+### 4. Correct errors
+
+A repeated component, unexpected label or wrong step triggers a warning. The verified component count remains unchanged until the correct label is accepted.
+
+### 5. Complete and export
+
+Rescan the original device after all requirements are satisfied. The dashboard shows the completed procedure and the operator can export the journal. See the [assembly demonstration](docs/workflows/01-component-assembly/README.md) for the recorded example.
 
 ```mermaid
 flowchart LR
