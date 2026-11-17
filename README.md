@@ -34,22 +34,6 @@ Manual recording creates two common problems:
 
 Scan existing instructions, component labels and instrument results instead of transcribing them. The scanner checks the expected workflow, provides immediate audible and visual feedback, and stores structured records. After sign-on, Embedded mode does not require a connected computer for each scan.
 
-### How it works
-
-```mermaid
-flowchart LR
- A[Sign on] --> B[Scan recipe header]
- B --> C[Present required label]
- C --> D{Valid for current step?}
- D -->|No| E[Warning tone; retry]
- E --> C
- D -->|Yes| F[Save event; chirp]
- F --> G{All steps complete?}
- G -->|No| C
- G -->|Yes| H[Completion melody]
- H --> I[Export traceability]
-```
-
 ### What the prototype improves
 
 | Prototype capability | Why it matters in manufacturing and testing |
@@ -70,7 +54,23 @@ These are prototype capabilities.
 
 The prototype combines an ESP32 OV5640 camera, controlled white illumination, passive buzzer, Wi-Fi, and local flash storage. The low-cost camera and lens were modified for close-range, macro-level imaging, enabling compact barcode recognition and detailed PCB inspection with the same hardware. Labels can be printed on travelers, PCBs, components, packaging, and fixtures, or displayed on a computer or electronic-paper screen.
 
-**Phone and offline use:** Open the dashboard from a phone or tablet connected to the scanner’s setup access point or the same local Wi-Fi network. This gives operators a mobile interface without a dedicated PC. The scanner does not have a cellular modem: a phone’s cellular-data connection alone cannot reach it. Once a workflow is started, Embedded mode continues scanning, validating steps, and saving records locally without an internet connection or an open browser. Export the journal when the dashboard is reachable again.
+**Phone and offline use:** Open the dashboard from a phone or tablet connected to the scanner’s setup access point or the same local Wi-Fi network. This gives operators a mobile interface without a dedicated PC. Once a workflow is started, Embedded mode continues scanning, validating steps, and saving records locally without an internet connection or an open browser. Export the journal when the dashboard is reachable again.
+
+### How it works
+
+```mermaid
+flowchart LR
+ A[Sign on] --> B[Scan recipe header]
+ B --> C[Present required label]
+ C --> D{Valid for current step?}
+ D -->|No| E[Warning tone; retry]
+ E --> C
+ D -->|Yes| F[Save event; chirp]
+ F --> G{All steps complete?}
+ G -->|No| C
+ G -->|Yes| H[Completion melody]
+ H --> I[Export traceability]
+```
 
 ## Estimated documentation time
 
