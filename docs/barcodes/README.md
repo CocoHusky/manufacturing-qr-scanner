@@ -11,6 +11,14 @@ The symbol format determines how information is encoded; the payload determines 
 
 ![Barcode examples](examples.svg)
 
+## Recognition in operation
+
+| Camera preview | Recognized QR code |
+| --- | --- |
+| ![Small printed QR in camera preview, not decoded in this frame](../media/screenshots/scanner-preview.png) | ![QR code recognized with green outline](../media/screenshots/scanner-detected.png) |
+
+Actual browser captures from the compact QR size-ladder test.
+
 ## Structured label examples
 
 | Record | Example encoded payload |

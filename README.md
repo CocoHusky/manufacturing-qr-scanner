@@ -113,6 +113,14 @@ flowchart LR
 
 [All workflow details and acceptance criteria](docs/workflows/README.md)
 
+### Barcode scanning demonstrations
+
+| Compact marking | QR density | Size ladder |
+| :---: | :---: | :---: |
+| [![Compact marking](docs/media/demo-compact-marking.gif)](docs/media/demo-compact-marking.mp4) | [![Density scanning](docs/media/demo-density-scanning.gif)](docs/media/demo-density-scanning.mp4) | [![Size ladder](docs/media/demo-qr-ladder.gif)](docs/media/demo-qr-ladder.mp4) |
+
+Compact markings, information density and QR size-ladder testing. [Experimental results and test sheets](docs/characterization/README.md).
+
 ## Macro inspection and defect documentation
 
 The modified close-focus camera also captures macro-level PCB images for manual inspection and annotation. Preserve the original image and export the marked copy for test review.
@@ -127,24 +135,11 @@ Export original and annotated images from the browser and associate them with th
 
 ![Examples of Data Matrix, QR, Code 128 and Code 39](docs/barcodes/examples.svg)
 
-| Camera preview | Recognized QR code |
-| --- | --- |
-| ![Small printed QR in camera preview, not decoded in this frame](docs/media/screenshots/scanner-preview.png) | ![QR code recognized with green outline](docs/media/screenshots/scanner-detected.png) |
+Capture device and component identifiers, lots, revisions, equipment, measurements, PASS/FAIL results, data references, operator context and timestamps.
 
-Actual browser captures from the compact QR size-ladder test.
+QR and Data Matrix are supported in both modes. Code 128 starts embedded workflows; Browser mode also reads general Code 128 and Code 39.
 
-| Data | Example |
-| --- | --- |
-| Component identity | Part PCB-001, lot PCB-261101, serial PCB-0025 |
-| Device traveler | ASM-DEV-01, lot ASM-261117, revision A |
-| Equipment | BENCH-007, THERM-009, AGE-008 |
-| Test result | PASS / FAIL, voltage, current, temperature, failure reason |
-| Measurement reference | RUN-0262P |
-| Traceability context | Operator, procedure revision, step and timestamp |
-
-QR and Data Matrix work in both decoding modes. Code 128 starts workflows in Embedded mode while idle; Browser mode additionally supports general Code 128 and Code 39 decoding.
-
-[Supported formats, payload examples and parser details](docs/barcodes/README.md)
+[Supported formats, encoded payload examples and recognition screenshots](docs/barcodes/README.md)
 
 ## Operator experience
 
@@ -234,25 +229,15 @@ Solid paths show the implemented scanner workflow; dotted paths show the propose
 
 ## Optical characterization
 
-Compact markings enable traceability on space-constrained PCBs. Our initial bench observations target QR footprints of 5–15 mm and Data Matrix down to 4 mm.
-
-| Compact marking | QR density | Size ladder |
-| :---: | :---: | :---: |
-| ![Compact marking](docs/media/demo-compact-marking.gif) | ![Density scanning](docs/media/demo-density-scanning.gif) | ![Size ladder](docs/media/demo-qr-ladder.gif) |
-
-| Format | Footprint | Payload / observation |
+| Format | Observed footprint | Reported payload |
 | --- | --- | --- |
-| Data Matrix | 4 × 4 mm | 16 ASCII characters reported read |
-| Data Matrix | 8 × 8 mm | 96 characters reported read |
-| QR | 5 × 5 mm | 16 characters reported read |
-| QR | 10–12 mm | 96-character candidate; 128-character attempt failed |
-| QR-M | 15 × 15 mm | PCB-002 (7 characters) observed read |
+| Data Matrix | 4 × 4 mm | 16 characters |
+| Data Matrix | 8 × 8 mm | 96 characters |
+| QR | 5 × 5 mm | 16 characters |
 
-![Observed payload capacity](docs/figures/capacity.svg)
+Initial bench observations for compact printed markings. A 600 DPI or better print process is a practical starting point for further testing.
 
-A 5 mm QR V1/M code (P:05, four characters) was also recognized. Its nominal 172 µm module pitch corresponds to about four dots per module at 600 DPI. For further testing, use 600 DPI or better, short Data Matrix identifiers on compact PCBs and larger QR labels for richer records.
-
-[Characterization, original test sheets and evidence](docs/characterization/README.md)
+[Full payload capacity chart, size limits, print-resolution calculations and original test sheets](docs/characterization/README.md)
 
 ## Browser vs. Embedded
 
