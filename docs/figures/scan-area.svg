@@ -1,37 +1,37 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 390" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 450" role="img" aria-labelledby="title desc">
 <title id="title">Browser and native scanner fields of view</title>
 <desc id="desc">The browser decoder can use the full camera frame. The native ESP32 decoder reads a fixed center crop measuring 640 by 480 pixels from a 1600 by 1200 image.</desc>
 <style>
  text{font-family:Inter,Arial,sans-serif;fill:#17212b}
  .title{font-size:22px;font-weight:700}.sub{font-size:14px;fill:#536273}.panel{fill:#fff;stroke:#d6dee7;stroke-width:1.5}
  .frame{fill:#f4f7fa;stroke:#8796a8;stroke-width:2}.crop{fill:#d9f0e8;stroke:#0b8a68;stroke-width:3}
- .muted{fill:#9aabba;opacity:.2}.label{font-size:16px;font-weight:700}.small{font-size:13px;fill:#536273}.badge{fill:#0b8a68}
+ .muted{fill:#9aabba;opacity:.24}.label{font-size:16px;font-weight:700}.small{font-size:13px;fill:#536273}
 </style>
-<rect width="900" height="390" rx="16" fill="#f7f9fb"/>
+<rect width="900" height="450" rx="16" fill="#f7f9fb"/>
 <text x="28" y="38" class="title">What the decoder can read</text>
 <text x="28" y="62" class="sub">The preview shows the whole frame. The active scan area depends on decoder mode.</text>
 
-<rect x="24" y="82" width="414" height="274" rx="12" class="panel"/>
+<rect x="24" y="82" width="414" height="342" rx="12" class="panel"/>
 <text x="44" y="112" class="label">Browser decoder</text>
 <text x="44" y="133" class="small">Full frame by default · center region optional</text>
-<rect x="58" y="153" width="346" height="174" rx="4" class="frame"/>
-<path d="M83 177h34v34H83zM82 177h13v13H82zM106 177h11v11h-11zM82 200h11v11H82zM96 190h7v7h-7z" fill="#17212b"/>
-<path d="M360 270h28v28h-28zM360 270h11v11h-11zM377 270h11v11h-11zM360 287h11v11h-11z" fill="#17212b"/>
-<rect x="160" y="202" width="52" height="52" rx="3" fill="#fff" stroke="#0b8a68" stroke-width="2"/>
-<path d="M169 211h15v15h-15zM169 211h6v6h-6zM178 211h6v6h-6zM169 220h6v6h-6zM190 211h13v13h-13zM190 211h5v5h-5zM198 211h5v5h-5zM190 219h5v5h-5z" fill="#17212b"/>
-<line x1="232" y1="228" x2="290" y2="228" stroke="#0b8a68" stroke-width="2"/>
-<text x="298" y="233" class="small">all areas scanned</text>
-<text x="58" y="345" class="small">Camera image: full frame</text>
+<rect x="68" y="151" width="320" height="240" rx="4" class="frame"/>
+<path d="M86 171h34v34H86zM86 171h13v13H86zM109 171h11v11h-11zM86 194h11v11H86zM99 184h7v7h-7z" fill="#17212b"/>
+<path d="M340 335h28v28h-28zM340 335h11v11h-11zM357 335h11v11h-11zM340 352h11v11h-11z" fill="#17212b"/>
+<rect x="210" y="239" width="30" height="30" rx="2" fill="#fff" stroke="#0b8a68" stroke-width="2"/>
+<path d="M216 245h8v8h-8zM216 245h4v4h-4zM228 245h6v6h-6zM216 257h6v6h-6z" fill="#17212b"/>
+<text x="68" y="411" class="small">Camera image and default scan region: full 4:3 frame</text>
 
-<rect x="462" y="82" width="414" height="274" rx="12" class="panel"/>
+<rect x="462" y="82" width="414" height="342" rx="12" class="panel"/>
 <text x="482" y="112" class="label">Native ESP32 decoder</text>
-<text x="482" y="133" class="small">Fixed 640 × 480 center crop · not adjustable</text>
-<rect x="496" y="153" width="346" height="174" rx="4" class="frame"/>
-<rect x="496" y="153" width="103" height="174" class="muted"/>
-<rect x="739" y="153" width="103" height="174" class="muted"/>
-<rect x="599" y="197" width="140" height="87" class="crop"/>
-<path d="M514 177h34v34h-34zM514 177h13v13h-13zM537 177h11v11h-11zM514 200h11v11h-11zM527 190h7v7h-7z" fill="#8796a8"/>
-<path d="M784 270h28v28h-28zM784 270h11v11h-11zM801 270h11v11h-11zM784 287h11v11h-11z" fill="#8796a8"/>
-<path d="M646 219h28v28h-28zM646 219h11v11h-11zM663 219h11v11h-11zM646 236h11v11h-11z" fill="#17212b"/>
-<text x="496" y="345" class="small">At 1600 × 1200, crop covers 16% of image area</text>
+<text x="482" y="133" class="small">Fixed center crop · 640 × 480 pixels · not adjustable</text>
+<rect x="506" y="151" width="320" height="240" rx="4" class="frame"/>
+<rect x="506" y="151" width="96" height="240" class="muted"/>
+<rect x="730" y="151" width="96" height="240" class="muted"/>
+<rect x="602" y="151" width="128" height="72" class="muted"/>
+<rect x="602" y="319" width="128" height="72" class="muted"/>
+<rect x="602" y="223" width="128" height="96" class="crop"/>
+<path d="M520 171h34v34h-34zM520 171h13v13h-13zM543 171h11v11h-11zM520 194h11v11h-11zM533 184h7v7h-7z" fill="#8796a8"/>
+<path d="M778 335h28v28h-28zM778 335h11v11h-11zM795 335h11v11h-11zM778 352h11v11h-11z" fill="#8796a8"/>
+<path d="M650 254h28v28h-28zM650 254h11v11h-11zM667 254h11v11h-11zM650 271h11v11h-11z" fill="#17212b"/>
+<text x="506" y="411" class="small">At 1600 × 1200, the crop covers 16% of the image area</text>
 </svg>
