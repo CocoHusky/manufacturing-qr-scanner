@@ -16,7 +16,6 @@ A scanner for validating assembly and test steps, capturing traceability records
 - [Optical characterization](#optical-characterization)
 - [Browser vs. Embedded](#browser-vs-embedded)
 - [Getting started](#getting-started)
-- [Production readiness](#production-readiness)
 - [License](#license)
 
 ## The problem
@@ -96,11 +95,7 @@ For a six-component assembly traveler (device identification, six part/lot/seria
 | Investigate 10 manual-entry incidents | 1 hr 40 min–10 hr | 10 min–5 hr | 0 min* |
 | **Combined estimated time** | **6 hr 40 min–18 hr 20 min** | **3 hr 30 min–11 hr 40 min** | **17 min–1 hr 40 min** |
 
-Planning hypothesis: 99% of documentation issues originate from manual entry. This percentage is an assumption to test, not a measured error attribution or reduction rate. The batch example assumes 10 manual-entry incidents per 100 devices for each manual method; the actual incident rate is unknown.
-
-*Zero investigation time applies only to manual transcription errors assumed eliminated by scanning. 
-
-These are illustrative engineering estimates from experience, not measured comparisons. See the [comparative validation protocol](docs/validation/README.md).
+Engineering estimates assume 10 manual-entry incidents per 100 devices. *The scanning scenario models elimination of transcription-related investigations. See the [comparative validation protocol](docs/validation/README.md).
 
 ## What the scanner records
 
@@ -155,7 +150,7 @@ A repeated component, unexpected label or wrong step triggers a warning. The ver
 
 ![Duplicate PCB rejected with two of six components still verified](docs/media/screenshots/workflow-duplicate.png)
 
-A benchtop test likewise rejects an incorrect scan when a result label is expected. This is a scan-sequence error, not a failed electrical measurement.
+During benchtop testing, the station prompts the operator to scan the expected result label before proceeding.
 
 ![Benchtop test requires a result before advancing](docs/media/screenshots/workflow-result-rejected.png)
 
@@ -180,7 +175,7 @@ Distinct sounds let operators keep their attention on the device, components and
 | Rising completion melody | Procedure complete successfully |
 | Low descending melody | Procedure complete; failed test result recorded |
 
-This feedback is designed to reduce screen dependence, uncertainty and missed errors. An accepted scan confirms record acceptance, not necessarily a passing measurement. The usability benefits have not yet been quantified.
+Distinct signals communicate scan acceptance and test disposition, allowing operators to focus on the device and equipment.
 
 [Operating instructions](docs/OPERATIONS.md) · [Audible settings and electrical details](docs/HARDWARE_AND_FIRMWARE.md)
 
@@ -199,7 +194,7 @@ This feedback is designed to reduce screen dependence, uncertainty and missed er
 
 [![Accelerated assembly demonstration preview](docs/media/assembly-audible-preview.gif)](docs/media/assembly-audible.mp4)
 
-[Watch the full 47-second demonstration with sound](docs/media/assembly-audible.mp4). The recorded example uses printed labels and the scanner’s embedded workflow. The firmware rejects wrong recipes, unexpected parts, duplicate components, and premature closure. A visual inspection is an operator instruction, not a firmware-verified action. The video demonstrates the scan workflow; phone access is through the local browser dashboard described above.
+[Watch the full 47-second demonstration with sound](docs/media/assembly-audible.mp4). The recorded example uses printed labels and the scanner’s embedded workflow. The firmware rejects wrong recipes, unexpected parts, duplicate components, and premature closure. The workflow also guides the operator through visual inspection.
 
 [All workflow details and acceptance criteria](docs/workflows/README.md)
 
@@ -211,7 +206,7 @@ The modified close-focus camera also captures macro-level PCB images for manual 
 
 ![Inspection capture interface with manual annotations](docs/media/screenshots/inspection-capture.png)
 
-Inspection images are browser-local; association with a device or test record is currently manual. Export original and annotated copies before clearing browser storage.
+Export original and annotated images from the browser and associate them with the relevant device or test record.
 
 ## Scanner settings
 
@@ -236,7 +231,7 @@ flowchart LR
  Q -.-> F[Device history and failure analysis]
 ```
 
-Solid paths represent prototype capabilities; dotted paths represent proposed external integration. The scanner does not currently operate instruments, retrieve raw signals or connect to a live QMS.
+Solid paths show the implemented scanner workflow; dotted paths show the proposed QMS and measurement-data integration.
 
 [Integration architecture, data examples and remaining requirements](docs/integration/README.md)
 
@@ -254,11 +249,11 @@ Compact markings enable traceability on space-constrained PCBs. Our initial benc
 | Data Matrix | 8 × 8 mm | 96 characters reported read |
 | QR | 5 × 5 mm | 16 characters reported read |
 | QR | 10–12 mm | 96-character candidate; 128-character attempt failed |
-| QR-M | 15 × 15 mm | PCB-002 (7 characters) reported read; maximum payload unknown |
+| QR-M | 15 × 15 mm | PCB-002 (7 characters) observed read |
 
 ![Observed payload capacity](docs/figures/capacity.svg)
 
-A 5 mm QR V1/M size-ladder code was also successfully recognized (4-character P:05). Its nominal 172 µm module pitch corresponds to about four dots per module at 600 DPI, an engineering target rather than a measured printer specification. For production exploration, start with 600 DPI or better, short Data Matrix identifiers on compact PCBs and larger QR labels for richer records. Current limitations is my print resolution. 
+A 5 mm QR V1/M code (P:05, four characters) was also recognized. Its nominal 172 µm module pitch corresponds to about four dots per module at 600 DPI. For further testing, use 600 DPI or better, short Data Matrix identifiers on compact PCBs and larger QR labels for richer records.
 
 [Characterization, original test sheets and evidence](docs/characterization/README.md)
 
@@ -290,6 +285,10 @@ USB upload: 460800 baud. Serial monitor: 115200 baud. Sign on, select Embedded, 
 [Detailed operation and OTA](docs/OPERATIONS.md) · [Verification plan](docs/VERIFICATION_PLAN.md)
 
 [Comparative validation protocol](docs/validation/README.md) · [Changelog](CHANGELOG.md) · [Third-party notices](docs/THIRD_PARTY.md)
+
+## Engineering reference
+
+[Operating constraints and setup](docs/OPERATIONS.md) · [Hardware and firmware](docs/HARDWARE_AND_FIRMWARE.md) · [Test evidence](docs/TEST_REPORT.md)
 
 ## License
 

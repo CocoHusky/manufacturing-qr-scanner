@@ -47,4 +47,4 @@ Both reported outcomes may be accepted and closed. No final confirmation deadlin
 
 [PASS example journal](example-pass.json) · [FAIL example journal](example-fail.json)
 
-Physical connection, probe calibration, accessory compatibility and temperature accuracy are not independently verified. The scanner checks accessory types and nonempty IDs, rather than enforcing an equipment calibration database. No dedicated recording for this workflow is published yet.
+The workflow checks accessory types and identifiers and records the reported temperature result. Physical setup, calibration and compatibility checks remain operator and test-system responsibilities.

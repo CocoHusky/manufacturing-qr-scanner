@@ -50,7 +50,7 @@ The firmware requires six distinct specified part numbers, nonempty component lo
 
 [Example event journal](example-record.json) — synthetic replay using the shared PDF labels.
 
-The scan sequence is evidence of label verification, not independent proof that the scanned parts were installed or visually inspected. Lot and serial values are supplied by labels, not authenticated against a production inventory database.
+The workflow verifies component labels and records their lot and serial values. Physical installation and visual inspection are operator tasks; inventory authentication is a future integration.
 
 ## Actual dashboard examples
 

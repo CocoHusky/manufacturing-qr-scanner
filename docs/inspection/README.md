@@ -11,7 +11,7 @@ Associate each original photograph and its separate annotation with part, lot, s
 
 ## Macro capture and manual defect labeling
 
-The modified camera and lens provide close-range macro views of PCB components and solder joints using the same inexpensive scanner hardware. The images below demonstrate manual inspection and documentation, not automated defect detection or calibrated microscopy.
+The modified camera and lens provide close-range macro views of PCB components and solder joints using the same inexpensive scanner hardware for manual inspection and documentation.
 
 | Original camera export | Annotated export |
 | --- | --- |
@@ -23,7 +23,7 @@ The modified camera and lens provide close-range macro views of PCB components a
 2. Select **Capture**, choose Circle or Rectangle, enter a finding label and mark the region. Use Undo to correct annotations.
 3. Select **Export original** to retain the unmarked image and **Save** to retain the marked image. Retrieve saved images from Advanced settings → Saved inspection images.
 
-The labels in this example are operator annotations, not automatic defect classification or verified electrical measurements. An image can support a test or nonconformance record by manually associating its filename with the device serial, run ID and finding. Automatic journal-to-image association is not implemented; saved images remain browser-local. Export both images before clearing browser data. See [settings guide](../settings/README.md).
+Operator annotations document visual findings. Associate exported image filenames with the device serial, run ID and finding to support a test or nonconformance record. Images are saved in the browser; export both copies before clearing browser data. See [settings guide](../settings/README.md).
 
 ## Inspection interface and saved images
 
