@@ -2,6 +2,20 @@
 
 An ESP32-CAM scanner for validating assembly and test steps, capturing traceability records, and reducing manual data entry. Operate it from a phone, tablet, or computer browser; after setup, scans can be processed and saved locally without internet access.
 
+## Contents
+
+- [The problem](#the-problem)
+- [The solution](#the-solution)
+- [Operator experience](#operator-experience)
+- [Manufacturing and test examples](#manufacturing-and-test-examples)
+- [Macro inspection and defect documentation](#macro-inspection-and-defect-documentation)
+- [From device history to failure investigation](#from-device-history-to-failure-investigation)
+- [Optical characterization](#optical-characterization)
+- [Browser vs. Embedded](#browser-vs-embedded)
+- [Getting started](#getting-started)
+- [Production readiness](#production-readiness)
+- [License](#license)
+
 ## The problem
 
 For every device, teams need to connect its identity, component lots, test setup, and result.
