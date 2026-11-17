@@ -107,7 +107,22 @@ flowchart LR
  H --> I[Export traceability]
 ```
 
+### Audible feedback and operator usability
+
+Distinct sounds let operators keep their attention on the device, components and test equipment instead of repeatedly checking a screen. A short confirmation chirp provides immediate reassurance that each scan was accepted, while a rising completion melody gives a clear sense of progress and accomplishment. Lower warning tones draw attention to rejected scans, and a separate descending melody distinguishes a completed failed test from a passing one.
+
 ![Audible feedback patterns](docs/figures/feedback-tones.svg)
+
+| Sound | Operator meaning |
+| --- | --- |
+| Two rising notes | Procedure started; ready to scan |
+| Short high chirp | Scan accepted; continue |
+| Single low beep | Scan rejected; correct the item or sequence |
+| Two low beeps | Confirmation timed out |
+| Rising completion melody | Procedure complete successfully |
+| Low descending melody | Procedure complete; failed test result recorded |
+
+This feedback is designed to reduce screen dependence, uncertainty and missed errors. An accepted scan confirms record acceptance, not necessarily a passing measurement. The usability benefits have not yet been quantified.
 
 [Operating instructions](docs/OPERATIONS.md) · [Audible settings and electrical details](docs/HARDWARE_AND_FIRMWARE.md)
 
