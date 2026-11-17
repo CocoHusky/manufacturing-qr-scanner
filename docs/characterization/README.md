@@ -18,7 +18,7 @@ The initial goal is a practical marking envelope for prototype assembly and test
 
 These are qualitative operator-reported observations, not guaranteed limits. Exact encoding, error correction, quiet zone and print quality affect payload density. A compact identity code can reference a richer external record rather than embedding every field.
 
-The current laser printer constrains module fidelity; 4 mm Data Matrix with 16 ASCII characters is the smallest demonstrated compact result in this setup. This does not establish a camera-only resolution limit. Contrast, print resolution, focus distance, full-frame field of view, exposure and motion have not been separated. Direct marking on manufactured PCBs remains unqualified.
+The camera and lens were modified for close-range macro imaging to make compact printed symbols occupy more of the sensor frame. This is a low-cost optical approach rather than digital enlargement alone. Working distance, optical magnification and depth of field remain uncharacterized. The current laser printer constrains module fidelity; 4 mm Data Matrix with 16 ASCII characters is the smallest demonstrated compact result in this setup. This does not establish a camera-only resolution limit. Contrast, print resolution, focus distance, full-frame field of view, exposure and motion have not been separated. Direct marking on manufactured PCBs remains unqualified.
 
 [Plotted observations (CSV)](optical-results.csv). The chart shows the four density series; short-code observations remain in the table and CSV. Coincident markers are offset horizontally for readability only; lines use the exact coordinates. Evidence status is retained in the CSV.
 

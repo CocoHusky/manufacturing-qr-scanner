@@ -4,6 +4,8 @@ Operator-reported bench tests, November 16–17, 2026. Supersedes earlier report
 
 ## Method
 
+The prototype uses a low-cost camera and lens modified for close-range macro imaging of compact markings and PCB features. The optical modification is part of the tested setup; its exact magnification, working distance and resolving power have not been independently measured.
+
 Original test sheets: QR sizes 4,5,6,8,10,12,15 mm with 4,16,32,64,96,128 ASCII characters; alphanumeric M, alphanumeric L and byte M. Data Matrix square ECC200 sizes 4–15 mm, payloads 7,16,32,64,96. Print at 100% scale, cover adjacent codes, present one at a time. Exact repeats, distance, printer DPI, exposure, light and camera parameters were not recorded for each sample. Results are qualitative successful reads, not measured reliability.
 
 QR V has 17+4V active modules and a four-module quiet zone on each edge: module pitch (µm) = 1000 × side_mm/(25+4V). Data Matrix with N modules and one-module quiet zone: pitch = 1000 × side_mm/(N+2). Area = side_mm². ASCII character count equals bytes in these samples.

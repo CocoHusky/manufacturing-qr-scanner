@@ -11,6 +11,8 @@ Associate each original photograph and its separate annotation with part, lot, s
 
 ## Macro capture and manual defect labeling
 
+The modified camera and lens provide close-range macro views of PCB components and solder joints using the same inexpensive scanner hardware. The images below demonstrate manual inspection and documentation, not automated defect detection or calibrated microscopy.
+
 | Original camera export | Annotated export |
 | --- | --- |
 | ![Original macro capture](macro-original.jpg) | ![Manual annotation export](macro-annotated.png) |

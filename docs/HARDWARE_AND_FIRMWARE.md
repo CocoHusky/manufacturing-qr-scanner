@@ -27,6 +27,8 @@ CPU speed (80/160/240 MHz), Wi-Fi power saving, JPEG quality (8–30), illuminat
 
 ## Camera and illumination
 
+The low-cost OV5640 camera and lens were modified for close-range macro imaging. This optical adaptation supports both compact barcode reading and visual inspection of small PCB features without a separate microscope or industrial imaging system for the demonstrated tasks. Working distance, magnification, depth of field and optical resolution have not yet been quantified.
+
 - OV5640 camera clock: 20 MHz; JPEG capture with two PSRAM frame buffers when available.
 - White LED: GPIO4, 20 kHz PWM. Defaults to 10% scan brightness and 50% confirmation brightness for 80 ms.
 - Red LED: GPIO33, active-low workflow warning.

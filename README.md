@@ -65,7 +65,7 @@ The intended benefits are less documentation overhead and fewer manual-entry err
 <img src="docs/media/prototype-side.jpg" width="275" alt="Scanner side">
 </p>
 
-The prototype combines an ESP32 OV5640 camera, controlled white illumination, passive buzzer, Wi-Fi, and local flash storage. Labels can be printed on travelers, PCBs, components, packaging, and fixtures, or displayed on a computer or electronic-paper screen.
+The prototype combines an ESP32 OV5640 camera, controlled white illumination, passive buzzer, Wi-Fi, and local flash storage. The low-cost camera and lens were modified for close-range, macro-level imaging, enabling compact barcode recognition and detailed PCB inspection with the same hardware. Labels can be printed on travelers, PCBs, components, packaging, and fixtures, or displayed on a computer or electronic-paper screen.
 
 **Phone and offline use:** Open the dashboard from a phone or tablet connected to the scanner’s setup access point or the same local Wi-Fi network. This gives operators a mobile interface without a dedicated PC. The scanner does not have a cellular modem: a phone’s cellular-data connection alone cannot reach it. Once a workflow is started, Embedded mode continues scanning, validating steps, and saving records locally without an internet connection or an open browser. Export the journal when the dashboard is reachable again.
 
@@ -147,7 +147,7 @@ This feedback is designed to reduce screen dependence, uncertainty and missed er
 
 ## Macro inspection and defect documentation
 
-The scanner also captures close-up PCB images for manual inspection and annotation. Preserve the original image and export the marked copy for test review.
+The modified close-focus camera also captures macro-level PCB images for manual inspection and annotation. Preserve the original image and export the marked copy for test review.
 
 | Original macro image | Operator-marked image |
 | --- | --- |
