@@ -1,0 +1,97 @@
+Manufacturing & Test Traceability Scanner
+Noncommercial Source License, version 1.0
+
+Copyright (c) 2026 Alex Burton
+
+1. Scope
+
+These terms apply to the copyright holder's original software contributions
+in this repository, including firmware, browser application, scripts, test
+code and configuration, unless a file expressly states other terms.
+Third-party components, including portions incorporated into generated
+assets or modified upstream code, retain their applicable licenses and
+notices. Nothing in this license restricts rights granted independently
+under those licenses.
+
+Documentation, photographs, videos and other non-software materials are
+governed by LICENSE-DOCS.md.
+
+2. Permitted use
+
+Subject to these terms, the copyright holder grants a worldwide,
+royalty-free, nonexclusive copyright license to use, reproduce, build,
+modify and distribute the covered software for:
+
+(a) personal study, hobby projects, independent experimentation and
+    noncommercial research by individuals, not acting for a business; and
+
+(b) noncommercial teaching and academic research by educational
+    institutions and their students or researchers.
+
+These permissions include building a scanner for such purposes. Research
+for or on behalf of a business, including commercial product development
+or evaluation, requires separate written permission. Funding alone does
+not determine whether academic research is commercial; its purpose and
+the intended beneficiary must be considered.
+
+3. Commercial and organizational use
+
+Without separate written permission from the copyright holder, the
+covered software may not be used, copied, modified or distributed for a
+commercial purpose, including:
+
+- internal business evaluation, proof of concept, benchmarking or pilot;
+- manufacturing, quality management, product development or testing for
+  a business, even if the software or scanner is not sold;
+- a paid service, commercial product, consulting engagement, or
+  distribution for commercial advantage; or
+- work performed on behalf of a business, whether paid or unpaid.
+
+A business may seek written evaluation permission before running or
+implementing the covered software. Commercial deployment requires a
+separate commercial license. Public viewing of the repository and its
+demonstrations is not prohibited by these terms. Rights under applicable
+law and the hosting platform's terms remain unaffected.
+
+4. Redistribution and attribution
+
+Permitted noncommercial redistribution, including modified versions,
+must retain the copyright notice, a copy of these terms, applicable
+third-party notices, and attribution to Alex Burton and the original
+repository (https://github.com/CocoHusky/manufacturing-qr-scanner).
+Clearly identify material changes. Redistribution of the covered
+software and modifications to it must preserve these noncommercial
+restrictions; recipients receive the license directly from the copyright
+holder for the covered original contributions. Do not imply endorsement
+by the original author. Independent original works are not subject to
+these terms merely because they interoperate with the software.
+
+5. Reserved rights and separate licenses
+
+All rights not expressly granted are reserved. The copyright holder may
+grant separate evaluation or commercial licenses on agreed terms.
+No trademark, patent or other intellectual property license is granted
+by implication. These terms do not transfer ownership of contributions
+made by others. Commercial licensing of those contributions requires
+appropriate rights from their owners.
+
+6. Termination
+
+Permission under this license terminates upon violation of its
+conditions. The copyright holder may reinstate permission in writing.
+Termination does not affect independently granted third-party rights.
+
+7. Disclaimer
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING MERCHANTABILITY, FITNESS FOR A PARTICULAR
+PURPOSE AND NONINFRINGEMENT. TO THE EXTENT PERMITTED BY LAW, THE
+COPYRIGHT HOLDER SHALL NOT BE LIABLE FOR CLAIMS, DAMAGES OR OTHER
+LIABILITY ARISING FROM THE SOFTWARE OR ITS USE.
+
+This is an engineering prototype, not a validated manufacturing,
+quality-management or safety-critical system. Users are responsible for
+appropriate verification, safety, security and regulatory compliance.
+
+Nothing in these terms limits exceptions or rights available under
+applicable law, including fair use where applicable.

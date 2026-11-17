@@ -176,3 +176,14 @@ This is an engineering prototype, not a qualified manufacturing or regulated QMS
 Next: timed comparisons of manual and scanned workflows, controlled optical and reliability tests, durable run recovery, actual instrument integration and authenticated QMS connectivity.
 
 [Comparative validation protocol](docs/validation/README.md) · [Changelog](CHANGELOG.md) · [Third-party notices](docs/THIRD_PARTY.md)
+
+## License
+
+Original software is **source-available for noncommercial use**, including
+personal projects and noncommercial academic teaching and research.
+Modification and noncommercial redistribution are permitted with attribution
+and preservation of the license terms. Corporate evaluation requires written
+permission; internal commercial use and commercial deployment require a
+separate license.
+
+[Software license](LICENSE) · [Evaluation and commercial licensing](COMMERCIAL_LICENSE.md) · [Documentation and media rights](LICENSE-DOCS.md) · [Third-party notices](docs/THIRD_PARTY.md)
