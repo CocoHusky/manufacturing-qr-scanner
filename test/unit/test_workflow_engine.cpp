@@ -11,9 +11,10 @@ static int warnings=0,completed=0,timeouts=0;
 static String jsString(const String& s){return String("\"")+s+"\"";}
 static String utcNow(){return "2026-11-17T00:00:00Z";}
 static bool appendJournal(const String&){return writeOK;}
+static void signalStart(){}
 static void signalWarning(){warnings++;}
 static void signalTimeout(){timeouts++;}
-static void signalComplete(){completed++;}
+static void signalComplete(bool=false){completed++;}
 #include "../../src/workflow_engine.h"
 static void start(const char* id){workflow=WorkflowState();workflow.recipe=id;workflow.active=true;workflow.run="test";assert(workflow.step==1);}
 static bool scan(const String& label){return workflowScan("WF="+workflow.recipe+";"+label);}

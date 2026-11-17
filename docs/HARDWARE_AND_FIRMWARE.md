@@ -35,7 +35,7 @@ CPU speed (80/160/240 MHz), Wi-Fi power saving, JPEG quality (8–30), illuminat
 
 ## Board constraints
 
-Camera signals use GPIOs 0, 5, 18, 19, 21–27, 32, 34–39. GPIO0 is a boot strap and camera clock output; the onboard GPIO0 button corrupted camera frames during operation and is not a runtime trigger. GPIO13 is assigned to an active-high motor driver for workflow errors only; do not drive a motor directly from a GPIO. A physical trigger is not implemented. Future SD storage must use 1-bit mode (GPIO2, 14, 15) to preserve GPIO13 and the illumination output. Verify electrical compatibility before connecting the card.
+Camera signals use GPIOs 0, 5, 18, 19, 21–27, 32, 34–39. GPIO0 is a boot strap and camera clock output; the onboard GPIO0 button corrupted camera frames during operation and is not a runtime trigger. GPIO13 is assigned to a passive buzzer using hardware PWM (LEDC channel 6), independently of camera and illumination timers. Use a suitable driver if the transducer exceeds GPIO electrical limits. A physical trigger is not implemented. Future SD storage must use 1-bit mode (GPIO2, 14, 15) to preserve GPIO13 and the illumination output. Verify electrical compatibility before connecting the card.
 
 ## Operational limits
 

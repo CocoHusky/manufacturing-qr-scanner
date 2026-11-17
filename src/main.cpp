@@ -39,7 +39,7 @@ static bool fresh(const String &s) {
   seen.push_back({s,now}); return true;
 }
 void setup(){
- Serial.begin(115200);esp_ota_img_states_t state;if(esp_ota_get_state_partition(esp_ota_get_running_partition(),&state)==ESP_OK&&state==ESP_OTA_IMG_PENDING_VERIFY){otaTrial=true;trialStart=millis();} pinMode(33,OUTPUT);digitalWrite(33,HIGH);ledcSetup(whitePWMChannel,20000,10);ledcAttachPin(4,whitePWMChannel);setLight(true);digitalWrite(buzzerPin,LOW);pinMode(buzzerPin,OUTPUT);delay(1000);
+ Serial.begin(115200);esp_ota_img_states_t state;if(esp_ota_get_state_partition(esp_ota_get_running_partition(),&state)==ESP_OK&&state==ESP_OTA_IMG_PENDING_VERIFY){otaTrial=true;trialStart=millis();} pinMode(33,OUTPUT);digitalWrite(33,HIGH);ledcSetup(whitePWMChannel,20000,10);ledcAttachPin(4,whitePWMChannel);setLight(true);buzzerConfigure();ledcAttachPin(buzzerPin,buzzerPWMChannel);buzzerOff();delay(1000);
  Serial.printf("\nQR scanner | PSRAM %u bytes\n",ESP.getPsramSize());
  auto &c=cameraCfg;
  c.ledc_channel=LEDC_CHANNEL_0;c.ledc_timer=LEDC_TIMER_0;

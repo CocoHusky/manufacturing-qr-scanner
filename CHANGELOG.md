@@ -1,5 +1,9 @@
 # Changelog
 
+## Audible feedback
+- Passive buzzer on GPIO13 with independent hardware PWM, persistent base pitch, literal 0–10% duty control, warning duration and timeout gap.
+- Distinct workflow start, accepted scan, rejected scan, timeout, PASS and FAIL sounds; individual sound previews in Advanced settings.
+
 ## Instruction revision 02
 - Versioned Code 128 start labels; no PC interaction required after sign-on.
 - PASS/FAIL result disposition, measurement fields, failure reason and data reference.

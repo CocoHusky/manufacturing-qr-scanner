@@ -13,7 +13,7 @@ Sign on first. Scan the Code 128 header or start the corresponding recipe from W
 
 Labels contain `WF`, `STEP`, `TYPE`, and `SN` or `ID`. Result labels also contain `DEVICE`, `BENCH`, `DATA`, `STATUS`, measurement values and `REASON`. The instrument's PASS/FAIL disposition is recorded, not inferred from a successful scan. The example measurement limits are illustrative.
 
-The approved PDF footer predates implementation of scan-to-start, result disposition and feedback patterns. These features are now included in the firmware. Physical scan and haptic performance still require bench verification.
+The approved PDF footer predates implementation of scan-to-start, result disposition and feedback patterns. These features are now included in the firmware. The printed vibration legend is superseded by audible feedback: rising start tones, correct-scan chirps, low rejection and timeout beeps, and distinct completion melodies for PASS and FAIL. Physical scan and acoustic performance still require bench verification.
 
 ## ASM-01 — component assembly
 
@@ -89,4 +89,4 @@ One device per active run. Exposure is measured between the two chamber scans. A
 
 ## Validation status
 
-Host regression tests replay the actual PDF payloads for all six valid paths (including both measurement outcomes), step skipping, duplicate parts, mismatched identity, timeout, elapsed exposure and storage failure. Physical scanning, motor response, power interruption recovery and production reliability require hardware qualification.
+Host regression tests replay the actual PDF payloads for all six valid paths (including both measurement outcomes), step skipping, duplicate parts, mismatched identity, timeout, elapsed exposure and storage failure. Physical scanning, buzzer response, power interruption recovery and production reliability require hardware qualification.

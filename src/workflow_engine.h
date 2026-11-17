@@ -42,7 +42,7 @@ static bool startWorkflow(const String& id,const String& raw){
  if(!sessionStarted.length()){workflow.message="Sign on first";return false;}
  if(workflow.active&&!workflow.complete&&!workflow.expired){workflow.message="Active run: finish or cancel before starting another";return false;}
  WorkflowState prior=workflow;workflow=WorkflowState();workflow.recipe=id;workflow.run=String((unsigned long)workflowNow())+"-"+String(bootId);workflow.active=true;workflow.message="Scan first required label";
- if(!workflowLog("started",raw,"")){workflow=prior;workflow.message="Unable to save new run";return false;}return true;
+ if(!workflowLog("started",raw,"")){workflow=prior;workflow.message="Unable to save new run";return false;}signalStart();return true;
 }
 static bool workflowReject(const String& raw,const String& message){
  workflow.error=true;workflow.message=message;workflowLog("rejected",raw,message);signalWarning();return false;
@@ -109,5 +109,5 @@ static bool workflowScan(const String& raw,const String& fmt=""){
  next.step=at+1;if(type=="PART"&&next.partMask!=63)next.step=at;
  next.error=false;next.complete=closing;if(closing)next.step=at;if(next.complete)next.deadline=0;
  next.message=next.complete?(next.disposition.length()?"Workflow complete — test "+next.disposition:String("Workflow complete")):("Accepted; scan next required label");
- workflow=next;if(closing)signalComplete();return true;
+ workflow=next;if(closing)signalComplete(workflow.disposition=="FAIL");return true;
 }

@@ -13,7 +13,7 @@ A compact ESP32-CAM station for identifying components, verifying assembly and t
 | :---: | :---: |
 | <img src="docs/media/operator-sign-on.png" width="250" alt="Operator sign-on"> | <img src="docs/media/manufacturing-parser.png" width="550" alt="Manufacturing label parsing"> |
 
-Sign on, then scan the instruction-sheet header to launch its recipe or use Scanner for general identification. Correct scans flash the white LED; sequence errors vibrate. The final device scan closes the traceability record, including failed measurements. Export JSON for review.
+Sign on, then scan the instruction-sheet header to launch its recipe or use Scanner for general identification. Correct scans give a short chirp and white LED flash; sequence errors produce a low beep. The final device scan closes the traceability record, including failed measurements. Export JSON for review.
 
 ```mermaid
 flowchart LR
@@ -77,7 +77,7 @@ flowchart TD
 - Both decoders: QR and Data Matrix; Code 128 workflow headers while idle. Browser also supports Code 39. VGA default, up to 1600 × 1200. No intentional center crop.
 - Browser: live preview. Embedded: standalone recognition and last decoded still image.
 - 192 KiB flash journal; 50 recent native records in RAM; browser-local rules and annotated images.
-- GPIO4 illumination, GPIO33 status LED, GPIO13 motor driver. Password-protected dual-slot OTA.
+- GPIO4 illumination, GPIO33 status LED, GPIO13 passive buzzer output. Password-protected dual-slot OTA.
 
 [Hardware and firmware](docs/HARDWARE_AND_FIRMWARE.md) · [Operating instructions](docs/OPERATIONS.md) · [PCB inspection example](docs/inspection/README.md)
 
