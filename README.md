@@ -16,7 +16,9 @@ A camera-based reader for QR and Data Matrix labels on components and test artic
 - Local scan history, searchable records, CSV/JSON export, and a bounded device archive.
 - Full-resolution still capture with simple image annotation.
 
-The browser preview shows the full camera frame. Browser decoding defaults to the full frame and also supports a smaller center region. Native ESP32 decoding currently checks only a fixed center crop; see [field of view and resolution](docs/HARDWARE_AND_FIRMWARE.md#recognition-pipeline).
+The browser preview shows the full camera frame. Browser decoding defaults to the full frame and also supports a smaller center region. Native ESP32 decoding currently checks only a fixed center crop.
+
+![Browser and native decoder scan areas](docs/figures/scan-area.svg)
 
 ## What the prototype does not do
 
