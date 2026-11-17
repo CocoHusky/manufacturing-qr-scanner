@@ -4,9 +4,9 @@ Embedded, document-driven verification for prototype assembly, manufacturing and
 
 ## The problem
 
-Quality management depends on knowing where a device came from, which components and lots were used, what tests it completed, and where its results can be found. These relationships support failure investigation and improvements throughout development and manufacturing.
+Quality management depends on knowing where a device came from, which components and lots were used, what tests it completed, and where its results can be found.
 
-Two recurring challenges with handwritten travelers and manual computer entry are:
+Two recurring challenges with handwritten  and manual computer entries or manufacturing or functional tests are:
 
 | **Time spent recording information** | **Human error from manual entry** |
 | --- | --- |
