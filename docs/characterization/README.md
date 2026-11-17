@@ -20,7 +20,7 @@ These are qualitative operator-reported observations, not guaranteed limits. Exa
 
 The current laser printer constrains module fidelity; 4 mm Data Matrix with 16 ASCII characters is the smallest demonstrated compact result in this setup. This does not establish a camera-only resolution limit. Contrast, print resolution, focus distance, full-frame field of view, exposure and motion have not been separated. Direct marking on manufactured PCBs remains unqualified.
 
-[Plotted observations (CSV)](optical-results.csv). The 15 mm short-code point is intentionally separate from the density series.
+[Plotted observations (CSV)](optical-results.csv). The chart shows the four density series; short-code observations remain in the table and CSV. Coincident markers are offset horizontally for readability only; lines use the exact coordinates. Evidence status is retained in the CSV.
 
 ## Printing and module resolution
 

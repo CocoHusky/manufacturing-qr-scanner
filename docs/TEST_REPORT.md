@@ -44,7 +44,7 @@ PCB-002 compact comparison (seven characters): Data Matrix 5,8,10 mm pass, 15 mm
 
 ![Payload vs footprint](figures/capacity.svg)
 
-Filled points are reported reads; open points are inferred or conditional. Dashed lines connect observations.
+Solid lines connect reported, inferred and conditional values; they are visual guides, not validated limits. Coincident markers are separated horizontally for readability. Exact values and evidence status are in the [CSV](characterization/optical-results.csv). Short-code reads at 5 and 15 mm remain in the table and CSV.
 
 ## Examples
 
