@@ -6,6 +6,7 @@ An ESP32-CAM scanner for validating assembly and test steps, capturing traceabil
 
 - [The problem](#the-problem)
 - [The solution](#the-solution)
+- [Estimated documentation time](#estimated-documentation-time)
 - [Operator experience](#operator-experience)
 - [Manufacturing and test examples](#manufacturing-and-test-examples)
 - [Macro inspection and defect documentation](#macro-inspection-and-defect-documentation)
@@ -31,11 +32,33 @@ Manual recording creates two common problems:
 
 Scan existing instructions, component labels and instrument results instead of transcribing them. The scanner checks the expected workflow, provides immediate audible and visual feedback, and stores structured records. After sign-on, Embedded mode does not require a connected computer for each scan.
 
-| Handwritten records | Manual computer entry | Scan-driven verification |
-| --- | --- | --- |
-| Copy identifiers onto a traveler | Type identifiers into a digital form | Present a label to the scanner |
-| Manual review of sequence and duplicates | Depends on application validation | Built-in recipe and duplicate checks |
-| Physical records need digitization | Digital records | Timestamped local journal and JSON export |
+![Circular scan-guided workflow: start a procedure, scan the device and parts, record test details, and save a local traceability record](docs/figures/solution-workflow.png)
+
+### What the prototype improves
+
+| Prototype capability | Improvement |
+| --- | --- |
+| Scan device, component, and lot labels | Capture identifiers without retyping each one |
+| Check recipe, sequence, and duplicate scans | Flag unexpected or repeated labels and prevent premature completion |
+| Record bench, operator, result, and timestamp | Keep test context linked to the device record |
+| Save a local journal and export JSON | Retain records offline and export them when connected |
+
+These are prototype capabilities; production cycle-time and error-rate improvements have not yet been measured.
+
+
+
+<p align="center">
+<img src="docs/media/prototype-front.jpg" width="275" alt="Scanner front">
+<img src="docs/media/prototype-side.jpg" width="275" alt="Scanner side">
+</p>
+
+The prototype combines an ESP32 OV5640 camera, controlled white illumination, passive buzzer, Wi-Fi, and local flash storage. The low-cost camera and lens were modified for close-range, macro-level imaging, enabling compact barcode recognition and detailed PCB inspection with the same hardware. Labels can be printed on travelers, PCBs, components, packaging, and fixtures, or displayed on a computer or electronic-paper screen.
+
+**Phone and offline use:** Open the dashboard from a phone or tablet connected to the scanner’s setup access point or the same local Wi-Fi network. This gives operators a mobile interface without a dedicated PC. The scanner does not have a cellular modem: a phone’s cellular-data connection alone cannot reach it. Once a workflow is started, Embedded mode continues scanning, validating steps, and saving records locally without an internet connection or an open browser. Export the journal when the dashboard is reachable again.
+
+
+
+## Estimated documentation time
 
 For a six-component assembly traveler (device identification, six part/lot/serial records and final confirmation), a rough planning estimate is:
 
@@ -57,17 +80,6 @@ Planning hypothesis: 99% of documentation issues originate from manual entry. Th
 *Zero investigation time applies only to manual transcription errors assumed eliminated by scanning. Incorrect source labels, scan retries and other errors still require investigation. Estimates exclude physical assembly, initial setup and label creation.
 
 These are illustrative engineering estimates from experience, not measured comparisons. See the [comparative validation protocol](docs/validation/README.md).
-
-The intended benefits are less documentation overhead and fewer manual-entry errors.
-
-<p align="center">
-<img src="docs/media/prototype-front.jpg" width="275" alt="Scanner front">
-<img src="docs/media/prototype-side.jpg" width="275" alt="Scanner side">
-</p>
-
-The prototype combines an ESP32 OV5640 camera, controlled white illumination, passive buzzer, Wi-Fi, and local flash storage. The low-cost camera and lens were modified for close-range, macro-level imaging, enabling compact barcode recognition and detailed PCB inspection with the same hardware. Labels can be printed on travelers, PCBs, components, packaging, and fixtures, or displayed on a computer or electronic-paper screen.
-
-**Phone and offline use:** Open the dashboard from a phone or tablet connected to the scanner’s setup access point or the same local Wi-Fi network. This gives operators a mobile interface without a dedicated PC. The scanner does not have a cellular modem: a phone’s cellular-data connection alone cannot reach it. Once a workflow is started, Embedded mode continues scanning, validating steps, and saving records locally without an internet connection or an open browser. Export the journal when the dashboard is reachable again.
 
 ## Operator experience
 
