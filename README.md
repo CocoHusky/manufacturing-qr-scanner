@@ -54,37 +54,6 @@ flowchart TD
     S --> S1["Barcode capture<br/>Operator guidance<br/>Macro inspection<br/>Local records and export"]
 ```
 
-### Business objectives
-
-| Objective | Business value |
-| --- | --- |
-| **Efficiency** | Spend less time recording information and more time building and testing devices. |
-| **Data integrity** | Reduce transcription errors, missing records and incorrect associations. |
-| **Quality management** | Improve procedure adherence and record consistency. |
-| **Failure investigation** | Trace issues to affected devices, component lots, equipment and test results. |
-
-### Manufacturing and testing applications
-
-| Manufacturing | Testing |
-| --- | --- |
-| Device serial number, lot and revision | Device under test and procedure revision |
-| Component part numbers, lots and serial numbers | Test benches, fixtures, probes and power supplies |
-| Required component verification and assembly confirmation | Test sequence, exposure timing and device confirmation |
-| Visual inspection and manufacturing history | Measurements, PASS/FAIL, failure reasons and data references |
-
-### Shared capabilities
-
-| Capability | How it supports manufacturing and testing |
-| --- | --- |
-| Data capture | Barcode recognition, operator information and automatic timestamps. |
-| Workflow verification | Required scan steps, duplicate detection and prevention of premature closure. |
-| Operator feedback | Audible and visual confirmation of progress, errors and completion. |
-| Visual documentation | Low-cost macro imaging and manual defect annotation. |
-| Standalone operation | Embedded scanning and local record storage without a continuously connected browser. |
-| Structured data export | Device history, failure investigation and future QMS integration. |
-
-The prototype verifies scanned information and records reported test outcomes; physical assembly and instrument accuracy are not independently verified.
-
 <p align="center">
 <img src="docs/media/prototype-front.jpg" width="275" alt="Scanner front">
 <img src="docs/media/prototype-side.jpg" width="275" alt="Scanner side">
