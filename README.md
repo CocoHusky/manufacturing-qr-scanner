@@ -15,8 +15,10 @@ ESP32-CAM and OV5640 scanner for component identification, lot traceability and 
 ## Features
 
 - QR, Data Matrix and linear barcode recognition in the browser.
-- Experimental standalone QR and Data Matrix decoding using native ZXing-C++.
-- Decoder comparison, searchable manufacturing history, CSV/JSON export and local part lookup.
+- Embedded QR and Data Matrix decoding using ZXing-C++.
+- Browser and Embedded operating modes, searchable manufacturing history, CSV/JSON export and local part lookup.
+- Test sign-in with name, department, test, handwritten signature, acknowledgment and compact 15 mm record QR.
+- Persistent local archive, camera standby and dual-slot firmware update layout.
 - Adjustable color JPEG resolution, scan rate, CPU frequency, Wi-Fi power saving and LED PWM.
 
 ## Manufacturing workflow
@@ -65,8 +67,7 @@ The 128-character QR failed. Dimensions include quiet zones. Results are from pr
 | Mode | Processing |
 |---|---|
 | Browser | ZXing-WASM on PC or phone |
-| Standalone | Native QR/Data Matrix on ESP32 |
-| Compare | Both engines using the same JPEG |
+| Embedded | Native QR/Data Matrix on ESP32 |
 
 Native recognition uses a central crop up to 640 × 480 pixels. Native recent history holds 50 entries in RAM; both engines can append raw records to the device archive. Native physical read limits remain unverified. Manufacturing rules and the part lookup are saved in browser storage.
 
@@ -80,6 +81,10 @@ Native recognition uses a central crop up to 640 × 480 pixels. Native recent hi
 
 Prototype runs hot during continuous capture. Stop if excessively hot; use only on a trusted local network.
 
+## Operator and firmware updates
+
+[Operating instructions](docs/OPERATIONS.md) cover test sign-in, signed inspection records and password-protected dual-slot OTA.
+
 ## Documentation
 
 - [Hardware and firmware](docs/HARDWARE_AND_FIRMWARE.md)
@@ -89,10 +94,29 @@ Prototype runs hot during continuous capture. Stop if excessively hot; use only 
 - [Changelog](CHANGELOG.md)
 - [Third-party licenses](docs/THIRD_PARTY.md) · [Superseded report](docs/archive/Scanner_System_Validation_SUPERSEDED.pdf)
 
-## Next steps
+## Roadmap: manufacturing test automation
 
-- Validate native recognition, minimum marking size and ±5% dimensional tolerance.
-- Measure power, temperature, scan latency and standby savings.
-- Validate UXGA capture, operator sign-off and archive retention; add physical trigger.
-- Qualify actual PCB markings and review security/licensing before release.
-- OTA requires a smaller firmware or larger flash with dual application slots.
+The scanner is intended to identify the unit under test, associate it with a test procedure, trigger the appropriate fixture, and preserve measurements and inspection evidence under one traceable record.
+
+```mermaid
+flowchart LR
+ A[Operator sign-in] --> B[Scan unit serial or lot]
+ B --> C[Resolve test recipe]
+ C --> D[Trigger test fixture]
+ D --> E[Acquire measurements]
+ E --> F[Evaluate acceptance criteria]
+ F --> G[Save result and inspection evidence]
+ G --> H[Sync to manufacturing database]
+```
+
+| Priority | Planned capability | Automation benefit |
+|---|---|---|
+| 1 | Fixed camera mount, controlled illumination and physical trigger | Repeatable identification and hands-free acquisition |
+| 2 | Unit ID, test ID, fixture ID and run ID | Link each measurement and image to a specific unit and test run |
+| 3 | Versioned test recipes and fixture API (HTTP, serial or MQTT) | Automatically select and execute the correct procedure |
+| 4 | Test limits, calibration status and pass/fail rules | Consistent decisions with recorded evidence |
+| 5 | External database, image storage and offline sync | Durable manufacturing history and MES integration |
+| 6 | Automated retries, interlocks and exception handling | Safe recovery, rework routing and duplicate prevention |
+| 7 | Validation, throughput and reliability testing | Quantify repeatability before deployment |
+
+Future work also includes thermal and power characterization, optical qualification on production markings, measured scan latency, verified OTA recovery and production access controls. The sign-in acknowledgment is self-reported; it is not authenticated identity or a regulated electronic signature. The roadmap describes planned functionality, not implemented fixture control.

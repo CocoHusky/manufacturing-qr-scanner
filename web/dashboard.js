@@ -3,20 +3,22 @@ function loadLocal(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{
 let rules=loadLocal('scanner.rules',[]),parts=loadLocal('scanner.parts',{}),nativeSeen=new Set(),nativeBoot='',nativeLastCount=0,nativeFrameCount=0;
 let trials=[],trial=null;
 function parseRecord(r){let p=T.parse(r.raw,rules),id=p.fields.part||p.fields.id||'';let desc=Object.prototype.hasOwnProperty.call(parts,id)?parts[id]:'';return {...r,parsed:p,description:typeof desc==='string'?desc:''}}
-function addRecord(r){logs.unshift(parseRecord(r));scanTotal++;renderLog();if(r.engine==='Browser')fetch('/record',{method:'POST',body:new URLSearchParams({raw:r.raw,format:r.format,time:r.time})}).then(async q=>{if(!q.ok)$('diagnostics').textContent='Archive: '+await q.text()}).catch(e=>$('diagnostics').textContent='Archive write failed')}
+let loggedOperator='';
+function addRecord(r){if(r.raw.startsWith('op=')){fetch('/operator-scan',{method:'POST',body:new URLSearchParams({raw:r.raw})}).then(async q=>{if(!q.ok)$('info').textContent=await q.text();await controls()});return}r.operator=r.operator||loggedOperator;logs.unshift(parseRecord(r));scanTotal++;renderLog();if(r.engine==='Browser')fetch('/record',{method:'POST',body:new URLSearchParams({raw:r.raw,format:r.format,time:r.time})}).then(async q=>{if(!q.ok)$('diagnostics').textContent='Archive: '+await q.text()}).catch(e=>$('diagnostics').textContent='Archive write failed')}
 function item(r){let li=document.createElement('li'),head=document.createElement('strong');head.textContent=(r.time?new Date(r.time).toLocaleString():'Device uptime '+r.uptime+' ms')+' | '+r.engine+' | '+r.format;li.append(head);
  let p=r.parsed;for(const [k,v] of Object.entries(p.fields)){let row=document.createElement('div');row.textContent=k+' — '+v;li.append(row)}
- if(r.description){let row=document.createElement('div');row.textContent=r.description;li.append(row)}
+ if(r.operator){let row=document.createElement('div');row.textContent='Operator — '+r.operator;li.append(row)}if(r.description){let row=document.createElement('div');row.textContent=r.description;li.append(row)}
  if(p.warnings.length){let w=document.createElement('div');w.style.color='#a65a00';w.textContent=p.warnings.join('; ');li.append(w)}
- let details=document.createElement('details'),s=document.createElement('summary'),pre=document.createElement('pre');s.textContent=p.type+' · raw data';pre.style.whiteSpace='pre-wrap';pre.textContent=r.raw;details.append(s,pre);li.append(details);return li}
+ if((p.fields.signature||p.fields.id)&&/^SIG-[a-f0-9]{16}$/i.test(p.fields.signature||p.fields.id)){let b=document.createElement('button');b.textContent='View sign-off';b.onclick=async()=>{let q=await fetch('/signature?id='+encodeURIComponent(p.fields.signature||p.fields.id));if(!q.ok){b.textContent=await q.text();return}let x=await q.json(),d=document.createElement('div');d.textContent=[x.operator,x.department||x.part,x.test||x.action,x.time].join(' | ');if(x.signature&&x.signature.startsWith('data:image/png;base64,')){let im=document.createElement('img');im.src=x.signature;im.style.maxWidth='100%';d.append(im)}li.append(d);b.disabled=true};li.append(b)}let details=document.createElement('details'),s=document.createElement('summary'),pre=document.createElement('pre');s.textContent=p.type+' · raw data';pre.style.whiteSpace='pre-wrap';pre.textContent=r.raw;details.append(s,pre);li.append(details);return li}
 function renderStructured(){const q=$('searchLog').value.toLowerCase();$('scanTotal').textContent=scanTotal;$('scanLog').replaceChildren(...logs.filter(r=>JSON.stringify(r).toLowerCase().includes(q)).slice(0,100).map(item))}
 function downloadFile(name,content,type){let u=URL.createObjectURL(new Blob([content],{type})),a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)}
 function syncNative(d){if(d.boot!==nativeBoot||d.count<nativeLastCount){nativeSeen.clear();nativeBoot=d.boot}nativeLastCount=d.count;nativeFrameCount=d.nativeFrames;
- for(const r of (d.records||[]).slice().reverse()){let k=d.boot+':'+r.id;if(nativeSeen.has(k))continue;nativeSeen.add(k);addRecord({engine:'ESP32',format:r.format,raw:r.raw,time:r.time||null,uptime:r.uptime})}
+ for(const r of (d.records||[]).slice().reverse()){let k=d.boot+':'+r.id;if(nativeSeen.has(k))continue;nativeSeen.add(k);addRecord({engine:'ESP32',format:r.format,raw:r.raw,time:r.time||null,uptime:r.uptime,operator:r.operator})}
  if(nativeSeen.size>500){nativeSeen=new Set((d.records||[]).map(r=>d.boot+':'+r.id))}
 }
 function configureTrace(){
  $('searchLog').oninput=renderLog;
+ $('operatorLogout').onclick=async()=>{await fetch('/operator-logout',{method:'POST'});await controls()};
  $('initStorage').onclick=async()=>{if(!confirm('Initialize the unmounted archive partition? Existing data in that partition may be erased.'))return;let r=await fetch('/storage-init',{method:'POST',body:new URLSearchParams({confirm:'INITIALIZE'})});if(!r.ok)$('diagnostics').textContent=await r.text();else await controls()};
  $('autoStandby').onchange=()=>setStandby('auto='+($('autoStandby').checked?'1':'0'));
  $('nativeRate').onchange=()=>setStandby('fps='+$('nativeRate').value);
@@ -43,4 +45,8 @@ function finishTrial(){if(!trial)return;clearTimeout(trial.timer);let want=trial
 
 let diagLoaded=false;
 async function setStandby(q){try{let r=await fetch('/standby?'+q,{method:'POST'});if(!r.ok)throw Error(await r.text());diagLoaded=false;await controls()}catch(e){$('diagnostics').textContent=e.message}}
-function updateDiagnostics(d){$('initStorage').hidden=d.journalReady;if(!diagLoaded){$('autoStandby').checked=d.autoStandby;$('nativeRate').value=Math.round(1000/d.nativePeriod);diagLoaded=true}$('diagnostics').textContent=(d.asleep?'Standby':'Camera active')+' | Heap '+d.heap+' B | PSRAM '+d.psram+' B | Uptime '+Math.round(d.uptime/1000)+' s | '+(d.journalReady?'Archive ready':'Archive unavailable')+(d.journalError?' | '+d.journalError:'')}
+function updateDiagnostics(d){loggedOperator=d.operator||'';$('operatorStatus').textContent=d.operatorName?'Operator: '+d.operatorName:'No operator';$('initStorage').hidden=d.journalReady;if(!diagLoaded){$('autoStandby').checked=d.autoStandby;$('nativeRate').value=Math.round(1000/d.nativePeriod);diagLoaded=true}$('diagnostics').textContent=(d.asleep?'Standby':'Camera active')+' | Heap '+d.heap+' B | PSRAM '+d.psram+' B | Uptime '+Math.round(d.uptime/1000)+' s | '+(d.journalReady?'Archive ready':'Archive unavailable')+(d.journalError?' | '+d.journalError:'')}
+
+async function readPolarities(im,effort){
+ return ZXingWASM.readBarcodes(im,{formats:[],tryHarder:effort!=='fast',tryRotate:true,tryInvert:true,tryDownscale:effort==='deep',maxNumberOfSymbols:1});
+}

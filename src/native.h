@@ -1,5 +1,6 @@
 #pragma once
 #include <ReadBarcode.h>
+#include "native_fixtures.h"
 #include <ReaderOptions.h>
 #include <esp_jpg_decode.h>
 #include <esp_heap_caps.h>
@@ -21,6 +22,9 @@ static bool jpegWrite(void *arg,uint16_t x,uint16_t y,uint16_t w,uint16_t h,uint
  }return true;
 }
 struct NativeResult{String value,format,error;uint32_t ms=0;};
+static ZXing::Result decodePolarities(uint8_t *g,int w,int h,const ZXing::ReaderOptions& opts){
+ return ZXing::ReadBarcode(ZXing::ImageView(g,w,h,ZXing::ImageFormat::Lum),opts);
+}
 static NativeResult decodeFrame(camera_fb_t *f){NativeResult result;
  uint32_t t=millis();
  // Center crop at most 640x480 to bound memory, retaining native pixel pitch.
@@ -31,7 +35,7 @@ static NativeResult decodeFrame(camera_fb_t *f){NativeResult result;
  if(esp_jpg_decode(f->len,JPG_SCALE_NONE,jpegRead,jpegWrite,&a)!=ESP_OK)result.error="JPEG conversion failed";
  else try{
  auto opts=ZXing::ReaderOptions().setFormats(ZXing::BarcodeFormat::QRCode|ZXing::BarcodeFormat::DataMatrix).setTryHarder(true).setTryRotate(true).setTryDownscale(false).setMaxNumberOfSymbols(1);
- auto r=ZXing::ReadBarcode(ZXing::ImageView(g,w,h,ZXing::ImageFormat::Lum),opts);
+ auto r=decodePolarities(g,w,h,opts);
  if(r.isValid()){
  result.format=ZXing::ToString(r.format()).c_str();auto b=r.bytes();for(auto c:b)result.value+=(char)c;
  }
@@ -40,7 +44,8 @@ static NativeResult decodeFrame(camera_fb_t *f){NativeResult result;
 }
 
 static void commitNative(const NativeResult& r){
- nativeFrames++;nativeValue=r.value;nativeFormat=r.format;nativeError=r.error;nativeMs=r.ms;
+ nativeFrames++;nativeValue=r.value.startsWith("op=")?"":r.value;nativeFormat=r.format;nativeError=r.error;nativeMs=r.ms;
+ if(r.value.startsWith("op=")){if(r.value!=lastNative){lastNative=r.value;if(identifyOperator(r.value))signalScan();else nativeError="Invalid or expired operator badge";}return;}
  if(r.value.length()){nativeMissing=0;if(r.value!=lastNative){lastNative=r.value;recordNative(r.format,r.value);if(decodeMode=="device")signalScan();}}
  else{if(!nativeMissing)nativeMissing=millis();if(millis()-nativeMissing>750)lastNative="";}
 }
@@ -49,3 +54,15 @@ static QueueHandle_t decodeJobs=nullptr,decodeDone=nullptr;
 static NativeResult asyncResult;
 static void decodeWorker(void*){camera_fb_t *f;for(;;){if(xQueueReceive(decodeJobs,&f,portMAX_DELAY)==pdTRUE){asyncResult=decodeFrame(f);esp_camera_fb_return(f);uint8_t done=1;xQueueSend(decodeDone,&done,portMAX_DELAY);}}}
 static bool startWorker(){decodeJobs=xQueueCreate(1,sizeof(camera_fb_t*));decodeDone=xQueueCreate(1,sizeof(uint8_t));return decodeJobs&&decodeDone&&xTaskCreatePinnedToCore(decodeWorker,"native",12288,nullptr,1,nullptr,0)==pdPASS;}
+
+static String nativeSelfTest(){
+ String out="[";for(int j=0;j<4;j++){int i=j%2;bool inverse=j>=2;
+ const char *matrix=i?dmMatrix:qrMatrix;int w=i?dmW:qrW,h=i?dmH:qrH;
+ const char *expected=i?"LOT-TEST-02":"PCB-TEST-01";
+ int width=w*5+40,height=h*5+40;
+ uint8_t *buf=(uint8_t*)heap_caps_malloc(width*height,MALLOC_CAP_SPIRAM|MALLOC_CAP_8BIT);
+ bool pass=false;uint32_t t=millis();if(buf){memset(buf,255,width*height);for(int y=0;y<h*5;y++)for(int x=0;x<w*5;x++)buf[(y+20)*width+x+20]=matrix[(y/5)*w+x/5]=='1'?0:255;
+ if(inverse)for(int k=0;k<width*height;k++)buf[k]=255-buf[k];try{auto r=decodePolarities(buf,width,height,ZXing::ReaderOptions().setFormats(i?ZXing::BarcodeFormat::DataMatrix:ZXing::BarcodeFormat::QRCode));auto b=r.bytes();pass=r.isValid()&&b.size()==strlen(expected)&&memcmp(b.data(),expected,b.size())==0;}catch(...){}free(buf);}
+ if(j)out+=",";out+="{\"format\":"+jsString(i?"DataMatrix":"QRCode")+",\"inverse\":"+(inverse?"true":"false")+",\"pass\":"+(pass?"true":"false")+",\"ms\":"+String(millis()-t)+"}";
+ }return out+"]";
+}

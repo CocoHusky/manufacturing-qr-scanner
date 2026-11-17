@@ -1,6 +1,10 @@
 # Changelog
 
 ## Development
+- Dual-slot OTA layout and gzip browser decoder assets.
+- Simple test sign-in, required signature and acknowledgment, compact record QR and archive lookup.
+- Simplified Browser and Embedded selector.
+- Native QR/Data Matrix fixture self-test.
 - Standby/wake, asynchronous standalone decoder, native FPS control and diagnostics.
 - Bounded LittleFS archive, UXGA still capture and operator signature QR page.
 - Manufacturing payload parser, custom rules, part lookup and searchable CSV/JSON history.
