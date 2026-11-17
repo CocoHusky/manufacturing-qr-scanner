@@ -25,6 +25,12 @@ Scan a part, serial or lot number; associate it with the manufacturing record; c
 
 Barcode scanning, preview-frame capture and circle/label annotation are implemented. Persistent local records are supported; MES integration and calibrated macro optics remain planned.
 
+## Manufacturing data parsing
+
+![ISO/IEC 15434 Data Matrix parsing](docs/media/manufacturing-parser-redacted.png)
+
+ISO/IEC 15434 Format 06 fields extracted from a component label. Original payload and identifiers redacted.
+
 ## PCB inspection
 
 [![Annotated PCB finding](docs/inspection/pcb-annotated.png)](docs/inspection/README.md)
