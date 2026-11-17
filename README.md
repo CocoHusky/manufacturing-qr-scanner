@@ -1,6 +1,8 @@
 # Manufacturing & Test Traceability Scanner
 
-A low-cost embedded scanner that reduces manual data entry, verifies manufacturing and test workflows, and links devices, components, equipment and results into traceable records.
+![Manufacturing and test traceability scanner — product overview](docs/media/manufacturing-traceability-overview.png)
+
+Reduce manual data entry, guide manufacturing and test workflows, and capture traceable records.
 
 ## Contents
 
