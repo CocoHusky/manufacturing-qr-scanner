@@ -69,7 +69,7 @@ The 128-character QR failed. Dimensions include quiet zones. Results are from pr
 | Browser | ZXing-WASM on PC or phone |
 | Embedded | Native QR/Data Matrix on ESP32 |
 
-Native recognition uses a central crop up to 640 × 480 pixels. Native recent history holds 50 entries in RAM; both engines can append raw records to the device archive. Native physical read limits remain unverified. Manufacturing rules and the part lookup are saved in browser storage.
+Embedded recognition uses the full camera field of view, downsampled to at most 640 × 480 pixels. Native recent history holds 50 entries in RAM; both engines can append raw records to the device archive. Native physical read limits remain unverified. Manufacturing rules and the part lookup are saved in browser storage.
 
 ## Setup
 

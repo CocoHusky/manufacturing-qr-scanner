@@ -17,8 +17,9 @@ static size_t jpegRead(void *arg,size_t i,uint8_t *buf,size_t n){
 static bool jpegWrite(void *arg,uint16_t x,uint16_t y,uint16_t w,uint16_t h,uint8_t *data){
  if(!data)return true;auto *a=(GrayJPEG*)arg;
  for(int j=0;j<h;j++)for(int i=0;i<w;i++){
- int xx=x+i,yy=y+j;if(xx<a->x||yy<a->y||xx>=a->x+a->w||yy>=a->y+a->h)continue;
- auto *p=data+3*(j*w+i);a->gray[(yy-a->y)*a->w+xx-a->x]=(77*p[0]+150*p[1]+29*p[2])>>8;
+ int xx=x+i,yy=y+j;if(xx>=a->x||yy>=a->y)continue;
+ int dx=xx*a->w/a->x,dy=yy*a->h/a->y;
+ auto *p=data+3*(j*w+i);a->gray[dy*a->w+dx]=(77*p[0]+150*p[1]+29*p[2])>>8;
  }return true;
 }
 struct NativeResult{String value,format,error;uint32_t ms=0;};
@@ -27,11 +28,11 @@ static ZXing::Result decodePolarities(uint8_t *g,int w,int h,const ZXing::Reader
 }
 static NativeResult decodeFrame(camera_fb_t *f){NativeResult result;
  uint32_t t=millis();
- // Center crop at most 640x480 to bound memory, retaining native pixel pitch.
+ // Preserve full field of view; downsample to bound decoder memory.
  int w=min((int)f->width,640),h=min((int)f->height,480);
  if(nativeCapacity<(size_t)(w*h)){free(nativeGray);nativeGray=(uint8_t*)heap_caps_malloc(w*h,MALLOC_CAP_SPIRAM|MALLOC_CAP_8BIT);nativeCapacity=nativeGray?w*h:0;}uint8_t *g=nativeGray;
  if(!g){result.error="PSRAM allocation failed";result.ms=millis()-t;return result;}
- GrayJPEG a{f,g,((int)f->width-w)/2,((int)f->height-h)/2,w,h};memset(g,255,w*h);
+ GrayJPEG a{f,g,(int)f->width,(int)f->height,w,h};memset(g,255,w*h);
  if(esp_jpg_decode(f->len,JPG_SCALE_NONE,jpegRead,jpegWrite,&a)!=ESP_OK)result.error="JPEG conversion failed";
  else try{
  auto opts=ZXing::ReaderOptions().setFormats(ZXing::BarcodeFormat::QRCode|ZXing::BarcodeFormat::DataMatrix).setTryHarder(true).setTryRotate(true).setTryDownscale(false).setMaxNumberOfSymbols(1);

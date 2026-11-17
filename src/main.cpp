@@ -93,12 +93,23 @@ static bool cameraWake(){
  afReady=af.start(camSensor)&&af.focusInit()==0;focusState=afReady?"AF firmware ready":"AF unavailable";
  asleep=false;lastActivity=millis();applyBrightness(ledOn?idleBrightness:0);return true;
 }
+static void applyPendingResolution(){
+ if(workerBusy||!pendingResolution.length())return;
+ String v=pendingResolution;
+ if(asleep&&!cameraWake()){resolutionError="Camera wake failed";pendingResolution="";return;}
+ framesize_t sz=v=="qvga"?FRAMESIZE_QVGA:v=="cif"?FRAMESIZE_CIF:v=="vga"?FRAMESIZE_VGA:v=="svga"?FRAMESIZE_SVGA:v=="uxga"?FRAMESIZE_UXGA:FRAMESIZE_XGA;
+ auto *sensor=esp_camera_sensor_get();
+ if(!sensor||sensor->set_framesize(sensor,sz)!=0)resolutionError="Camera setting failed";
+ else{scanResolution=v;for(int i=0;i<2;i++){auto *f=esp_camera_fb_get();if(f)esp_camera_fb_return(f);}lastActivity=millis();}
+ pendingResolution="";
+}
 void loop(){
  networkLoop();
  checkOtaTrial();
  static String cmd;while(Serial.available()){char c=Serial.read();if(c=='\n'||c=='\r'){if(cmd=="OTAKEY")Serial.println("OTAKEY="+otaPassword);else if(cmd.startsWith("OPADD ")){int split=cmd.indexOf(' ',6);if(split>6&&!registerOperator(cmd.substring(6,split),cmd.substring(split+1)))Serial.println("Operator registration failed");}else if(cmd.startsWith("OPDEL ")){String id=cmd.substring(6);if(validOperatorId(id)){prefs.remove(("n"+id).c_str());prefs.remove(("k"+id).c_str());if(activeOperator==id){activeOperator="";activeOperatorName="";}Serial.println("Operator revoked");}}cmd="";}else if(cmd.length()<120)cmd+=c;}
 
  uint8_t done=0;if(workerBusy&&xQueueReceive(decodeDone,&done,0)==pdTRUE){commitNative(asyncResult);workerBusy=false;nativeDoneAt=millis();}
+ if(!otaActive)applyPendingResolution();
  if(!otaTrial&&!otaActive&&decodeMode=="device"&&camStatus=="Ready"&&!asleep&&!workerBusy&&!whiteUntil&&millis()-nativeLast>=nativePeriod&&millis()-nativeDoneAt>=80){nativeLast=millis();auto *f=esp_camera_fb_get();if(f){if(workerAvailable){workerBusy=true;if(xQueueSend(decodeJobs,&f,0)!=pdTRUE){workerBusy=false;esp_camera_fb_return(f);}}else{nativeDecode(f);esp_camera_fb_return(f);}}}
  if(!otaTrial&&!otaActive&&autoStandby&&decodeMode!="device"&&!workerBusy&&!asleep&&millis()-lastActivity>=standbyDelay)cameraSleep();
  if(redUntil&&(int32_t)(millis()-redUntil)>=0){digitalWrite(33,HIGH);redUntil=0;}

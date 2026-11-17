@@ -38,7 +38,7 @@ IO0 is a boot strap and active camera clock output. Pressing the onboard IO0 but
 | Browser | ZXing-WASM 3.1.7; QR, Data Matrix and linear formats |
 | Embedded | ZXing-C++ 2.2.1; QR and Data Matrix |
 
-Native processing converts JPEG to grayscale in PSRAM, cropping to the central 640 × 480 pixels maximum. Native target: 1–10 FPS; actual throughput depends on decode time. Native processing includes JPEG conversion; measured example: 1,108 ms/frame at XGA. Physical native read limits remain unverified.
+Native processing converts JPEG to grayscale in PSRAM, downsampling the full field of view to at most 640 × 480 pixels. Native target: 1–10 FPS; actual throughput depends on decode time. Native processing includes JPEG conversion; measured example: 1,108 ms/frame at XGA. Physical native read limits remain unverified.
 
 Browser controls: resolution, ROI, 1–30 FPS target or maximum, decoder effort. Hardware controls: CPU 80/160/240 MHz, Wi-Fi sleep and JPEG quality 8–30 (larger number means stronger compression). FPS limits requests, not sensor activity. Browser decode, preview and delivered-frame rates are coupled; HTTP residual excludes measured acquisition time. Duplicate suppression can admit repeats after missed detections. Recent histories are volatile; the separate flash archive persists.
 
