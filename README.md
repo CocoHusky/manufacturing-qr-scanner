@@ -4,7 +4,7 @@
 
 Low-cost optical manufacturing documentation station for part and lot identification, traceability, and close-up PCB inspection. An ESP32-CAM acquires JPEG images over local Wi-Fi; the connected browser uses ZXing WebAssembly to decode one QR code, Data Matrix or supported linear barcode per frame. No cloud decoder or SD card is required. Present a part at any orientation, recognize its identifier, pulse the illumination, record a session event and continue.
 
-> Prototype only. Not yet production-qualified or standalone. The browser performs recognition. The board has exhibited excessive heating; disconnect power if uncomfortably hot and do not operate unattended. Private pending public-release review.
+> Prototype only. Not yet production-qualified. Browser and experimental native standalone decoding are available. The board has exhibited excessive heating; disconnect power if uncomfortably hot and do not operate unattended. Private pending public-release review.
 
 ## Prototype photographs and demonstration
 
@@ -83,6 +83,10 @@ All square dimensions include quiet zones. These are observed reads, not validat
 - [Reported observations CSV](test/observations.csv)
 - [Trial recording template](test/trial_template.csv)
 - [Third-party notices](docs/THIRD_PARTY.md)
+
+## Decoder engines (experimental native firmware)
+
+Select Browser, ESP32 standalone, or Compare same frame in the dashboard. Browser uses ZXing-WASM; standalone runs native ZXing-C++ 2.2.1 QR/Data Matrix recognition directly on the ESP32, including without browser requests. Compare runs both on the same JPEG, but native searches the center crop (up to 640×480 pixels) while browser ROI is independently adjustable. Native mode records up to 50 results in board RAM and signals a successful new read with the white LED; records are lost on reset. Native decoder timing includes JPEG grayscale conversion. Native result text, frame count and timing appear on the dashboard. Raw control separators are preserved in the payload. Standalone mode currently uses a minimum 500 ms interval between scan starts; the browser FPS control is independent. Linear barcodes are browser-only in this build. Dynamic memory, thermal performance and physical read limits remain unqualified.
 
 ## Quick start
 

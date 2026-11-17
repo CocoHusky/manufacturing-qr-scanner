@@ -60,6 +60,7 @@ static void pollButton(){
 }
 void loop(){
  networkLoop();
+ if(decodeMode=="device"&&camStatus=="Ready"&&!whiteUntil&&millis()-nativeLast>=nativePeriod){nativeLast=millis();auto *f=esp_camera_fb_get();if(f){nativeDecode(f);esp_camera_fb_return(f);}}
  if(redUntil&&(int32_t)(millis()-redUntil)>=0){digitalWrite(33,HIGH);redUntil=0;}
  if(whiteUntil&&(int32_t)(millis()-whiteUntil)>=0){whiteUntil=0;applyBrightness(ledOn?idleBrightness:0);}
  if(focusRequested){focusRequested=false;focusNow();}

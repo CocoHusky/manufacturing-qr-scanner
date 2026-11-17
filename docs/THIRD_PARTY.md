@@ -6,3 +6,5 @@
 - Arduino ESP32 / esp32-camera: supplied by pinned PlatformIO package.
 
 No blanket project license selected. Preserve third-party notices and review rights before making public.
+
+- Native ZXing-C++: https://github.com/zxing-cpp/zxing-cpp/tree/v2.2.1 (2.2.1, tag 99a83b3a6ac514d7f850dda7fa24cddb5120c7e2). Apache-2.0 license in lib/ZXingNative/LICENSE. Local MultiFormatReader change limits native readers to QR and Data Matrix; build filters omit unused format implementations. Retained upstream source notices.

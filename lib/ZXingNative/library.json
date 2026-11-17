@@ -1,0 +1,1 @@
+{"name":"ZXingNative","version":"2.2.1","build":{"flags":["-DZXING_BUILD_READERS","-std=gnu++17","-fexceptions","-Isrc"],"srcFilter":["+<*>","-<aztec/>","-<maxicode/>","-<oned/>","-<pdf417/>","-<*Writer.cpp>","-<qrcode/*Encoder.cpp>","-<datamatrix/*Encoder.cpp>","-<datamatrix/DMHighLevelEncoder.cpp>","-<BitMatrixIO.cpp>"]}}
