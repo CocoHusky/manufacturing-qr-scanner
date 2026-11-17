@@ -14,6 +14,10 @@ Use QR and Data Matrix ECC 200 targets with known payloads and exact sample IDs.
 
 Test nominal sizes and ±5% dimensional variation. Include actual production PCB silkscreen or laser markings before selecting a minimum. Record the smallest reliably readable symbol and the largest symbol that fits the intended fixture field of view. Do not infer a universal maximum code size from one camera position.
 
+### Separate printer and reader constraints
+
+Print identical vector targets at actual size using available 300, 600 and 1200 DPI settings, or comparable verified marking processes. Measure the actual symbol and quiet zone with a calibrated scale; inspect module geometry, edge spread and contrast under magnification. Keep camera settings and working distance fixed for the printer comparison, then vary reader settings using the same target. Include 4 mm Data Matrix, 5 mm QR V1/M and 15 mm short QR as reference conditions. Separately sweep larger payloads through 15 mm, including 96 and 128 characters; do not extrapolate from short-code success. Repeat on intended PCB materials and electronic displays.
+
 ## 3. Engineering screen
 
 For each selected size, payload, position, and decoder mode, make at least 20 independent presentations. Remove and replace the target between trials. Record correct reads, wrong reads, timeouts, duplicates, and time-to-result.

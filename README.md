@@ -138,7 +138,7 @@ Compact markings enable traceability on space-constrained PCBs. Our initial benc
 
 ![Observed payload capacity](docs/figures/capacity.svg)
 
-A 5 mm QR V1/M size-ladder code was also successfully recognized (4-character P:05). Its nominal 172 µm module pitch corresponds to about four dots per module at 600 DPI, an engineering target rather than a measured printer specification. The laser printer is a practical constraint for small, dense markings. Print quality, optics, focus and field of view have not been isolated experimentally. These are qualitative bench observations, not guaranteed operating limits.
+A 5 mm QR V1/M size-ladder code was also successfully recognized (4-character P:05). Its nominal 172 µm module pitch corresponds to about four dots per module at 600 DPI, an engineering target rather than a measured printer specification. For production exploration, start with 600 DPI or better, short Data Matrix identifiers on compact PCBs and larger QR labels for richer records. Print resolution is a practical constraint, but higher DPI alone does not guarantee recognition. Print quality, optics, focus and field of view have not been isolated experimentally. These are qualitative bench observations, not guaranteed operating limits.
 
 [Characterization, original test sheets and evidence](docs/characterization/README.md)
 

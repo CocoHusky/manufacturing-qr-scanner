@@ -34,6 +34,18 @@ The latest 5 mm QR V1/M size-ladder screenshot shows a recognized QR with visibl
 
 Four dots per module would require approximately 589 DPI; 600 DPI is therefore a reasonable engineering target, not a measured printer specification or validated minimum. The 4 mm ECC200 example (18 active modules plus two quiet-zone modules, if that symbol size applies) has 200 µm pitch, or 4.72 dots per module at 600 DPI. Printer toner spread, camera blur and compression cannot be separated from the screenshots alone. Measure a calibrated printed target or consult the printer specification to determine actual resolution.
 
+## Recommended marking choices
+
+| Location | Initial design | Reason |
+| --- | --- | --- |
+| Compact PCB or small component | 4–5 mm Data Matrix; short unique identifier | Smaller footprint; 4 mm / 16 characters reported read |
+| Traveler, packaging or equipment | 5–15 mm QR, sized for actual payload | Larger labels provide more module area |
+| Instrument result display | QR with unique run reference; optional summary fields | Link to authoritative measurement files without encoding entire datasets |
+
+Use a nominal 600 DPI or better print process as a starting point, actual-size output, intact quiet zones and high contrast. At 4 mm QR V1, four dots per module would require about 737 DPI; denser codes may need more. A 1200 DPI process is a useful comparison, not a proven solution. Small ID-only labels require an external lookup for richer metadata; the current workflow parser expects its defined fields, so this lookup design is proposed rather than implemented.
+
+[Full module-pitch calculations and marking recommendations](../TEST_REPORT.md#print-resolution-and-practical-marking-design).
+
 ## Evidence and reproduction
 
 - [Compact marking demonstration](../media/demo-compact-marking.mp4)
