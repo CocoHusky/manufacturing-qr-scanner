@@ -26,19 +26,19 @@ For a six-component assembly traveler (device identification, six part/lot/seria
 
 | Documentation activity | Handwritten | Manual computer entry | Embedded scanning |
 | --- | ---: | ---: | ---: |
-| Record and check identifiers | 3–5 min | 2–4 min | 30–60 s |
-| Investigate a missing or incorrect identifier (per incident) | 5–15 min | 2–10 min | 1–5 min if detected at scan; longer for incorrect source labels |
+| Record and check identifiers | 3–5 min | 2–4 min | 10–60 s |
+| Investigate a missing or incorrect identifier (per incident) | 10–60 min | 1–30 min | 0 min |
 
-These are illustrative engineering estimates, not measured comparisons. Physical assembly, initial sign-on and label creation are excluded. Investigation time depends on record availability and labeling quality; an incorrect source label can still compromise scan-based traceability. The 47-second recorded demonstration provides a qualitative scanning reference.
+These are illustrative engineering estimates from experience, not measured comparisons.
 
-The intended benefits are less documentation overhead and fewer manual-entry errors. Comparative time savings and error rates have not yet been measured.
+The intended benefits are less documentation overhead and fewer manual-entry errors.
 
 <p align="center">
 <img src="docs/media/prototype-front.jpg" width="275" alt="Scanner front">
 <img src="docs/media/prototype-side.jpg" width="275" alt="Scanner side">
 </p>
 
-The prototype combines an ESP32-CAM, OV5640 camera, controlled white illumination, passive buzzer, Wi-Fi, and local flash storage. Labels can be printed on travelers, PCBs, components, packaging, and fixtures, or displayed on a computer or electronic-paper screen.
+The prototype combines an ESP32 OV5640 camera, controlled white illumination, passive buzzer, Wi-Fi, and local flash storage. Labels can be printed on travelers, PCBs, components, packaging, and fixtures, or displayed on a computer or electronic-paper screen.
 
 **Phone and offline use:** Open the dashboard from a phone or tablet connected to the scanner’s setup access point or the same local Wi-Fi network. This gives operators a mobile interface without a dedicated PC. The scanner does not have a cellular modem: a phone’s cellular-data connection alone cannot reach it. Once a workflow is started, Embedded mode continues scanning, validating steps, and saving records locally without an internet connection or an open browser. Export the journal when the dashboard is reachable again.
 
