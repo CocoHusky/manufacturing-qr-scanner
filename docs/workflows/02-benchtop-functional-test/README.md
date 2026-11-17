@@ -45,3 +45,7 @@ The result display in the PDF simulates an electronic-paper display. Scan either
 [PASS example journal](example-pass.json) · [FAIL example journal](example-fail.json) · [Proposed bench and QMS integration](../../integration/README.md)
 
 The scanner records reported values and status; it does not calculate the disposition or verify numeric limits independently. Actual e-paper control, electrical measurements and raw data ingestion are not implemented. No dedicated recording for this workflow is published yet.
+
+## Actual dashboard examples
+
+![Workflow result rejected](../../media/screenshots/workflow-result-rejected.png)

@@ -24,3 +24,9 @@ The modified camera and lens provide close-range macro views of PCB components a
 3. Select **Export original** to retain the unmarked image and **Save** to retain the marked image. Retrieve saved images from Advanced settings → Saved inspection images.
 
 The labels in this example are operator annotations, not automatic defect classification or verified electrical measurements. An image can support a test or nonconformance record by manually associating its filename with the device serial, run ID and finding. Automatic journal-to-image association is not implemented; saved images remain browser-local. Export both images before clearing browser data. See [settings guide](../settings/README.md).
+
+## Inspection interface and saved images
+
+![Manual annotation interface](../media/screenshots/inspection-capture.png)
+
+![Browser-local saved inspection images and export links](../media/screenshots/inspection-saved.png)

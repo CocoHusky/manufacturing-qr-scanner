@@ -1,5 +1,7 @@
 # Scanner configuration
 
+![Actual advanced settings dashboard](../media/screenshots/advanced-settings.png)
+
 These are initial tuning values for the prototype, not qualified production settings. Open the device's local browser interface and expand Advanced settings.
 
 | Control | Suggested starting point | Purpose and adjustment |

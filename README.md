@@ -1,6 +1,6 @@
 # Manufacturing & Test Traceability Scanner
 
-An scanner for validating assembly and test steps, capturing traceability records, and reducing manual data entry for quality management systems. Operate it from a phone, tablet, or computer browser; after setup, scans can be processed and saved locally without internet access.
+A scanner for validating assembly and test steps, capturing traceability records, and reducing manual data entry for quality management systems. Operate it from a phone, tablet, or computer browser; after setup, scans can be processed and saved locally without internet access.
 
 ## Contents
 
@@ -11,6 +11,7 @@ An scanner for validating assembly and test steps, capturing traceability record
 - [Operator experience](#operator-experience)
 - [Manufacturing and test examples](#manufacturing-and-test-examples)
 - [Macro inspection and defect documentation](#macro-inspection-and-defect-documentation)
+- [Scanner settings](#scanner-settings)
 - [From device history to failure investigation](#from-device-history-to-failure-investigation)
 - [Optical characterization](#optical-characterization)
 - [Browser vs. Embedded](#browser-vs-embedded)
@@ -49,13 +50,11 @@ flowchart LR
  H --> I[Export traceability]
 ```
 
-
-
 ### What the prototype improves
 
 | Prototype capability | Why it matters in manufacturing and testing |
 | --- | --- |
-| Scan device, component and lot labels | Know exactly which parts went into each device without manually writing down their information. |
+| Scan device, component and lot labels | Record which component labels were associated with each device without manually writing down their information. |
 | Verify procedure steps and detect duplicates | Check that the required component labels are scanned and required scan steps are not skipped. |
 | Record test equipment, operator, results and timestamps | Know what was tested, who tested it, when it was tested and whether it passed or failed. |
 | Save and export structured records | Retrieve a device's manufacturing and testing history when investigating failures. |
@@ -63,8 +62,6 @@ flowchart LR
 | Capture and annotate macro images | Document visible defects, component placement issues and suspected failures for later review. |
 
 These are prototype capabilities.
-
-
 
 <p align="center">
 <img src="docs/media/prototype-front.jpg" width="275" alt="Scanner front">
@@ -74,8 +71,6 @@ These are prototype capabilities.
 The prototype combines an ESP32 OV5640 camera, controlled white illumination, passive buzzer, Wi-Fi, and local flash storage. The low-cost camera and lens were modified for close-range, macro-level imaging, enabling compact barcode recognition and detailed PCB inspection with the same hardware. Labels can be printed on travelers, PCBs, components, packaging, and fixtures, or displayed on a computer or electronic-paper screen.
 
 **Phone and offline use:** Open the dashboard from a phone or tablet connected to the scanner’s setup access point or the same local Wi-Fi network. This gives operators a mobile interface without a dedicated PC. The scanner does not have a cellular modem: a phone’s cellular-data connection alone cannot reach it. Once a workflow is started, Embedded mode continues scanning, validating steps, and saving records locally without an internet connection or an open browser. Export the journal when the dashboard is reachable again.
-
-
 
 ## Estimated documentation time
 
@@ -104,6 +99,12 @@ These are illustrative engineering estimates from experience, not measured compa
 
 ![Examples of Data Matrix, QR, Code 128 and Code 39](docs/barcodes/examples.svg)
 
+| Camera preview | Recognized QR code |
+| --- | --- |
+| ![Small printed QR in camera preview, not decoded in this frame](docs/media/screenshots/scanner-preview.png) | ![QR code recognized with green outline](docs/media/screenshots/scanner-detected.png) |
+
+Actual browser captures from the compact QR size-ladder test.
+
 | Data | Example |
 | --- | --- |
 | Component identity | Part PCB-001, lot PCB-261101, serial PCB-0025 |
@@ -119,6 +120,8 @@ QR and Data Matrix work in both decoding modes. Code 128 starts workflows in Emb
 
 ## Operator experience
 
+The browser dashboard has two views: **Scanner** for camera preview, decoded records and inspection capture; **Workflows** for procedure progress and verification. In Embedded mode, the operator can follow the instruction sheet without keeping the browser open.
+
 ### 1. Operator sign-on
 
 <img src="docs/media/operator-sign-on.png" width="300" alt="Operator sign-on">
@@ -129,17 +132,31 @@ Enter the operator, department and test context from a computer or mobile browse
 
 Scan the four-digit Code 128 header from the [shared instruction sheet](docs/workflows/instructions.pdf). The station selects the recipe and displays the required steps.
 
+![Component assembly instruction header and Code 128 start label](docs/media/screenshots/workflow-header.png)
+
+![Initialized assembly workflow awaiting the device traveler](docs/media/screenshots/workflow-start.png)
+
 ### 3. Verify components
 
 Present each required label. The station captures part numbers, lots, serials and timestamps; accepted components are marked verified. Embedded mode requires no browser interaction between scans.
+
+![Assembly progress with PCB and battery verified](docs/media/screenshots/workflow-progress.png)
 
 ### 4. Correct errors
 
 A repeated component, unexpected label or wrong step triggers a warning. The verified component count remains unchanged until the correct label is accepted.
 
+![Duplicate PCB rejected with two of six components still verified](docs/media/screenshots/workflow-duplicate.png)
+
+A benchtop test likewise rejects an incorrect scan when a result label is expected. This is a scan-sequence error, not a failed electrical measurement.
+
+![Benchtop test requires a result before advancing](docs/media/screenshots/workflow-result-rejected.png)
+
 ### 5. Complete and export
 
 Rescan the original device after all requirements are satisfied. The dashboard shows the completed procedure and the operator can export the journal. See the [assembly demonstration](docs/workflows/01-component-assembly/README.md) for the recorded example.
+
+![Completed assembly with all six components and original traveler verified](docs/media/screenshots/workflow-complete.png)
 
 ### Audible feedback and operator usability
 
@@ -189,7 +206,17 @@ The modified close-focus camera also captures macro-level PCB images for manual 
 
 [Inspection procedure and examples](docs/inspection/README.md) · [Scanner settings, Wi-Fi and OTA guide](docs/settings/README.md)
 
-Inspection images are browser-local; association with a device or test record is currently manual.
+![Inspection capture interface with manual annotations](docs/media/screenshots/inspection-capture.png)
+
+Inspection images are browser-local; association with a device or test record is currently manual. Export original and annotated copies before clearing browser storage.
+
+## Scanner settings
+
+![Advanced settings for illumination, audible feedback, decoding, Wi-Fi and firmware](docs/media/screenshots/advanced-settings.png)
+
+Adjust illumination, confirmation flash, buzzer frequency and volume, camera resolution and decoding mode for the task. Wi-Fi and firmware settings support local configuration and OTA maintenance.
+
+[Configuration values and setup instructions](docs/settings/README.md)
 
 ## From device history to failure investigation
 
