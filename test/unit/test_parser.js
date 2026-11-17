@@ -1,0 +1,11 @@
+const assert=require('node:assert/strict'),T=require('../../web/traceability.js');
+const raw='[)>\x1e06\x1d1P720-KDVSL2619-11\x1dQ1\x1d10D2639\x1d1TLOT260939A\x1d4LPL\x1e\x04';
+let p=T.parse(raw);assert.equal(p.fields.part,'720-KDVSL2619-11');assert.equal(p.fields.lot,'LOT260939A');assert.equal(p.fields.quantity,'1');assert.deepEqual(p.warnings,[]);
+assert.deepEqual(T.parse(raw.replace(/\x1e/g,'␞').replace(/\x1d/g,'␝').replace(/\x04/g,'␄')),p);
+assert.equal(T.parse('PCB:ABC/XYZ',[{prefix:'PCB:',separator:'/',fields:['part','lot']}]).fields.lot,'XYZ');
+assert.equal(T.parse('part=X;sn=123;qty=2').fields.serial,'123');
+assert.equal(T.parse('{"part":"ABC","lot":"L1"}').fields.lot,'L1');
+assert(T.parse('part=X;qty=bad').warnings.includes('Invalid quantity'));
+assert(T.parse('[)>\x1e06\x1d1PX').warnings.includes('Missing message terminator'));
+assert(T.csv([{raw:'=1+1',parsed:T.parse('=1+1')}]).includes("'=1+1"));
+console.log('8 parser regression checks passed');

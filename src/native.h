@@ -7,6 +7,8 @@ static String decodeMode="browser", nativeValue="", nativeFormat="", nativeError
 static uint32_t nativeMs=0,nativeFrames=0,nativeLast=0,nativePeriod=500;
 static String lastNative="";
 static uint32_t nativeMissing=0;
+static uint8_t *nativeGray=nullptr;
+static size_t nativeCapacity=0;
 struct GrayJPEG {camera_fb_t *f;uint8_t *gray;int x,y,w,h;};
 static size_t jpegRead(void *arg,size_t i,uint8_t *buf,size_t n){
  auto *a=(GrayJPEG*)arg;if(i>=a->f->len)return 0;n=min(n,a->f->len-i);if(buf)memcpy(buf,a->f->buf+i,n);return n;
@@ -22,7 +24,7 @@ static void nativeDecode(camera_fb_t *f){
  uint32_t t=millis();nativeFrames++;nativeValue="";nativeFormat="";nativeError="";
  // Center crop at most 640x480 to bound memory, retaining native pixel pitch.
  int w=min((int)f->width,640),h=min((int)f->height,480);
- uint8_t *g=(uint8_t*)heap_caps_malloc(w*h,MALLOC_CAP_SPIRAM|MALLOC_CAP_8BIT);
+ if(nativeCapacity<(size_t)(w*h)){free(nativeGray);nativeGray=(uint8_t*)heap_caps_malloc(w*h,MALLOC_CAP_SPIRAM|MALLOC_CAP_8BIT);nativeCapacity=nativeGray?w*h:0;}uint8_t *g=nativeGray;
  if(!g){nativeError="PSRAM allocation failed";return;}
  GrayJPEG a{f,g,((int)f->width-w)/2,((int)f->height-h)/2,w,h};memset(g,255,w*h);
  if(esp_jpg_decode(f->len,JPG_SCALE_NONE,jpegRead,jpegWrite,&a)!=ESP_OK)nativeError="JPEG conversion failed";
@@ -32,8 +34,8 @@ static void nativeDecode(camera_fb_t *f){
  if(r.isValid()){
  nativeFormat=ZXing::ToString(r.format()).c_str();auto b=r.bytes();for(auto c:b)nativeValue+=(char)c;
  nativeMissing=0;
- if(nativeValue!=lastNative){lastNative=nativeValue;recordScan(nativeFormat+" | "+nativeValue);Serial.printf("Native %s: %s\n",nativeFormat.c_str(),nativeValue.c_str());if(decodeMode=="device")signalScan();}
+ if(nativeValue!=lastNative){lastNative=nativeValue;recordNative(nativeFormat,nativeValue);Serial.printf("Native %s: %s\n",nativeFormat.c_str(),nativeValue.c_str());if(decodeMode=="device")signalScan();}
  }else{if(!nativeMissing)nativeMissing=millis();if(millis()-nativeMissing>500)lastNative="";}
  }catch(const std::exception &e){nativeError=e.what();}catch(...){nativeError="Native decode exception";}
- free(g);nativeMs=millis()-t;
+ nativeMs=millis()-t;
 }

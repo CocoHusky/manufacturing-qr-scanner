@@ -10,6 +10,11 @@ jobs:
           python-version: '3.11'
       - run: pip install platformio==6.1.18
       - run: python -m unittest discover -s test/unit -v
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node test/unit/test_parser.js
+      - run: python tools/embed_web.py && git diff --exit-code src/web_assets.h
       - run: pio run
       - uses: actions/upload-artifact@v4
         with:

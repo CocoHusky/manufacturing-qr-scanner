@@ -16,14 +16,14 @@ ESP32-CAM and OV5640 scanner for component identification, lot traceability and 
 
 - QR, Data Matrix and linear barcode recognition in the browser.
 - Experimental standalone QR and Data Matrix decoding using native ZXing-C++.
-- Side-by-side decoder testing, scan history and CSV export.
+- Decoder comparison, searchable manufacturing history, CSV/JSON export and local part lookup.
 - Adjustable color JPEG resolution, scan rate, CPU frequency, Wi-Fi power saving and LED PWM.
 
 ## Manufacturing workflow
 
 Scan a part, serial or lot number; associate it with the manufacturing record; capture close-up PCB photographs; circle defects and add notes for inspection, rework and nonconformance reports.
 
-Barcode scanning and live imaging are implemented. Persistent MES records, calibrated macro optics, still-image capture and non-destructive annotation are planned.
+Barcode scanning, preview-frame capture and circle/label annotation are implemented. Persistent MES records and calibrated macro optics remain planned.
 
 ## PCB inspection
 
@@ -62,7 +62,7 @@ The 128-character QR failed. Dimensions include quiet zones. Results are from pr
 | Standalone | Native QR/Data Matrix on ESP32 |
 | Compare | Both engines using the same JPEG |
 
-Native recognition uses a central crop up to 640 × 480 pixels. Native scan history holds 50 entries in RAM; browser history is session-only. Native physical read limits remain unverified.
+Native recognition uses a central crop up to 640 × 480 pixels. Native scan history holds 50 entries in RAM; browser history is session-only. Native physical read limits remain unverified. Manufacturing rules and the part lookup are saved in browser storage.
 
 ## Setup
 
@@ -87,5 +87,5 @@ Prototype runs hot during continuous capture. Stop if excessively hot; use only 
 
 - Validate native recognition, minimum marking size and ±5% dimensional tolerance.
 - Measure power, temperature and scan latency; implement sensor standby.
-- Add physical trigger, photo capture, annotation and persistent lot records.
+- Add physical trigger, dedicated high-resolution capture and persistent lot records.
 - Qualify actual PCB markings and review security/licensing before release.
