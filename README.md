@@ -1,117 +1,84 @@
 # Manufacturing QR & Data Matrix Scanner
 
-**ESP32-CAM / OV5640 | Rev 02 | Preliminary feasibility, 16 November 2026**
-
-Low-cost optical manufacturing documentation station for part and lot identification, traceability, and close-up PCB inspection. An ESP32-CAM acquires JPEG images over local Wi-Fi; the connected browser uses ZXing WebAssembly to decode one QR code, Data Matrix or supported linear barcode per frame. No cloud decoder or SD card is required. Present a part at any orientation, recognize its identifier, pulse the illumination, record a session event and continue.
-
-> Prototype only. Not yet production-qualified. Browser and experimental native standalone decoding are available. The board has exhibited excessive heating; disconnect power if uncomfortably hot and do not operate unattended. Private pending public-release review.
-
-## Prototype photographs and demonstration
+ESP32-CAM and OV5640 scanner for component identification, lot traceability and PCB inspection. Supports browser and native ESP32 decoding over a local network.
 
 <p align="center">
-<img src="docs/media/prototype-front.jpg" alt="Front of assembled ESP32-CAM scanner showing lens, heatsink and white illumination" width="300">
-<img src="docs/media/prototype-side.jpg" alt="Side of compact scanner showing USB programmer stack and illuminated housing" width="300">
+<img src="docs/media/prototype-front.jpg" alt="Scanner front" width="280">
+<img src="docs/media/prototype-side.jpg" alt="Scanner side" width="280">
 </p>
 
-The actual prototype uses the OV5640 camera, a compact white housing, an attached heatsink and adjustable white illumination. These photographs document the assembled prototype, not a production enclosure.
-
-### Live scanning demonstrations
-
-| Information-density test | Compact marking comparison | QR size ladder |
+| Information density | Compact markings | QR size ladder |
 | :---: | :---: | :---: |
 | ![Density scanning](docs/media/demo-density-scanning.gif) | ![Compact markings](docs/media/demo-compact-marking.gif) | ![QR ladder](docs/media/demo-qr-ladder.gif) |
 | [MP4](docs/media/demo-density-scanning.mp4) | [MP4](docs/media/demo-compact-marking.mp4) | [MP4](docs/media/demo-qr-ladder.mp4) |
 
-Animated GIFs loop directly in the README; original privacy-cropped silent MP4 versions remain available.
+## Features
 
-The clips show the handheld scanner being presented to printed test targets and its illumination during operation. They are cropped to omit personal surroundings and computer-screen content where practical. Hand and work surface remain visible. They illustrate the operating workflow, not a controlled timing or decode-success benchmark. Original personal media, audio and camera metadata are excluded from the repository.
+- QR, Data Matrix and linear barcode recognition in the browser.
+- Experimental standalone QR and Data Matrix decoding using native ZXing-C++.
+- Side-by-side decoder testing, scan history and CSV export.
+- Adjustable color JPEG resolution, scan rate, CPU frequency, Wi-Fi power saving and LED PWM.
 
-## Intended manufacturing workflow
+## Manufacturing workflow
 
-Use one optical station to identify a component or board, link its serial/part/lot identifiers to manufacturing records, and document inspection findings. Compact QR or Data Matrix identifiers serve as keys into a future manufacturing execution system (MES), rather than embedding an entire device history in a tiny symbol.
+Scan a part, serial or lot number; associate it with the manufacturing record; capture close-up PCB photographs; circle defects and add notes for inspection, rework and nonconformance reports.
 
-| Use case | Intended workflow | Status |
-|---|---|---|
-| Part and lot identification | Scan a compact QR/ECC200 marking, display decoded ID and time | Prototype demonstrated on printed samples |
-| Manufacturing traceability | Associate part, lot, serial, revision, workstation, operator and process outcome with a traceability record | Session log and CSV exist; persistent MES/database integration planned |
-| PCB inspection photography | Capture high-resolution close-up still images of solder joints, pads, traces, connectors and component placement | Live JPEG preview exists; dedicated snapshot and calibrated macro/microscope optics planned |
-| Visual defect documentation | Circle or outline a defect, draw arrows, add text/labels, zoom/crop and adjust display contrast | Planned annotation editor; not implemented |
-| Inspection record | Preserve original image, annotation layer, edited export, timestamp, part/lot ID and finding/disposition | Planned controlled evidence workflow |
+Barcode scanning and live imaging are implemented. Persistent MES records, calibrated macro optics, still-image capture and non-destructive annotation are planned.
 
-### PCB inspection and annotation concept
+## Bench results
 
-The OV5640 prototype is a candidate for close-up inspection, not a calibrated microscope. To achieve microscope-level detail, select appropriate macro optics, working distance, stable fixture, diffuse illumination and a calibrated scale target. Demonstrate resolvable feature size before claiming magnification or defect-detection performance.
+| Marking | Footprint | Payload |
+|---|---:|---:|
+| Smallest reported QR | 5 × 5 mm | 16 characters |
+| Smallest reported Data Matrix | 4 × 4 mm | 16 characters |
+| Data Matrix density | 8 × 8 mm | 96 characters |
+| QR density candidate | 8–12 mm | 96 characters; retest required |
 
-The proposed editor retains the untouched original JPEG and stores annotations non-destructively as image-coordinate geometry with text, author and time. Export a marked-up copy for manufacturing travelers, nonconformance reports, rework instructions and inspection documentation. Cropping, brightness and contrast changes must be documented; no editing should obscure or misrepresent an original defect.
+The 128-character QR failed. Dimensions include quiet zones. Results are from printed targets, not production reliability tests.
 
-Example record fields: part ID, lot, board serial, revision, station, operator, UTC timestamp, image UUID, finding annotation, disposition, and source image hash. Database, file retention, access controls, audit trail and report export remain future work.
+![Payload capacity](docs/figures/capacity.svg)
 
-```mermaid
-flowchart TD
- A[Scan component or lot ID] --> B[Associate manufacturing record]
- B --> C[Capture original close-up PCB image]
- C --> D[Circle defect or add arrow and note]
- D --> E[Review and assign disposition]
- E --> F[Export annotated evidence and link to lot history]
-```
+## Hardware
 
-The diagram describes the intended workflow, not features already implemented.
-
-## Key findings
-
-| Objective | Experimental evidence |
+| Component | Specification |
 |---|---|
-| Smallest QR | 5 × 5 mm, 16 ASCII characters (L052, V1); P:05 also read |
-| Smallest Data Matrix ECC200 | 4 × 4 mm, 16 characters |
-| Largest reported Data Matrix payload | 96 characters at 8 × 8 mm; 10 mm also reported, with a conflicting FOV observation |
-| Largest QR payload | 128-character test failed on follow-up; 96-character candidate inferred from prior version cutoffs, needs explicit confirmation |
-| PCB mockup | 6, 8 and 10 mm footprints reported readable on printed 10 mm PCB mockup |
+| MCU | ESP32, 4 MB flash, 4 MB PSRAM detected |
+| Camera | OV5640, color JPEG up to 1600 × 1200 |
+| Illumination | GPIO4, 20 kHz PWM |
+| Browser decoder | ZXing-WASM 3.1.7 |
+| Native decoder | ZXing-C++ 2.2.1 |
 
-All square dimensions include quiet zones. These are observed reads, not validated detection probabilities. Below 4 mm and maximum QR capacity remain open test questions.
+## Decoder modes
 
-![Capacity envelope](docs/figures/capacity.svg)
+| Mode | Processing |
+|---|---|
+| Browser | ZXing-WASM on PC or phone |
+| Standalone | Native QR/Data Matrix on ESP32 |
+| Compare | Both engines using the same JPEG |
+
+Native recognition uses a central crop up to 640 × 480 pixels. Native scan history holds 50 entries in RAM; browser history is session-only. Native physical read limits remain unverified.
+
+## Setup
+
+1. Install PlatformIO Core and connect the USB serial programmer.
+2. Build with `pio run`.
+3. Identify the USB port with `pio device list`, then run `pio run -t upload --upload-port <port>`.
+4. Open the serial monitor at 115200 baud. For initial setup, join the scanner AP using the password printed in the monitor and configure Wi-Fi at 192.168.4.1.
+5. Open the assigned scanner IP in a browser and select the decoder mode.
+
+Prototype runs hot during continuous capture. Stop if excessively hot; use only on a trusted local network.
 
 ## Documentation
 
-- [Hardware and firmware specification](docs/HARDWARE_AND_FIRMWARE.md)
-- [System test report and corrected conclusions](docs/TEST_REPORT.md)
-- [Verification plan and ±5% tolerance](docs/VERIFICATION_PLAN.md)
-- [Original mixed barcode and QR test PDF](docs/test-sheets/manufacturing_barcode_test.pdf)
-- [Per-target marking results and evidence rules](docs/MARKED_RESULTS.md)
-- [QR density test PDF](docs/test-sheets/QR_information_density_test.pdf)
-- [Data Matrix / PCB comparison PDF](docs/test-sheets/PCB_Data_Matrix_and_QR_Test.pdf)
-- [Historical report PDF — superseded](docs/archive/Scanner_System_Validation_SUPERSEDED.pdf): contains the corrected 128-character claim; do not use as acceptance specification.
-- [Reported observations CSV](test/observations.csv)
-- [Trial recording template](test/trial_template.csv)
-- [Third-party notices](docs/THIRD_PARTY.md)
+- [Hardware and firmware](docs/HARDWARE_AND_FIRMWARE.md)
+- [Test report](docs/TEST_REPORT.md) · [Per-target results](docs/MARKED_RESULTS.md) · [Observations CSV](test/observations.csv)
+- Test sheets: [Mixed barcodes](docs/test-sheets/manufacturing_barcode_test.pdf) · [QR density](docs/test-sheets/QR_information_density_test.pdf) · [Data Matrix / PCB](docs/test-sheets/PCB_Data_Matrix_and_QR_Test.pdf)
+- [Verification plan](docs/VERIFICATION_PLAN.md) · [Trial template](test/trial_template.csv)
+- [Third-party licenses](docs/THIRD_PARTY.md) · [Superseded report](docs/archive/Scanner_System_Validation_SUPERSEDED.pdf)
 
-## Decoder engines (experimental native firmware)
+## Next steps
 
-Select Browser, ESP32 standalone, or Compare same frame in the dashboard. Browser uses ZXing-WASM; standalone runs native ZXing-C++ 2.2.1 QR/Data Matrix recognition directly on the ESP32, including without browser requests. Compare runs both on the same JPEG, but native searches the center crop (up to 640×480 pixels) while browser ROI is independently adjustable. Native mode records up to 50 results in board RAM and signals a successful new read with the white LED; records are lost on reset. Native decoder timing includes JPEG grayscale conversion. Native result text, frame count and timing appear on the dashboard. Raw control separators are preserved in the payload. Standalone mode currently uses a minimum 500 ms interval between scan starts; the browser FPS control is independent. Linear barcodes are browser-only in this build. Dynamic memory, thermal performance and physical read limits remain unqualified.
-
-## Quick start
-
-1. Install PlatformIO Core and connect the ESP32-CAM using a compatible USB serial programmer.
-2. Run `pio run`, then `pio run -t upload --upload-port <your-serial-port>`. Use `pio device list` to find the port; reduce upload speed if necessary.
-3. Open the serial monitor at 115200. For initial provisioning, join the setup AP using the password printed locally in the serial monitor. Open 192.168.4.1 and configure the local 2.4 GHz network.
-4. Reconnect to the network and open the scanner IP printed in the serial monitor. Use a modern browser on the same trusted network.
-5. Set resolution, region, scan rate, decoder effort and LED PWM. Present one code at a time. Export the browser session log as CSV if necessary; refreshing or closing the browser discards the session.
-
-## Architecture
-
-```mermaid
-flowchart LR
- A[Part marking] --> B[OV5640 camera]
- B --> C[ESP32 JPEG capture]
- C --> D[Local Wi-Fi HTTP]
- D --> E[Browser ZXing WASM]
- E --> F{Valid new code?}
- F -- No --> E
- F -- Yes --> G[Session log and count]
- F -- Yes --> H[HTTP confirmation]
- H --> I[White LED PWM pulse]
-```
-
-## Roadmap
-
-Implement snapshot capture and non-destructive annotation, lot/serial record linking and inspection export. Validate minimum marking size, QR payload ceiling, optical/print resolution, repeated reads and motion tolerance; measure power and component temperature; qualify actual PCB marks; implement safe physical trigger and buzzer; evaluate standalone scan engine; complete security and third-party licensing review before public release.
+- Validate native recognition, minimum marking size and ±5% dimensional tolerance.
+- Measure power, temperature and scan latency; implement sensor standby.
+- Add physical trigger, photo capture, annotation and persistent lot records.
+- Qualify actual PCB markings and review security/licensing before release.

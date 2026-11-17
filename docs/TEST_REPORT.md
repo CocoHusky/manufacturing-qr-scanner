@@ -2,10 +2,6 @@
 
 Operator-reported bench tests, November 16, 2026. Supersedes earlier report's provisional 128-character QR conclusion.
 
-## Objectives
-
-Minimize square component marking area while retaining a useful identifier; maximize data within a single square QR or ECC200 symbol. All footprints include quiet zones. The smallest reported standard QR is 5 mm with 16 ASCII characters (L052); the smallest Data Matrix is 4 mm with 16 characters. The best explicit Data Matrix payload is 96 characters at 8 mm. The later 128-character QR read failed; 96 is an inferred candidate, not a confirmed maximum.
-
 ## Method
 
 Original test sheets: QR sizes 4,5,6,8,10,12,15 mm with 4,16,32,64,96,128 ASCII characters; alphanumeric M, alphanumeric L and byte M. Data Matrix square ECC200 sizes 4–15 mm, payloads 7,16,32,64,96. Print at 100% scale, cover adjacent codes, present one at a time. Exact repeats, distance, printer DPI, exposure, light and camera parameters were not recorded for each sample. Results are qualitative successful reads, not measured reliability.
@@ -46,7 +42,7 @@ PCB-002 compact comparison (seven characters): Data Matrix 5,8,10 mm pass, 15 mm
 
 ![Payload vs footprint](figures/capacity.svg)
 
-Points are reported reads or mapped cutoffs; dashed lines connect observations rather than predict guaranteed capacity. The 128-character failure supersedes the historical PDF. No validated absolute maximum QR payload exists yet.
+Filled points are reported reads; open points are inferred or conditional. Dashed lines connect observations.
 
 ## Examples
 
@@ -57,7 +53,7 @@ Points are reported reads or mapped cutoffs; dashed lines connect observations r
 | 4–5 mm Data Matrix | PCB-002/LOT26A01 | 16 characters; capacity demonstrated, exact example not tested |
 | 8–12 mm QR / Data Matrix | PART=PCB002;LOT=26A;SN=000123;REV=B;DATE=20261116;LINE=01;STATION=02;TEST=PASS | Example compact manufacturing record; not physically tested |
 
-Use a compact ID linked to a manufacturing database for tiny components. At 5 mm, marking occupies 25% of a 10 mm PCB; at 8 mm, 64% with 1 mm margin per edge. Prefer 5 mm ECC200 / 16 characters as conservative initial design; higher-capacity 8 mm ECC200 / 64–96 characters for richer records. Validate before production.
+Initial design: 5 mm ECC200 / 16 characters linked to a database; 8 mm ECC200 / 64–96 characters for richer records. On a 10 mm PCB these occupy 25% and 64% of area respectively.
 
 ## Print and optical limits
 
@@ -65,4 +61,4 @@ V1 QR at 4 mm has 138 µm pitch (1.6 printer dots/module at 300 DPI, 3.3 at 600 
 
 ## Limitations and next decision
 
-No repeated-read probability, false-read rate, independent sensor FPS, swipe speed, focus range, power or temperature data. Exact 128-character failure and 10 mm Data Matrix FOV contradiction need retests. ±5% dimensional tolerance and 19/20 success are proposed screening criteria, not demonstrated. Prior report retained in archive for traceability, not current specification.
+Unmeasured: repeatability, false reads, motion, focus range, sensor FPS, power and temperature. Retest 128-character QR and 10 mm Data Matrix. See [verification plan](VERIFICATION_PLAN.md) for acceptance criteria.

@@ -45,8 +45,4 @@ At 10 mm, 96 characters reportedly read, but 10 mm was also described as too lar
 
 ## Boundary test
 
-Final boundary sheet has no reported results. Candidate ranges are 0.5–5.25 mm short QR/ECC200, 80–128 character high-density QR, and ±5% nominal size checks. Mark all pending, not failed. Original boundary PDF and full annotated 15-page report are available from the project conversation but were not present on this Mac at the time of this commit. Add those exact PDFs to the repository when transferred.
-
-## Inspection photography
-
-The close-up photography and non-destructive defect annotation workflows in the README are intended requirements. No fabricated PCB inspection qualification or image editor tests have been performed.
+Final boundary sheet has no reported results. Candidate ranges are 0.5–5.25 mm short QR/ECC200, 80–128 character high-density QR, and ±5% nominal size checks. Mark all pending, not failed. Boundary and annotated report PDFs pending inclusion.

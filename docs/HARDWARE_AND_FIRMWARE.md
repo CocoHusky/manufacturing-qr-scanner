@@ -12,7 +12,7 @@
 | White LED | GPIO4, 20 kHz 10-bit PWM, defaults 10% scanning → 50% confirmation → 10%, 80 ms |
 | Red LED | GPIO33 configured off, board wiring not verified |
 | Wi-Fi | 2.4 GHz STA, fallback provisioning AP, modem sleep enabled |
-| Storage | Preferences for configuration; browser session log only; SD not required |
+| Storage | Preferences for configuration; browser session log and 50 native records in RAM |
 | Toolchain | PlatformIO espressif32 6.13.0, Arduino ESP32 2.0.17; upload 460800 baud, monitor 115200 |
 
 ## Pin assignments
@@ -33,14 +33,22 @@ IO0 is a boot strap and active camera clock output. Pressing the onboard IO0 but
 
 ## Recognition pipeline
 
-ZXing-WASM 3.1.7 is hosted by the ESP32 and executed in the browser. All supported readable formats are enabled, one symbol per frame. QR and Data Matrix physically tested; linear codes not qualified. Decoder effort, region, rate and resolution adjustable. Center ROI reduces browser processing, not necessarily sensor power. Frame rates are target ceilings. Camera delivered-frame timestamps, display FPS and decode FPS are reported but coupled sequentially; camera FPS is not independently measured maximum sensor FPS. HTTP residual is estimated as request latency minus frame acquisition. Same-code suppression may still admit duplicates after missed detections. Browser logs have no persistent storage.
+| Mode | Decoder |
+|---|---|
+| Browser | ZXing-WASM 3.1.7; QR, Data Matrix and linear formats |
+| Standalone | ZXing-C++ 2.2.1; QR and Data Matrix |
+| Compare | Both readers use the same JPEG |
+
+Native processing converts JPEG to grayscale in PSRAM, cropping to the central 640 × 480 pixels maximum. Minimum interval between standalone scan starts: 500 ms. Native processing includes JPEG conversion; measured example: 1,108 ms/frame at XGA. No native successful read independently verified yet.
+
+Browser controls: resolution, ROI, 1–30 FPS target or maximum, decoder effort. Hardware controls: CPU 80/160/240 MHz, Wi-Fi sleep and JPEG quality 8–30 (larger number means stronger compression). FPS limits requests, not sensor activity. Browser decode, preview and delivered-frame rates are coupled; HTTP residual excludes measured acquisition time. Duplicate suppression can admit repeats after missed detections. Both logs are volatile.
 
 ## Thermal / optical limitations
 
-Earlier QVGA transfer sample averaged 161 ms for five frames; ~6.2 requests/s before browser decode. Later buffering improvements are not benchmarked under comparable conditions; no 30/60 FPS claim. Focus firmware initialized and reported success, but actual lens movement/VCM supply not verified. Verify exact module before hardware modifications. Prefer a fixed macro focus and stable lighting.
+QVGA transfer averaged 161 ms over five frames (~6.2 requests/s before decoding). Later buffering changes are unbenchmarked. Autofocus firmware initializes; actuator movement and supply remain unverified.
 
-The board was reported very hot during continuous operation. PWM reduces illumination demand, but input current and temperature are unmeasured; browser pause does not guarantee sensor standby. Stop operation if excessively hot. Evaluate LED, regulator, ESP32 and camera individually. Do not operate unattended.
+Continuous operation caused excessive heating. Current and component temperatures remain unmeasured. Browser pause does not suspend the sensor. Stop if excessively hot; do not operate unattended.
 
 ## Security
 
-Prototype HTTP is unauthenticated and unencrypted; ordinary Preferences stores network settings. Repository removes machine-specific upload path and replaces the prototype's fixed AP password with a random persisted per-unit setup password printed in serial monitor. Repository change requires hardware retest, and does not change the already-installed firmware until flashed. Do not expose server to internet. Public/production release requires credential protection, authenticated provisioning, signed updates, flash encryption, secure boot, threat model and third-party notice review.
+HTTP is unauthenticated and unencrypted. Wi-Fi credentials use Preferences; the random setup AP password is printed in serial monitor. Use a trusted LAN only. Before production, review authenticated provisioning, credential storage, signed updates, secure boot and flash encryption.
