@@ -1,0 +1,10 @@
+.pio/
+.vscode/
+.DS_Store
+*.bak
+.vendor-git/
+.env
+.env.*
+secrets.h
+__pycache__/
+*.pyc

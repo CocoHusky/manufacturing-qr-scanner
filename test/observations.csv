@@ -1,0 +1,35 @@
+format,encoding,side_mm,reported_version,payload_chars,status,note
+QR,alphanumeric L,5,1,16,reported_read,L051 L052
+QR,alphanumeric L,6,1,16,reported_read,L061 L062
+QR,alphanumeric L,8,4,96,inferred_cutoff,V5 failed
+QR,alphanumeric L,10,,96,inferred_candidate,128 later failed scope unclear
+QR,alphanumeric L,12,,96,inferred_candidate,128 later failed scope unclear
+QR,alphanumeric L,15,,,failed_group,No density reads reported
+QR,alphanumeric M,5,1,16,inferred_cutoff,
+QR,alphanumeric M,6,2,32,inferred_cutoff,
+QR,alphanumeric M,8,4,64,inferred_cutoff,
+QR,alphanumeric M,10,6,96,inferred_candidate,128 later failed
+QR,alphanumeric M,12,6,96,inferred_candidate,128 later failed
+QR,byte M,5,1,4,inferred_cutoff,
+QR,byte M,6,2,16,inferred_cutoff,
+QR,byte M,8,5,64,inferred_cutoff,
+QR,byte M,10,6,96,inferred_cutoff,
+QR,byte M,12,8,96,inferred_candidate,128 later failed
+QR,unspecified,,,128,reported_failure,Later correction size and encoding unspecified
+Data Matrix,ECC200,4,,16,reported_read,
+Data Matrix,ECC200,5,,32,reported_read,
+Data Matrix,ECC200,6,,32,reported_read,
+Data Matrix,ECC200,8,,96,reported_read,
+Data Matrix,ECC200,10,,96,conditional_read,Also reported FOV limited
+Data Matrix,ECC200,12,,,fov_limited,
+Data Matrix,PCB-002,5,,7,reported_read,
+Data Matrix,PCB-002,8,,7,reported_read,
+Data Matrix,PCB-002,10,,7,reported_read,
+Data Matrix,PCB-002,15,,7,fov_limited,
+QR,PCB-002 M,5,1,7,reported_read,
+QR,PCB-002 M,8,1,7,reported_read,
+QR,PCB-002 M,10,1,7,reported_read,
+QR,PCB-002 M,15,1,7,reported_read,
+Data Matrix,PCB mockup,6,,,reported_read,10 mm paper mockup
+Data Matrix,PCB mockup,8,,,reported_read,10 mm paper mockup
+Data Matrix,PCB mockup,10,,,reported_read,10 mm paper mockup

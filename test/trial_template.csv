@@ -1,0 +1,1 @@
+trial_id,date,firmware_commit,symbol_id,format,encoding,nominal_side_mm,measured_side_mm,payload_chars,expected_value,printer_model,dpi,media,distance_mm,angle_deg,resolution,roi_fraction,decoder_mode,pwm_percent,exposure_us,observed_value,correct,timeout,duplicate,latency_ms,input_voltage_v,input_current_ma,temperature_c,notes
