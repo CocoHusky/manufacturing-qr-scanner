@@ -289,7 +289,7 @@ Compact markings enable traceability on space-constrained PCBs. Our initial benc
 
 ![Observed payload capacity](docs/figures/capacity.svg)
 
-A 5 mm QR V1/M size-ladder code was also successfully recognized (4-character P:05). Its nominal 172 µm module pitch corresponds to about four dots per module at 600 DPI, an engineering target rather than a measured printer specification. For production exploration, start with 600 DPI or better, short Data Matrix identifiers on compact PCBs and larger QR labels for richer records. Print resolution is a practical constraint, but higher DPI alone does not guarantee recognition. Print quality, optics, focus and field of view have not been isolated experimentally. These are qualitative bench observations, not guaranteed operating limits.
+A 5 mm QR V1/M size-ladder code was also successfully recognized (4-character P:05). Its nominal 172 µm module pitch corresponds to about four dots per module at 600 DPI, an engineering target rather than a measured printer specification. For production exploration, start with 600 DPI or better, short Data Matrix identifiers on compact PCBs and larger QR labels for richer records. Current limitations is my print resolution. 
 
 [Characterization, original test sheets and evidence](docs/characterization/README.md)
 
@@ -319,16 +319,6 @@ pio run -t upload --upload-port PORT
 USB upload: 460800 baud. Serial monitor: 115200 baud. Sign on, select Embedded, resume scanning and use the shared instruction PDF.
 
 [Detailed operation and OTA](docs/OPERATIONS.md) · [Verification plan](docs/VERIFICATION_PLAN.md)
-
-## Production readiness
-
-This is an engineering prototype, not a qualified manufacturing or regulated QMS system.
-
-**Demonstrated:** on-device scan decoding and workflow checks, operator feedback, local event journaling, JSON export, and browser access from a phone or computer on the scanner’s Wi-Fi/LAN. The scan loop can continue without internet access.
-
-**Gaps before production use:** operator sign-on is self-reported; HTTP is unencrypted; active runs do not recover after reboot; local archive capacity is limited; and scans do not prove physical assembly or instrument accuracy. Instrument control, raw-data capture, and live QMS/MES or cloud sync are not implemented. Cellular data alone cannot reach the scanner.
-
-**Next validation work:** measure cycle time and entry-error rates in a controlled comparison; characterize decode reliability across label sizes, print quality, lighting, and placement; verify restart recovery and archive retention; then add authenticated access, protected transport, instrument/data-system integration, and a supported record backup path.
 
 [Comparative validation protocol](docs/validation/README.md) · [Changelog](CHANGELOG.md) · [Third-party notices](docs/THIRD_PARTY.md)
 
