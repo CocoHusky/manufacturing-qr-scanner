@@ -77,14 +77,14 @@ flowchart LR
 
 For a six-component assembly traveler (device identification, six part/lot/serial records and final confirmation), a rough planning estimate is:
 
-| Documentation activity | Handwritten | Manual computer entry | Embedded scanning |
+| Documentation activity | Handwritten | Manual computer entry | OUR DEVICE |
 | --- | ---: | ---: | ---: |
 | Record and check identifiers | 3–5 min | 2–4 min | 10–60 s |
 | Investigate a missing or incorrect identifier (per incident) | 10–60 min | 1–30 min | 0 min |
 
 ### Estimated documentation effort — 100 devices
 
-| Activity | Handwritten | Manual computer entry | Embedded scanning |
+| Activity | Handwritten | Manual computer entry | OUR DEVICE |
 | --- | ---: | ---: | ---: |
 | Record and check identifiers (100 devices) | 5–8 hr 20 min | 3 hr 20 min–6 hr 40 min | 17 min–1 hr 40 min |
 | Investigate 10 manual-entry incidents | 1 hr 40 min–10 hr | 10 min–5 hr | 0 min* |
