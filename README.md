@@ -7,6 +7,7 @@ An ESP32-CAM scanner for validating assembly and test steps, capturing traceabil
 - [The problem](#the-problem)
 - [The solution](#the-solution)
 - [Estimated documentation time](#estimated-documentation-time)
+- [What the scanner records](#what-the-scanner-records)
 - [Operator experience](#operator-experience)
 - [Manufacturing and test examples](#manufacturing-and-test-examples)
 - [Macro inspection and defect documentation](#macro-inspection-and-defect-documentation)
@@ -80,6 +81,23 @@ Planning hypothesis: 99% of documentation issues originate from manual entry. Th
 *Zero investigation time applies only to manual transcription errors assumed eliminated by scanning. 
 
 These are illustrative engineering estimates from experience, not measured comparisons. See the [comparative validation protocol](docs/validation/README.md).
+
+## What the scanner records
+
+![Examples of Data Matrix, QR, Code 128 and Code 39](docs/barcodes/examples.svg)
+
+| Data | Example |
+| --- | --- |
+| Component identity | Part PCB-001, lot PCB-261101, serial PCB-0025 |
+| Device traveler | ASM-DEV-01, lot ASM-261117, revision A |
+| Equipment | BENCH-007, THERM-009, AGE-008 |
+| Test result | PASS / FAIL, voltage, current, temperature, failure reason |
+| Measurement reference | RUN-0262P |
+| Traceability context | Operator, procedure revision, step and timestamp |
+
+QR and Data Matrix work in both decoding modes. Code 128 starts workflows in Embedded mode while idle; Browser mode additionally supports general Code 128 and Code 39 decoding.
+
+[Supported formats, payload examples and parser details](docs/barcodes/README.md)
 
 ## Operator experience
 
