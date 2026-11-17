@@ -77,7 +77,7 @@ For a six-component assembly traveler (device identification, six part/lot/seria
 
 Planning hypothesis: 99% of documentation issues originate from manual entry. This percentage is an assumption to test, not a measured error attribution or reduction rate. The batch example assumes 10 manual-entry incidents per 100 devices for each manual method; the actual incident rate is unknown.
 
-*Zero investigation time applies only to manual transcription errors assumed eliminated by scanning. Incorrect source labels, scan retries and other errors still require investigation. Estimates exclude physical assembly, initial setup and label creation.
+*Zero investigation time applies only to manual transcription errors assumed eliminated by scanning. 
 
 These are illustrative engineering estimates from experience, not measured comparisons. See the [comparative validation protocol](docs/validation/README.md).
 
