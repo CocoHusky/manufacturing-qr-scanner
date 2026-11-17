@@ -23,11 +23,38 @@ flowchart LR
  C -->|No| D[Record identifier]
  C -->|Yes| E{Expected step and identity?}
  E -->|Yes| F[Advance or complete]
- E -->|No| G[Vibrate and show correction]
+ E -->|No| G[Low beep; retain expected step]
  G --> B
  D --> H[JSON export]
  F --> H
 ```
+
+## Assembly demonstration — audible guidance
+
+[![Assembly demonstration preview](docs/media/assembly-audible-preview.gif)](docs/media/assembly-audible.mp4)
+
+[Watch the full 47-second recording with sound](docs/media/assembly-audible.mp4) · [Print the assembly instruction sheet](docs/test-sheets/manufacturing-pipeline.pdf)
+
+The printed sheet becomes the operator's work instruction. After sign-on, the embedded scanner reads the workflow header, captures the device traveler, and verifies six required components. Each accepted part produces a short chirp. A wrong label, repeated component or premature final confirmation produces a low warning tone and leaves the expected step unchanged. Rescanning the original traveler after all six components closes the record.
+
+| Operator action | Scanner response |
+|---|---|
+| Start recipe from printed header | Rising start tone |
+| Scan a new required component | Chirp; record part number, lot and serial |
+| Scan the same component again after removing it from view | Reject; do not increment component count |
+| Scan another recipe or an unexpected part | Reject; retain expected step |
+| Confirm traveler before all six parts | Reject; continue assembly |
+| Confirm original traveler after six parts | Completion melody; save traceability record |
+
+In Embedded mode, decoding, sequence validation, audible feedback and local record storage run on the ESP32. A computer can be used for sign-on, monitoring and later export, but is not required for each scan. The buzzer communicates acceptance or rejection; the printed instructions identify the next action. This demonstration uses printed sample labels rather than a production assembly.
+
+| Recording method | Operator interaction | Traceability |
+|---|---|---|
+| Handwritten | Copy part, lot and serial by hand | Manual checking and later digitization |
+| Manual computer entry | Type or copy identifiers into a form | Depends on form validation |
+| Embedded scanner | Present each label | Automatic identity/order checks and timestamped records |
+
+Potential benefits are less transcription and immediate error detection. No comparative cycle-time improvement has been measured.
 
 ## Manufacturing and test pipelines
 
