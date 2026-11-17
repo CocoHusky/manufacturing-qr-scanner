@@ -101,6 +101,20 @@ QR and Data Matrix work in both decoding modes. Code 128 starts workflows in Emb
 
 ## Operator experience
 
+```mermaid
+flowchart LR
+ A[Sign on] --> B[Scan recipe header]
+ B --> C[Present required label]
+ C --> D{Valid for current step?}
+ D -->|No| E[Warning tone; retry]
+ E --> C
+ D -->|Yes| F[Save event; chirp]
+ F --> G{All steps complete?}
+ G -->|No| C
+ G -->|Yes| H[Completion melody]
+ H --> I[Export traceability]
+```
+
 ### 1. Operator sign-on
 
 <img src="docs/media/operator-sign-on.png" width="300" alt="Operator sign-on">
@@ -122,20 +136,6 @@ A repeated component, unexpected label or wrong step triggers a warning. The ver
 ### 5. Complete and export
 
 Rescan the original device after all requirements are satisfied. The dashboard shows the completed procedure and the operator can export the journal. See the [assembly demonstration](docs/workflows/01-component-assembly/README.md) for the recorded example.
-
-```mermaid
-flowchart LR
- A[Sign on] --> B[Scan recipe header]
- B --> C[Present required label]
- C --> D{Valid for current step?}
- D -->|No| E[Warning tone; retry]
- E --> C
- D -->|Yes| F[Save event; chirp]
- F --> G{All steps complete?}
- G -->|No| C
- G -->|Yes| H[Completion melody]
- H --> I[Export traceability]
-```
 
 ### Audible feedback and operator usability
 
