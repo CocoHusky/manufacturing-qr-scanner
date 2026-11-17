@@ -1,16 +1,16 @@
 # Manufacturing & Test Traceability Scanner
 
-Embedded, document-driven verification for prototype assembly, manufacturing and testing.
+An ESP32-CAM scanner for validating assembly and test steps, capturing traceability records, and reducing manual data entry. Operate it from a phone, tablet, or computer browser; after setup, scans can be processed and saved locally without internet access.
 
 ## The problem
 
 Quality management depends on knowing where a device came from, which components and lots were used, what tests it completed, and where its results can be found.
 
-Two recurring challenges with handwritten  and manual computer entries or manufacturing or functional tests are:
+Manual recording creates two common problems:
 
 | **Time spent recording information** | **Human error from manual entry** |
 | --- | --- |
-| Operators repeatedly copy serial numbers, lot numbers, equipment IDs and results which costs time instead of focusing this effort on assembling or testing the device. | Mistyped identifiers, missing records, duplicate entries and incorrect device-to-test associations undermine traceability. |
+| Operators spend time copying serial numbers, lot numbers, equipment IDs, and results instead of assembling or testing devices. | Mistyped identifiers, missing records, duplicate entries and incorrect device-to-test associations undermine traceability. |
 
 ## The solution
 
@@ -38,7 +38,9 @@ The intended benefits are less documentation overhead and fewer manual-entry err
 <img src="docs/media/prototype-side.jpg" width="275" alt="Scanner side">
 </p>
 
-The prototype combines an ESP32-CAM, OV5640 camera, controlled white illumination, passive buzzer, Wi-Fi and local flash storage. Labels can be printed on travelers, PCBs, components, packaging and fixtures, or displayed on a computer or electronic-paper screen.
+The prototype combines an ESP32-CAM, OV5640 camera, controlled white illumination, passive buzzer, Wi-Fi, and local flash storage. Labels can be printed on travelers, PCBs, components, packaging, and fixtures, or displayed on a computer or electronic-paper screen.
+
+**Phone and offline use:** Open the dashboard from a phone or tablet connected to the scanner’s setup access point or the same local Wi-Fi network. This gives operators a mobile interface without a dedicated PC. The scanner does not have a cellular modem: a phone’s cellular-data connection alone cannot reach it. Once a workflow is started, Embedded mode continues scanning, validating steps, and saving records locally without an internet connection or an open browser. Export the journal when the dashboard is reachable again.
 
 ## Operator experience
 
@@ -97,7 +99,7 @@ flowchart LR
 
 [![Accelerated assembly demonstration preview](docs/media/assembly-audible-preview.gif)](docs/media/assembly-audible.mp4)
 
-[Watch the full 47-second demonstration with sound](docs/media/assembly-audible.mp4). The example uses printed labels to demonstrate standalone scanning. The firmware rejects wrong recipes, unexpected parts, duplicate components and premature closure. A visual inspection is an operator instruction, not a firmware-verified action.
+[Watch the full 47-second demonstration with sound](docs/media/assembly-audible.mp4). The recorded example uses printed labels and the scanner’s embedded workflow. The firmware rejects wrong recipes, unexpected parts, duplicate components, and premature closure. A visual inspection is an operator instruction, not a firmware-verified action. The video demonstrates the scan workflow; phone access is through the local browser dashboard described above.
 
 [All workflow details and acceptance criteria](docs/workflows/README.md)
 
@@ -171,7 +173,7 @@ USB upload: 460800 baud. Serial monitor: 115200 baud. Sign on, select Embedded, 
 
 ## Limits and next steps
 
-This is an engineering prototype, not a qualified manufacturing or regulated QMS system. It checks labels, sequence and reported outcomes, not physical installation or instrument accuracy. Active runs are lost on reboot; archive capacity is finite, sign-on is self-reported, and thermal performance requires validation. Use a trusted local network.
+This is an engineering prototype, not a qualified manufacturing or regulated QMS system. It checks labels, sequence, and reported outcomes, not physical installation or instrument accuracy. Active runs are lost on reboot; archive capacity is finite; sign-on is self-reported; and thermal performance requires validation. The dashboard uses unencrypted HTTP on a trusted local network. Phones must connect to the scanner’s Wi-Fi or the same LAN; cellular data alone is not supported.
 
 Next: timed comparisons of manual and scanned workflows, controlled optical and reliability tests, durable run recovery, actual instrument integration and authenticated QMS connectivity.
 
