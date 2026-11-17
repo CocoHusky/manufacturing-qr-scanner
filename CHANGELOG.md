@@ -1,6 +1,8 @@
 # Changelog
 
 ## Development
+- Standby/wake, asynchronous standalone decoder, native FPS control and diagnostics.
+- Bounded LittleFS archive, UXGA still capture and operator signature QR page.
 - Manufacturing payload parser, custom rules, part lookup and searchable CSV/JSON history.
 - Validation trials, matching decoder crop, native history synchronization and reusable PSRAM.
 - Preview JPEG capture, circle annotations and separate original export.

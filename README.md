@@ -23,7 +23,7 @@ ESP32-CAM and OV5640 scanner for component identification, lot traceability and 
 
 Scan a part, serial or lot number; associate it with the manufacturing record; capture close-up PCB photographs; circle defects and add notes for inspection, rework and nonconformance reports.
 
-Barcode scanning, preview-frame capture and circle/label annotation are implemented. Persistent MES records and calibrated macro optics remain planned.
+Barcode scanning, preview-frame capture and circle/label annotation are implemented. Persistent local records are supported; MES integration and calibrated macro optics remain planned.
 
 ## PCB inspection
 
@@ -62,7 +62,7 @@ The 128-character QR failed. Dimensions include quiet zones. Results are from pr
 | Standalone | Native QR/Data Matrix on ESP32 |
 | Compare | Both engines using the same JPEG |
 
-Native recognition uses a central crop up to 640 × 480 pixels. Native scan history holds 50 entries in RAM; browser history is session-only. Native physical read limits remain unverified. Manufacturing rules and the part lookup are saved in browser storage.
+Native recognition uses a central crop up to 640 × 480 pixels. Native recent history holds 50 entries in RAM; both engines can append raw records to the device archive. Native physical read limits remain unverified. Manufacturing rules and the part lookup are saved in browser storage.
 
 ## Setup
 
@@ -86,6 +86,7 @@ Prototype runs hot during continuous capture. Stop if excessively hot; use only 
 ## Next steps
 
 - Validate native recognition, minimum marking size and ±5% dimensional tolerance.
-- Measure power, temperature and scan latency; implement sensor standby.
-- Add physical trigger, dedicated high-resolution capture and persistent lot records.
+- Measure power, temperature, scan latency and standby savings.
+- Validate UXGA capture, operator sign-off and archive retention; add physical trigger.
 - Qualify actual PCB markings and review security/licensing before release.
+- OTA requires a smaller firmware or larger flash with dual application slots.

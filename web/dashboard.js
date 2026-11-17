@@ -3,7 +3,7 @@ function loadLocal(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{
 let rules=loadLocal('scanner.rules',[]),parts=loadLocal('scanner.parts',{}),nativeSeen=new Set(),nativeBoot='',nativeLastCount=0,nativeFrameCount=0;
 let trials=[],trial=null;
 function parseRecord(r){let p=T.parse(r.raw,rules),id=p.fields.part||p.fields.id||'';let desc=Object.prototype.hasOwnProperty.call(parts,id)?parts[id]:'';return {...r,parsed:p,description:typeof desc==='string'?desc:''}}
-function addRecord(r){logs.unshift(parseRecord(r));scanTotal++;renderLog()}
+function addRecord(r){logs.unshift(parseRecord(r));scanTotal++;renderLog();if(r.engine==='Browser')fetch('/record',{method:'POST',body:new URLSearchParams({raw:r.raw,format:r.format,time:r.time})}).then(async q=>{if(!q.ok)$('diagnostics').textContent='Archive: '+await q.text()}).catch(e=>$('diagnostics').textContent='Archive write failed')}
 function item(r){let li=document.createElement('li'),head=document.createElement('strong');head.textContent=(r.time?new Date(r.time).toLocaleString():'Device uptime '+r.uptime+' ms')+' | '+r.engine+' | '+r.format;li.append(head);
  let p=r.parsed;for(const [k,v] of Object.entries(p.fields)){let row=document.createElement('div');row.textContent=k+' — '+v;li.append(row)}
  if(r.description){let row=document.createElement('div');row.textContent=r.description;li.append(row)}
@@ -17,6 +17,12 @@ function syncNative(d){if(d.boot!==nativeBoot||d.count<nativeLastCount){nativeSe
 }
 function configureTrace(){
  $('searchLog').oninput=renderLog;
+ $('initStorage').onclick=async()=>{if(!confirm('Initialize the unmounted archive partition? Existing data in that partition may be erased.'))return;let r=await fetch('/storage-init',{method:'POST',body:new URLSearchParams({confirm:'INITIALIZE'})});if(!r.ok)$('diagnostics').textContent=await r.text();else await controls()};
+ $('autoStandby').onchange=()=>setStandby('auto='+($('autoStandby').checked?'1':'0'));
+ $('nativeRate').onchange=()=>setStandby('fps='+$('nativeRate').value);
+ $('sleepNow').onclick=async()=>{running=false;$('pause').textContent='Resume';await setStandby('mode=sleep')};
+ $('wakeNow').onclick=async()=>{await setStandby('mode=wake');running=true;$('pause').textContent='Pause'};
+ $('highPhoto').onclick=async()=>{let was=running;running=false;try{let r=await fetch('/photo?size=uxga');if(!r.ok)throw Error(await r.text());photoBlob=await r.blob();$('snapshot').click()}catch(e){$('diagnostics').textContent=e.message}finally{running=was}};
  $('rules').value=JSON.stringify(rules,null,2);$('parts').value=JSON.stringify(parts,null,2);
  $('saveRules').onclick=()=>{try{let r=JSON.parse($('rules').value),p=JSON.parse($('parts').value);if(!Array.isArray(r)||r.some(x=>!x||typeof x.prefix!=='string'||!x.prefix||typeof x.separator!=='string'||!x.separator||!Array.isArray(x.fields)||x.fields.some(k=>!T.fields.includes(k))))throw Error('Invalid custom rule');if(!p||typeof p!=='object'||Array.isArray(p)||Object.values(p).some(x=>typeof x!=='string'))throw Error('Part database must map identifiers to descriptions');localStorage.setItem('scanner.rules',JSON.stringify(r));localStorage.setItem('scanner.parts',JSON.stringify(p));rules=r;parts=p;logs=logs.map(parseRecord);renderLog();$('rulesMsg').textContent='Saved locally'}catch(e){$('rulesMsg').textContent=e.message}};
  $('exportJSON').onclick=()=>downloadFile('scans.json',JSON.stringify(logs.slice().reverse(),null,2),'application/json');
@@ -34,3 +40,7 @@ let photoBlob=null,photoOriginal=null,photoImage=null,marks=[];
 function redrawPhoto(){if(!photoImage)return;let c=$('photo'),g=c.getContext('2d');g.drawImage(photoImage,0,0);g.strokeStyle='#ff3030';g.fillStyle='#ff3030';g.lineWidth=Math.max(3,c.width/300);g.font=Math.max(14,c.width/50)+'px sans-serif';for(const m of marks){let x=(m.a[0]+m.b[0])/2,y=(m.a[1]+m.b[1])/2;g.beginPath();g.ellipse(x,y,Math.max(1,Math.abs(m.a[0]-m.b[0])/2),Math.max(1,Math.abs(m.a[1]-m.b[1])/2),0,0,2*Math.PI);g.stroke();g.fillText(m.label,Math.min(m.a[0],m.b[0]),Math.max(20,Math.min(m.a[1],m.b[1])-5))}}
 function trialObserve(engine,raw){if(!trial||trial.results[engine]||!raw)return;trial.results[engine]={outcome:T.normalize(raw)===trial.expected?'correct':'wrong',latency_ms:Math.round(performance.now()-trial.start)};let want=trial.engine==='compare'?['browser','native']:[trial.engine==='device'?'native':'browser'];if(want.every(k=>trial.results[k]))finishTrial()}
 function finishTrial(){if(!trial)return;clearTimeout(trial.timer);let want=trial.engine==='compare'?['browser','native']:[trial.engine==='device'?'native':'browser'];for(let engine of want)trials.push({engine,symbol_id:trial.symbol_id,...(trial.results[engine]||{outcome:'timeout',latency_ms:''})});$('trialStatus').textContent=want.map(k=>k+': '+(trial.results[k]?.outcome||'timeout')).join(' | ')+' · '+trials.length+' observations';trial=null;$('startTrial').disabled=false}
+
+let diagLoaded=false;
+async function setStandby(q){try{let r=await fetch('/standby?'+q,{method:'POST'});if(!r.ok)throw Error(await r.text());diagLoaded=false;await controls()}catch(e){$('diagnostics').textContent=e.message}}
+function updateDiagnostics(d){$('initStorage').hidden=d.journalReady;if(!diagLoaded){$('autoStandby').checked=d.autoStandby;$('nativeRate').value=Math.round(1000/d.nativePeriod);diagLoaded=true}$('diagnostics').textContent=(d.asleep?'Standby':'Camera active')+' | Heap '+d.heap+' B | PSRAM '+d.psram+' B | Uptime '+Math.round(d.uptime/1000)+' s | '+(d.journalReady?'Archive ready':'Archive unavailable')+(d.journalError?' | '+d.journalError:'')}
