@@ -1,8 +1,39 @@
-# Verification plan (proposed)
+# Verification plan
 
-1. Record print model/DPI/media, measure 50 mm scale, inspect print under microscope. Record camera/lens, working distance, resolution, ROI, LED PWM, exposure, ambient lighting, firmware commit and browser.
-2. Minimum marking: 0.5–5 mm square QR/ECC200, 1/4/8/16 characters. Maximum QR payload: 80/96/104/112/120/128 characters at usable 8–12 mm sizes. Retest exact failed 128-character samples. Boundary PDF pending inclusion.
-3. Dimensional tolerances: nominal and ±5% side length at 4,5,8,10,12 mm (3.8/4.2, 4.75/5.25, 7.6/8.4, 9.5/10.5, 11.4/12.6 mm).
-4. Twenty independent presentations per condition; remove code between trials. Record payload, correct/incorrect, timeout, duplicate and latency. Proposed screen: at least 19/20 correct at nominal and each endpoint, zero incorrect reads. This is 95% observed, not a 95% confidence bound. Increase trials/sample count before production qualification.
-5. Measure temperature and input current versus time, including idle, browser closed, resolution/rate/PWM sweeps, and continuous scanning. Stop on abnormal heating, brownouts or instability. Separate acquisition, transfer, decode and time-to-first-read. Quantify motion and angular tolerance.
-6. Repeat with actual production PCB silkscreen or laser marks. Select smallest configuration with sufficient payload and reliability margin. Record all failures and untested conditions separately.
+This plan separates optical feasibility from production qualification. The current bench results are qualitative observations. No production acceptance limits or production validation have been completed.
+
+## 1. Freeze the test setup
+
+For every trial, record the firmware commit, decoder mode, camera resolution, scan region, focus state, LED level, exposure, ambient lighting, working distance, angle, marking material, printer or marking process, print DPI, measured symbol size, payload, and time to result. Verify printed dimensions against a measured scale.
+
+Use the same physical targets in Browser and Embedded modes. Record whether a target is inside or outside the native 640 × 480 center crop. Test center, edge, and corner positions separately; the preview being visible does not mean the Embedded decoder can read it.
+
+## 2. Map optical limits
+
+Use QR and Data Matrix ECC 200 targets with known payloads and exact sample IDs. Include the previously ambiguous 128-character QR samples. Sweep symbol sizes and payloads separately; include quiet zones in measured footprint and record encoding and error-correction settings.
+
+Test nominal sizes and ±5% dimensional variation. Include actual production PCB silkscreen or laser markings before selecting a minimum. Record the smallest reliably readable symbol and the largest symbol that fits the intended fixture field of view. Do not infer a universal maximum code size from one camera position.
+
+## 3. Engineering screen
+
+For each selected size, payload, position, and decoder mode, make at least 20 independent presentations. Remove and replace the target between trials. Record correct reads, wrong reads, timeouts, duplicates, and time-to-result.
+
+A screen result of 19/20 correct with no wrong reads is only an engineering screen. It is not evidence of production reliability or an acceptance criterion for release. Define production sampling and acceptance criteria from the product risk and required error rate before qualification.
+
+## 4. Measure operator time
+
+Time the same representative task using paper, manual computer entry, and the proposed two-scan fixture workflow. Include setup, scan retries, corrections, and record review. Report median and range across repeated runs, and keep actual test duration separate from operator entry time.
+
+The two-scan case is not measurable with the current prototype because automatic fixture capture is not implemented. Treat any time comparison before that integration as a planning model, not a product result.
+
+## 5. Verify the fixture record
+
+Before a pilot, demonstrate that a single run record binds the unit ID, fixture ID, recipe/version, operator, calibration state, run ID, timestamps, raw measurements, pass/fail decision, and relevant image references. Verify duplicate prevention, interrupted runs, rework/retest handling, local persistence, export, and cloud-sync recovery.
+
+## 6. Characterize the device
+
+Measure input current and component temperature during idle, normal scanning, high LED output, maximum resolution, and sustained operation. Measure camera acquisition, transfer, decode, and end-to-end scan latency separately. Test focus, motion, angle, illumination variation, low contrast, damaged codes, duplicate suppression, and recovery after power or network loss.
+
+## 7. Close production gaps
+
+Use production markings and the intended fixture geometry. Set and document optical, thermal, security, data-retention, recovery, and throughput requirements. Complete verification against those requirements before describing the system as production-ready.
