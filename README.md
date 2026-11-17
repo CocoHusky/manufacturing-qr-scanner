@@ -1,122 +1,84 @@
-# Manufacturing QR & Data Matrix Scanner
+# Manufacturing Test Scanner
 
-ESP32-CAM and OV5640 scanner for component identification, lot traceability and PCB inspection. Supports browser and native ESP32 decoding over a local network.
+A camera-based reader for QR and Data Matrix labels on components and test articles. It captures an identifier, parses supported label data, and keeps a local scan record so operators do not have to retype identifiers.
 
 <p align="center">
-<img src="docs/media/prototype-front.jpg" alt="Scanner front" width="280">
-<img src="docs/media/prototype-side.jpg" alt="Scanner side" width="280">
+<img src="docs/media/prototype-front.jpg" alt="Manufacturing scanner prototype" width="300">
 </p>
 
-| Information density | Compact markings | QR size ladder |
-| :---: | :---: | :---: |
-| ![Density scanning](docs/media/demo-density-scanning.gif) | ![Compact markings](docs/media/demo-compact-marking.gif) | ![QR ladder](docs/media/demo-qr-ladder.gif) |
-| [MP4](docs/media/demo-density-scanning.mp4) | [MP4](docs/media/demo-compact-marking.mp4) | [MP4](docs/media/demo-qr-ladder.mp4) |
+[Watch the compact-marking scan demo](docs/media/demo-compact-marking.mp4) · [See the prototype](docs/media/prototype-side.jpg)
 
-## Features
+## What works today
 
-- QR, Data Matrix and linear barcode recognition in the browser.
-- Embedded QR and Data Matrix decoding using ZXing-C++.
-- Browser and Embedded operating modes, searchable manufacturing history, CSV/JSON export and local part lookup.
-- Test sign-in with name, department, test, handwritten signature, acknowledgment and compact 15 mm record QR.
-- Persistent local archive, camera standby and dual-slot firmware update layout.
-- Adjustable color JPEG resolution, scan rate, CPU frequency, Wi-Fi power saving and LED PWM.
+- Browser decoding: QR, Data Matrix, and linear barcodes.
+- ESP32 decoding: QR and Data Matrix.
+- Browser-side parsing for ISO/IEC 15434 Format 06, JSON, key/value labels, and configured custom formats.
+- Local scan history, searchable records, CSV/JSON export, and a bounded device archive.
+- Full-resolution still capture with simple image annotation.
 
-## Manufacturing workflow
+The browser preview shows the full camera frame. Browser decoding defaults to the full frame and also supports a smaller center region. Native ESP32 decoding currently checks only a fixed center crop; see [field of view and resolution](docs/HARDWARE_AND_FIRMWARE.md#recognition-pipeline).
 
-Scan a part, serial or lot number; associate it with the manufacturing record; capture close-up PCB photographs; circle defects and add notes for inspection, rework and nonconformance reports.
+## What the prototype does not do
 
-Barcode scanning, preview-frame capture and circle/label annotation are implemented. Persistent local records are supported; MES integration and calibrated macro optics remain planned.
+It does not start a test, control a fixture, collect instrument measurements, decide pass/fail, or upload records to a cloud or MES. Those are the next product steps. The sign-in page and image annotation are prototype utilities; sign-in is self-reported and is not authenticated or a regulated electronic signature.
 
-## Manufacturing data parsing
+## Bench-read observations
 
-![ISO/IEC 15434 Data Matrix parsing](docs/media/manufacturing-parser.png)
+These are qualitative reads from printed targets, not validated operating limits. The tests did not consistently record independent repeats, print settings, camera distance, lighting, or latency. Treat the figures as promising examples, not guaranteed limits.
 
-ISO/IEC 15434 Format 06 fields extracted from a component label. The decoded component fields appear alongside the camera view.
-
-## PCB inspection
-
-[![Annotated PCB finding](docs/inspection/pcb-annotated.png)](docs/inspection/README.md)
-
-Operator-reported capacitor short; electrical verification required. [Original image](docs/inspection/pcb-original.png).
-
-## Bench results
-
-| Marking | Footprint | Payload |
-|---|---:|---:|
-| Smallest reported QR | 5 × 5 mm | 16 characters |
-| Smallest reported Data Matrix | 4 × 4 mm | 16 characters |
-| Data Matrix density | 8 × 8 mm | 96 characters |
-| QR density candidate | 8–12 mm | 96 characters; retest required |
-
-The 128-character QR failed. Dimensions include quiet zones. Results are from printed targets, not production reliability tests.
-
-![Payload capacity](docs/figures/capacity.svg)
-
-## Hardware
-
-| Component | Specification |
-|---|---|
-| MCU | ESP32, 4 MB flash, 4 MB PSRAM detected |
-| Camera | OV5640, color JPEG up to 1600 × 1200 |
-| Illumination | GPIO4, 20 kHz PWM |
-| Browser decoder | ZXing-WASM 3.1.7 |
-| Native decoder | ZXing-C++ 2.2.1 |
-
-## Decoder modes
-
-| Mode | Processing |
-|---|---|
-| Browser | ZXing-WASM on PC or phone |
-| Embedded | Native QR/Data Matrix on ESP32 |
-
-Embedded recognition uses the full camera field of view, downsampled to at most 640 × 480 pixels. Native recent history holds 50 entries in RAM; both engines can append raw records to the device archive. Native physical read limits remain unverified. Manufacturing rules and the part lookup are saved in browser storage.
-
-## Setup
-
-1. Install PlatformIO Core and connect the USB serial programmer.
-2. Build with `pio run`.
-3. Identify the USB port with `pio device list`, then run `pio run -t upload --upload-port <port>`.
-4. Open the serial monitor at 115200 baud. For initial setup, join the scanner AP using the password printed in the monitor and configure Wi-Fi at 192.168.4.1.
-5. Open the assigned scanner IP in a browser and select the decoder mode.
-
-Prototype runs hot during continuous capture. Stop if excessively hot; use only on a trusted local network.
-
-## Operator and firmware updates
-
-[Operating instructions](docs/OPERATIONS.md) cover test sign-in, signed inspection records and password-protected dual-slot OTA.
-
-## Documentation
-
-- [Hardware and firmware](docs/HARDWARE_AND_FIRMWARE.md)
-- [Test report](docs/TEST_REPORT.md) · [Per-target results](docs/MARKED_RESULTS.md) · [Observations CSV](test/observations.csv)
-- Test sheets: [Mixed barcodes](docs/test-sheets/manufacturing_barcode_test.pdf) · [QR density](docs/test-sheets/QR_information_density_test.pdf) · [Data Matrix / PCB](docs/test-sheets/PCB_Data_Matrix_and_QR_Test.pdf)
-- [Verification plan](docs/VERIFICATION_PLAN.md) · [Trial template](test/trial_template.csv) · [Validation CSV](test/validation_template.csv)
-- [Changelog](CHANGELOG.md)
-- [Third-party licenses](docs/THIRD_PARTY.md) · [Superseded report](docs/archive/Scanner_System_Validation_SUPERSEDED.pdf)
-
-## Roadmap: manufacturing test automation
-
-The scanner is intended to identify the unit under test, associate it with a test procedure, trigger the appropriate fixture, and preserve measurements and inspection evidence under one traceable record.
-
-```mermaid
-flowchart LR
- A[Operator sign-in] --> B[Scan unit serial or lot]
- B --> C[Resolve test recipe]
- C --> D[Trigger test fixture]
- D --> E[Acquire measurements]
- E --> F[Evaluate acceptance criteria]
- F --> G[Save result and inspection evidence]
- G --> H[Sync to manufacturing database]
-```
-
-| Priority | Planned capability | Automation benefit |
+| Marking | Bench observation | Evidence status |
 |---|---|---|
-| 1 | Fixed camera mount, controlled illumination and physical trigger | Repeatable identification and hands-free acquisition |
-| 2 | Unit ID, test ID, fixture ID and run ID | Link each measurement and image to a specific unit and test run |
-| 3 | Versioned test recipes and fixture API (HTTP, serial or MQTT) | Automatically select and execute the correct procedure |
-| 4 | Test limits, calibration status and pass/fail rules | Consistent decisions with recorded evidence |
-| 5 | External database, image storage and offline sync | Durable manufacturing history and MES integration |
-| 6 | Automated retries, interlocks and exception handling | Safe recovery, rework routing and duplicate prevention |
-| 7 | Validation, throughput and reliability testing | Quantify repeatability before deployment |
+| QR | 5 mm square, 16 alphanumeric characters | Reported read; repeatability unknown |
+| Data Matrix ECC 200 | 4 mm square, 16 characters | Reported read; repeatability unknown |
+| Data Matrix ECC 200 | 8 mm square, 96 characters | Reported read; strongest dense result |
+| QR | 10–12 mm, up to 96 characters | Candidate inferred from the test grid; not a confirmed maximum |
+| QR, compact PCB label | 15 mm square, 7 characters | Reported read; does not establish a general maximum |
 
-Future work also includes thermal and power characterization, optical qualification on production markings, measured scan latency, verified OTA recovery and production access controls. The sign-in acknowledgment is self-reported; it is not authenticated identity or a regulated electronic signature. The roadmap describes planned functionality, not implemented fixture control.
+Reported footprints include the code quiet zone. Character counts describe the tested ASCII samples. A later 128-character QR failure was reported, but its exact size and encoding were not recorded. The maximum dense QR payload is therefore unknown. Physical read limits depend on symbol type, encoding, print quality, focus, working distance, lighting, and framing. See the [full test report](docs/TEST_REPORT.md) and [per-target evidence](docs/MARKED_RESULTS.md).
+
+The sensor can capture up to 1600 × 1200 pixels. That is image resolution, not a promise that a symbol of a given size will decode. The minimum pixels per module, working distance, and reliable scan envelope have not been measured.
+
+## Proposed test-bench workflow
+
+1. Scan the unit serial or component label.
+2. Scan the fixture or test-recipe identifier.
+3. The fixture validates the pairing and runs the selected procedure.
+4. The fixture records measurements, result, calibration state, image references, and a unique run ID.
+5. Save locally first, then sync the record to the manufacturing system when available.
+
+This flow is a product direction, not an implemented capability. The fixture should own test execution and measurements; the scanner should provide reliable unit identification and operator feedback.
+
+## Illustrative time model
+
+For a seven-item record (unit, fixture, test, three measurements, and outcome), planning assumptions are 30–60 seconds to write on paper, 20–40 seconds to type, and 4–8 seconds for two scans plus review after automatic fixture capture is implemented.
+
+| Entry method | Assumed operator entry time per unit | 100 units |
+|---|---:|---:|
+| Paper record | 30–60 s | 50–100 min |
+| Manual computer entry | 20–40 s | 33–67 min |
+| Two scans plus automatic capture | 4–8 s | 7–13 min |
+
+This is a modeled comparison, not a measured speed result. It excludes test duration, fixture setup, exceptions, failed scans, and retries. The current prototype has not been timed end to end and does not perform automatic fixture capture. A timed study is required before claiming a throughput improvement.
+
+## Hardware and limits
+
+- ESP32-CAM with OV5640 camera; maximum capture size 1600 × 1200.
+- Browser decoding runs on the connected computer or phone.
+- Native decoding uses a 640 × 480 center crop to limit memory use. At 1600 × 1200 this is 40% of the image width and height, or 16% of its area. A code outside that center crop can remain visible in the preview but will not be read by the native decoder.
+- Device archive capacity is 192 KiB. Export records before the archive fills.
+- Continuous operation has caused excessive heating; current and component temperatures are not yet characterized.
+- Autofocus actuator movement, scan repeatability, false-read rate, and end-to-end latency are unverified.
+- The local web interface uses unencrypted HTTP. Use a trusted local network and synthetic data for demos.
+
+See [hardware and firmware](docs/HARDWARE_AND_FIRMWARE.md), [operations](docs/OPERATIONS.md), and the [verification plan](docs/VERIFICATION_PLAN.md).
+
+## Build
+
+1. Install PlatformIO Core.
+2. Connect the USB serial programmer and run pio run.
+3. Upload with pio run -t upload --upload-port PORT.
+4. Configure Wi-Fi at 192.168.4.1, then open the scanner's assigned address in a browser.
+
+## Project status
+
+Engineering prototype for a manufacturing test workflow. It is not qualified or approved for production use. A project-level license has not been selected; third-party notices are listed in [THIRD_PARTY.md](docs/THIRD_PARTY.md).
