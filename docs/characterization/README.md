@@ -8,16 +8,31 @@ The initial goal is a practical marking envelope for prototype assembly and test
 | Data Matrix | 5–6 mm | 32 characters |
 | Data Matrix | 8 mm | 96 characters |
 | Data Matrix | 10 mm | Conditional 96-character report; field-of-view conflict |
-| QR | 5 mm | 16 characters (alphanumeric) |
+| QR V1/M | 5 mm | P:05 (4 characters) size-ladder read; new successful recognition screenshot |
+| QR | 5 mm | 16 characters (alphanumeric L reported; M inferred) |
 | QR | 8 mm | Up to 96 characters reported for alphanumeric L; inferred cutoff |
 | QR | 10–12 mm | 96-character candidates; 128-character failure not isolated |
-| QR | 15 mm | Short PCB identifier read in separate comparison |
+| QR-M | 15 mm | PCB-002 (7 characters) reported read in separate comparison; maximum unknown |
 
 ![Payload capacity](../figures/capacity.svg)
 
 These are qualitative operator-reported observations, not guaranteed limits. Exact encoding, error correction, quiet zone and print quality affect payload density. A compact identity code can reference a richer external record rather than embedding every field.
 
 The current laser printer constrains module fidelity; 4 mm Data Matrix with 16 ASCII characters is the smallest demonstrated compact result in this setup. This does not establish a camera-only resolution limit. Contrast, print resolution, focus distance, full-frame field of view, exposure and motion have not been separated. Direct marking on manufactured PCBs remains unqualified.
+
+[Plotted observations (CSV)](optical-results.csv). The 15 mm short-code point is intentionally separate from the density series.
+
+## Printing and module resolution
+
+The latest 5 mm QR V1/M size-ladder screenshot shows a recognized QR with visible edge irregularity; it is not a calibrated printer-resolution measurement. Version 1 has 21 active modules per side, plus four quiet-zone modules per edge. Assuming nominal footprint includes quiet zone, module pitch is 5 mm / 29 = 172.4 µm.
+
+| Nominal printer DPI | Dot pitch | Dots per 5 mm QR module |
+| ---: | ---: | ---: |
+| 300 | 84.7 µm | 2.04 |
+| 600 | 42.3 µm | 4.07 |
+| 1200 | 21.2 µm | 8.15 |
+
+Four dots per module would require approximately 589 DPI; 600 DPI is therefore a reasonable engineering target, not a measured printer specification or validated minimum. The 4 mm ECC200 example (18 active modules plus two quiet-zone modules, if that symbol size applies) has 200 µm pitch, or 4.72 dots per module at 600 DPI. Printer toner spread, camera blur and compression cannot be separated from the screenshots alone. Measure a calibrated printed target or consult the printer specification to determine actual resolution.
 
 ## Evidence and reproduction
 

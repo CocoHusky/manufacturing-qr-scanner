@@ -134,11 +134,11 @@ Compact markings enable traceability on space-constrained PCBs. Our initial benc
 | Data Matrix | 8 × 8 mm | 96 characters reported read |
 | QR | 5 × 5 mm | 16 characters reported read |
 | QR | 10–12 mm | 96-character candidate; 128-character attempt failed |
-| QR | 15 × 15 mm | Short PCB identifier read in separate comparison |
+| QR-M | 15 × 15 mm | PCB-002 (7 characters) reported read; maximum payload unknown |
 
 ![Observed payload capacity](docs/figures/capacity.svg)
 
-The laser printer is a practical constraint for small, dense markings. Print quality, optics, focus and field of view have not been isolated experimentally. These are qualitative bench observations, not guaranteed operating limits.
+A 5 mm QR V1/M size-ladder code was also successfully recognized (4-character P:05). Its nominal 172 µm module pitch corresponds to about four dots per module at 600 DPI, an engineering target rather than a measured printer specification. The laser printer is a practical constraint for small, dense markings. Print quality, optics, focus and field of view have not been isolated experimentally. These are qualitative bench observations, not guaranteed operating limits.
 
 [Characterization, original test sheets and evidence](docs/characterization/README.md)
 

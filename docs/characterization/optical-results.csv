@@ -1,0 +1,23 @@
+format,footprint_mm,ascii_characters,evidence_status,notes
+QR alpha L,5,16,reported,Qualitative observation; see TEST_REPORT.md
+QR alpha L,6,16,reported,Qualitative observation; see TEST_REPORT.md
+QR alpha L,8,96,inferred,Qualitative observation; see TEST_REPORT.md
+QR alpha L,10,96,candidate,Qualitative observation; see TEST_REPORT.md
+QR alpha L,12,96,candidate,Qualitative observation; see TEST_REPORT.md
+QR alpha M,5,16,inferred,Qualitative observation; see TEST_REPORT.md
+QR alpha M,6,32,inferred,Qualitative observation; see TEST_REPORT.md
+QR alpha M,8,64,inferred,Qualitative observation; see TEST_REPORT.md
+QR alpha M,10,96,candidate,Qualitative observation; see TEST_REPORT.md
+QR alpha M,12,96,candidate,Qualitative observation; see TEST_REPORT.md
+QR byte M,5,4,inferred,Qualitative observation; see TEST_REPORT.md
+QR byte M,6,16,inferred,Qualitative observation; see TEST_REPORT.md
+QR byte M,8,64,inferred,Qualitative observation; see TEST_REPORT.md
+QR byte M,10,96,candidate,Qualitative observation; see TEST_REPORT.md
+QR byte M,12,96,candidate,Qualitative observation; see TEST_REPORT.md
+Data Matrix,4,16,reported,Qualitative observation; see TEST_REPORT.md
+Data Matrix,5,32,reported,Qualitative observation; see TEST_REPORT.md
+Data Matrix,6,32,reported,Qualitative observation; see TEST_REPORT.md
+Data Matrix,8,96,reported,Qualitative observation; see TEST_REPORT.md
+Data Matrix,10,96,conditional,Qualitative observation; see TEST_REPORT.md
+QR V1/M short identifier,5,4,reported,P:05 size ladder; 5 mm screenshot confirms recognition
+QR V1/M short identifier,15,7,reported,15 mm PCB-002 comparison; not a maximum

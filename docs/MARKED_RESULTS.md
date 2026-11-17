@@ -7,7 +7,7 @@ The original test PDFs are the source for symbol IDs, encoding, footprint and pa
 ## Original mixed test
 
 - P:05, P:06, P:08, P:10 shown in scan log (P).
-- P:04 shown not recognized in current frame (F for that attempt only).
+- P:04 shown not recognized in current frame (F for that attempt only). A later 5 mm QR V1/M screenshot shows recognition; the existing P:05 log establishes the four-character result. The separate 15 mm QR-M PCB-002 read is plotted at seven characters; density remains unknown.
 - Other QR ladder cells, dense payloads, batch and linear barcode targets: outcomes not recorded per sample (?).
 - Original fixed 44×44 Data Matrix was superseded by compact ECC200 test; original PCB-002 was reported too large for the window.
 

@@ -24,6 +24,8 @@ Version labels mapped against original printed PDF. L-prefixed sample IDs anchor
 
 The later 128 failure scope across encodings and sizes is unspecified. Do not count any 128-character sample as a verified maximum. Separate compact PCB QR test did read 15 mm; FOV limits depend on geometry and focus distance.
 
+A separate short-code QR V1/M size-ladder read at 5 mm (P:05, four ASCII characters) is supported by the reported scan log and the latest successful-recognition screenshot. The 15 mm QR-M PCB-002 read (seven characters) is included as a separate plotted observation, not an extrapolated maximum. See the [characterization data and printer-resolution estimate](characterization/README.md).
+
 ## Data Matrix results
 
 | Side (mm) | Greatest reported readable characters |
