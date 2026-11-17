@@ -1,6 +1,6 @@
 # Manufacturing & Test Traceability Scanner
 
-An ESP32-CAM scanner for validating assembly and test steps, capturing traceability records, and reducing manual data entry. Operate it from a phone, tablet, or computer browser; after setup, scans can be processed and saved locally without internet access.
+An scanner for validating assembly and test steps, capturing traceability records, and reducing manual data entry. Operate it from a phone, tablet, or computer browser; after setup, scans can be processed and saved locally without internet access.
 
 ## Contents
 
