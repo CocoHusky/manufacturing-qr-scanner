@@ -5,17 +5,19 @@ Reduce manual data entry, guide manufacturing and test workflows, and capture tr
 ## Contents
 
 - [The problem](#the-problem)
+  - [Estimated documentation time and potential savings](#estimated-documentation-time-and-potential-savings)
 - [The solution](#the-solution)
-- [Estimated documentation time](#estimated-documentation-time)
-- [What the scanner records](#what-the-scanner-records)
-- [Operator experience](#operator-experience)
+- [How it works](#how-it-works)
 - [Manufacturing and test examples](#manufacturing-and-test-examples)
 - [Macro inspection and defect documentation](#macro-inspection-and-defect-documentation)
+- [What the scanner records](#what-the-scanner-records)
+- [Operator experience](#operator-experience)
 - [Scanner settings](#scanner-settings)
 - [From device history to failure investigation](#from-device-history-to-failure-investigation)
 - [Optical characterization](#optical-characterization)
 - [Browser vs. Embedded](#browser-vs-embedded)
 - [Getting started](#getting-started)
+- [Engineering reference](#engineering-reference)
 - [License](#license)
 
 ## The problem
@@ -28,6 +30,25 @@ Manual recording creates two common problems:
 | --- | --- |
 | ![Operator copying device and lot details onto a paper traveler at a test bench](docs/media/problem-manual-time.jpg) | ![Operator reviewing a paper test record with a duplicate entry highlighted](docs/media/problem-manual-errors.jpg) |
 | Operators copy serial numbers, lots, equipment IDs, and results instead of assembling or testing devices. | Mistyped identifiers, missing records, and duplicate entries can break the link between a device and its test. |
+
+### Estimated documentation time and potential savings
+
+For a six-component assembly traveler, compare manual documentation with our system’s scan-driven approach:
+
+| Documentation activity | Handwritten | Manual computer entry | Our system (estimated) |
+| --- | ---: | ---: | ---: |
+| Record and check identifiers | 3–5 min | 2–4 min | **10–60 s** |
+| Investigate a missing or incorrect identifier (per incident) | 10–60 min | 1–30 min | 0 min* |
+
+#### Estimated documentation effort — 100 devices
+
+| Activity | Handwritten | Manual computer entry | Our system (estimated) |
+| --- | ---: | ---: | ---: |
+| Record and check identifiers (100 devices) | 5–8 hr 20 min | 3 hr 20 min–6 hr 40 min | 17 min–1 hr 40 min |
+| Investigate 10 manual-entry incidents | 1 hr 40 min–10 hr | 10 min–5 hr | 0 min* |
+| **Combined estimated time** | **6 hr 40 min–18 hr 20 min** | **3 hr 30 min–11 hr 40 min** | **17 min–1 hr 40 min** |
+
+Engineering estimates assume 10 manual-entry incidents per 100 devices. *Zero minutes models elimination of transcription-related investigations only. See the [comparative validation protocol](docs/validation/README.md).
 
 ## The solution
 
@@ -57,7 +78,7 @@ The prototype combines an ESP32 and a OV5640 camera, controlled white illuminati
 
 **Phone and offline use:** Open the dashboard from a phone or tablet connected to the scanner’s setup access point or the same local Wi-Fi network. This gives operators a mobile interface without a dedicated PC. Once a workflow is started, Embedded mode continues scanning, validating steps, and saving records locally without an internet connection or an open browser. Export the journal when the dashboard is reachable again.
 
-### How it works
+## How it works
 
 ```mermaid
 flowchart LR
@@ -73,25 +94,34 @@ flowchart LR
  H --> I[Export traceability]
 ```
 
-## Estimated documentation time
+## Manufacturing and test examples
 
-For a six-component assembly traveler (device identification, six part/lot/serial records and final confirmation), a rough planning estimate is:
+[**Printable work instructions for experimental testing (PDF)**](docs/workflows/instructions.pdf) — print at 100% scale or display digitally.
 
-| Documentation activity | Handwritten | Manual computer entry | OUR DEVICE |
-| --- | ---: | ---: | ---: |
-| Record and check identifiers | 3–5 min | 2–4 min | 10–60 s |
-| Investigate a missing or incorrect identifier (per incident) | 10–60 min | 1–30 min | 0 min |
+| Application | Purpose |
+| --- | --- |
+| [01 — Component assembly](docs/workflows/01-component-assembly/README.md) | Capture device genealogy; prevent duplicate and missing components |
+| [02 — Benchtop functional test](docs/workflows/02-benchtop-functional-test/README.md) | Associate device, bench, PASS/FAIL result and measurement reference |
+| [03 — Thermal fixture test](docs/workflows/03-thermal-fixture-test/README.md) | Verify fixture, accessories and temperature result |
+| [04 — Environmental aging](docs/workflows/04-environmental-aging/README.md) | Record chamber exposure and confirm removal |
 
-### Estimated documentation effort — 100 devices
+### Assembly demonstration
 
-| Activity | Handwritten | Manual computer entry | OUR DEVICE |
-| --- | ---: | ---: | ---: |
-| Record and check identifiers (100 devices) | 5–8 hr 20 min | 3 hr 20 min–6 hr 40 min | 17 min–1 hr 40 min |
-| Investigate 10 manual-entry incidents | 1 hr 40 min–10 hr | 10 min–5 hr | 0 min* |
-| **Combined estimated time** | **6 hr 40 min–18 hr 20 min** | **3 hr 30 min–11 hr 40 min** | **17 min–1 hr 40 min** |
+[![Accelerated assembly demonstration preview](docs/media/assembly-audible-preview.gif)](docs/media/assembly-audible.mp4)
 
-Engineering estimates assume 10 manual-entry incidents per 100 devices. *The scanning scenario models elimination of transcription-related investigations. See the [comparative validation protocol](docs/validation/README.md).
-*This represents time where issues do not come from incorrect data entery.
+[Watch the full 47-second demonstration with sound](docs/media/assembly-audible.mp4). The recorded example uses printed labels and the scanner’s embedded workflow. The firmware rejects wrong recipes, unexpected parts, duplicate components, and premature closure. The workflow also guides the operator through visual inspection.
+
+[All workflow details and acceptance criteria](docs/workflows/README.md)
+
+## Macro inspection and defect documentation
+
+The modified close-focus camera also captures macro-level PCB images for manual inspection and annotation. Preserve the original image and export the marked copy for test review.
+
+[Inspection procedure and examples](docs/inspection/README.md) · [Scanner settings, Wi-Fi and OTA guide](docs/settings/README.md)
+
+![Inspection capture interface with manual annotations](docs/media/screenshots/inspection-capture.png)
+
+Export original and annotated images from the browser and associate them with the relevant device or test record.
 
 ## What the scanner records
 
@@ -174,35 +204,6 @@ Distinct sounds let operators keep their attention on the device, components and
 Distinct signals communicate scan acceptance and test disposition, allowing operators to focus on the device and equipment.
 
 [Operating instructions](docs/OPERATIONS.md) · [Audible settings and electrical details](docs/HARDWARE_AND_FIRMWARE.md)
-
-## Manufacturing and test examples
-
-[**Open the four-workflow instruction PDF**](docs/workflows/instructions.pdf) — print at 100% scale or display digitally.
-
-| Application | Purpose |
-| --- | --- |
-| [01 — Component assembly](docs/workflows/01-component-assembly/README.md) | Capture device genealogy; prevent duplicate and missing components |
-| [02 — Benchtop functional test](docs/workflows/02-benchtop-functional-test/README.md) | Associate device, bench, PASS/FAIL result and measurement reference |
-| [03 — Thermal fixture test](docs/workflows/03-thermal-fixture-test/README.md) | Verify fixture, accessories and temperature result |
-| [04 — Environmental aging](docs/workflows/04-environmental-aging/README.md) | Record chamber exposure and confirm removal |
-
-### Assembly demonstration
-
-[![Accelerated assembly demonstration preview](docs/media/assembly-audible-preview.gif)](docs/media/assembly-audible.mp4)
-
-[Watch the full 47-second demonstration with sound](docs/media/assembly-audible.mp4). The recorded example uses printed labels and the scanner’s embedded workflow. The firmware rejects wrong recipes, unexpected parts, duplicate components, and premature closure. The workflow also guides the operator through visual inspection.
-
-[All workflow details and acceptance criteria](docs/workflows/README.md)
-
-## Macro inspection and defect documentation
-
-The modified close-focus camera also captures macro-level PCB images for manual inspection and annotation. Preserve the original image and export the marked copy for test review.
-
-[Inspection procedure and examples](docs/inspection/README.md) · [Scanner settings, Wi-Fi and OTA guide](docs/settings/README.md)
-
-![Inspection capture interface with manual annotations](docs/media/screenshots/inspection-capture.png)
-
-Export original and annotated images from the browser and associate them with the relevant device or test record.
 
 ## Scanner settings
 
