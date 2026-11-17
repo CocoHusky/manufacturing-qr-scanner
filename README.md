@@ -1,6 +1,6 @@
 # Manufacturing & Test Traceability Scanner
 
-A scanner for validating assembly and test steps, capturing traceability records, and reducing manual data entry for quality management systems. Operate it from a phone, tablet, or computer browser; after setup, scans can be processed and saved locally without internet access.
+A low-cost embedded scanner that reduces manual data entry, verifies manufacturing and test workflows, and links devices, components, equipment and results into traceable records.
 
 ## Contents
 
