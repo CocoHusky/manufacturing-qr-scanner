@@ -14,7 +14,7 @@ Workflow start: two rising notes. Correct scan: short high chirp and white LED f
 
 The benchtop and aging confirmation deadlines are 60 seconds. Aging timing begins at the first chamber scan; rescan the same chamber after at least five seconds. Network time is synchronized with NTP; elapsed time uses a monotonic clock. Export records before clearing the journal.
 
-[Workflow diagrams](workflows/README.md) · [Test sheets](test-sheets/manufacturing-pipeline.pdf)
+[Workflow diagrams](workflows/README.md) · [Test sheets](workflows/instructions.pdf)
 
 ## OTA
 

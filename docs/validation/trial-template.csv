@@ -1,0 +1,1 @@
+operator_id,trial_id,method,order,scenario,total_seconds,documentation_seconds,manual_entries,incorrect_fields,duplicate_items,missing_items,injected_errors,detected_errors,required_fields,complete_fields,rework_seconds,completed,notes

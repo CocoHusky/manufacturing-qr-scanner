@@ -1,137 +1,158 @@
-# Manufacturing Test Scanner
+# Manufacturing & Test Traceability Scanner
 
-A compact ESP32-CAM station for identifying components, verifying assembly and test sequences, and recording traceability data without manual transcription.
+Embedded, document-driven verification for prototype assembly, manufacturing and testing.
+
+## The problem
+
+Quality management depends on knowing where a device came from, which components and lots were used, what tests it completed, and where its results can be found. These relationships support failure investigation and improvements throughout development and manufacturing.
+
+Two recurring challenges with handwritten travelers and manual computer entry are:
+
+| **Time spent recording information** | **Human error from manual entry** |
+| --- | --- |
+| Operators repeatedly copy serial numbers, lot numbers, equipment IDs and results instead of assembling or testing the device. | Mistyped identifiers, missing records, duplicate entries and incorrect device-to-test associations undermine traceability. |
+
+## The solution
+
+Scan existing instructions, component labels and instrument results instead of transcribing them. The scanner checks the expected workflow, provides immediate audible and visual feedback, and stores structured records. After sign-on, Embedded mode does not require a connected computer for each scan.
+
+| Handwritten records | Manual computer entry | Scan-driven verification |
+| --- | --- | --- |
+| Copy identifiers onto a traveler | Type identifiers into a digital form | Present a label to the scanner |
+| Manual review of sequence and duplicates | Depends on application validation | Built-in recipe and duplicate checks |
+| Physical records need digitization | Digital records | Timestamped local journal and JSON export |
+
+The intended benefits are less documentation overhead and fewer manual-entry errors. Comparative time savings and error rates have not yet been measured.
 
 <p align="center">
-<img src="docs/media/prototype-front.jpg" width="280" alt="Scanner front">
-<img src="docs/media/prototype-side.jpg" width="280" alt="Scanner side">
+<img src="docs/media/prototype-front.jpg" width="275" alt="Scanner front">
+<img src="docs/media/prototype-side.jpg" width="275" alt="Scanner side">
 </p>
 
-## Operator workflow
+The prototype combines an ESP32-CAM, OV5640 camera, controlled white illumination, passive buzzer, Wi-Fi and local flash storage. Labels can be printed on travelers, PCBs, components, packaging and fixtures, or displayed on a computer or electronic-paper screen.
 
-| Sign on | Scan and identify |
+## Operator experience
+
+| Sign on | Monitor scans |
 | :---: | :---: |
-| <img src="docs/media/operator-sign-on.png" width="250" alt="Operator sign-on"> | Scan the device or workflow code; the active recipe checks identity and step order. |
+| <img src="docs/media/operator-sign-on.png" width="230" alt="Operator sign-on"> | Scan the workflow or device code; the dashboard displays the current step, accepted records and corrections. |
 
-Sign on, then scan the instruction-sheet header to launch its recipe or use Scanner for general identification. Correct scans give a short chirp and white LED flash; sequence errors produce a low beep. The final device scan closes the traceability record, including failed measurements. Export JSON for review.
+1. Sign on from a computer or mobile browser.
+2. Scan the procedure's Code 128 header to start a recipe.
+3. Follow the printed or digital instructions; present each required item individually.
+4. Listen for acceptance or rejection; correct errors before continuing.
+5. Confirm the original device and close the record.
+6. Export the journal for review or downstream integration.
 
 ```mermaid
 flowchart LR
- A[Operator sign-on] --> S[Scan workflow header or select Scanner]
- S --> B[Scan item label]
- B --> C{Active workflow?}
- C -->|No| D[Record identifier]
- C -->|Yes| E{Expected step and identity?}
- E -->|Yes| F[Advance or complete]
- E -->|No| G[Low beep; retain expected step]
- G --> B
- D --> H[JSON export]
- F --> H
+ A[Sign on] --> B[Scan recipe header]
+ B --> C[Present required label]
+ C --> D{Valid for current step?}
+ D -->|No| E[Warning tone; retry]
+ E --> C
+ D -->|Yes| F[Save event; chirp]
+ F --> G{All steps complete?}
+ G -->|No| C
+ G -->|Yes| H[Completion melody]
+ H --> I[Export traceability]
 ```
 
-## Assembly demonstration — audible guidance
+![Audible feedback patterns](docs/figures/feedback-tones.svg)
 
-[![Assembly demonstration preview](docs/media/assembly-audible-preview.gif)](docs/media/assembly-audible.mp4)
+[Operating instructions](docs/OPERATIONS.md) · [Audible settings and electrical details](docs/HARDWARE_AND_FIRMWARE.md)
 
-[Watch the full 47-second recording with sound](docs/media/assembly-audible.mp4) · [Print the assembly instruction sheet](docs/test-sheets/manufacturing-pipeline.pdf)
+## Manufacturing and test examples
 
-The printed sheet becomes the operator's work instruction. After sign-on, the embedded scanner reads the workflow header, captures the device traveler, and verifies six required components. Each accepted part produces a short chirp. A wrong label, repeated component or premature final confirmation produces a low warning tone and leaves the expected step unchanged. Rescanning the original traveler after all six components closes the record.
+[**Open the four-workflow instruction PDF**](docs/workflows/instructions.pdf) — print at 100% scale or display digitally.
 
-| Operator action | Scanner response |
-|---|---|
-| Start recipe from printed header | Rising start tone |
-| Scan a new required component | Chirp; record part number, lot and serial |
-| Scan the same component again after removing it from view | Reject; do not increment component count |
-| Scan another recipe or an unexpected part | Reject; retain expected step |
-| Confirm traveler before all six parts | Reject; continue assembly |
-| Confirm original traveler after six parts | Completion melody; save traceability record |
+| Application | Purpose |
+| --- | --- |
+| [01 — Component assembly](docs/workflows/01-component-assembly/README.md) | Capture device genealogy; prevent duplicate and missing components |
+| [02 — Benchtop functional test](docs/workflows/02-benchtop-functional-test/README.md) | Associate device, bench, PASS/FAIL result and measurement reference |
+| [03 — Thermal fixture test](docs/workflows/03-thermal-fixture-test/README.md) | Verify fixture, accessories and temperature result |
+| [04 — Environmental aging](docs/workflows/04-environmental-aging/README.md) | Record chamber exposure and confirm removal |
 
-In Embedded mode, decoding, sequence validation, audible feedback and local record storage run on the ESP32. A computer can be used for sign-on, monitoring and later export, but is not required for each scan. The buzzer communicates acceptance or rejection; the printed instructions identify the next action. This demonstration uses printed sample labels rather than a production assembly.
+### Assembly demonstration
 
-| Recording method | Operator interaction | Traceability |
-|---|---|---|
-| Handwritten | Copy part, lot and serial by hand | Manual checking and later digitization |
-| Manual computer entry | Type or copy identifiers into a form | Depends on form validation |
-| Embedded scanner | Present each label | Automatic identity/order checks and timestamped records |
+[![Accelerated assembly demonstration preview](docs/media/assembly-audible-preview.gif)](docs/media/assembly-audible.mp4)
 
-Potential benefits are less transcription and immediate error detection. No comparative cycle-time improvement has been measured.
+[Watch the full 47-second demonstration with sound](docs/media/assembly-audible.mp4). The example uses printed labels to demonstrate standalone scanning. The firmware rejects wrong recipes, unexpected parts, duplicate components and premature closure. A visual inspection is an operator instruction, not a firmware-verified action.
 
-## Manufacturing and test pipelines
+[All workflow details and acceptance criteria](docs/workflows/README.md)
 
-| Recipe | Verification |
-|---|---|
-| Assembly | Six required unique components; confirm original device |
-| Functional test | Device, bench, PASS/FAIL measurements; confirm within 60 seconds |
-| Thermal setup | Fixture, device, bag, supply, probe, PASS/FAIL temperature result and confirmation |
-| Aging | Device, chamber start and stop, device confirmation; exposure timing |
+## From device history to failure investigation
 
-[Four workflow diagrams and instructions](docs/workflows/README.md) · [Four-page operator instructions — revision 02 (PDF)](docs/test-sheets/manufacturing-pipeline.pdf)
-
-## Optical feasibility
-
-| Compact markings | QR density | Size ladder |
-| :---: | :---: | :---: |
-| ![Compact marking](docs/media/demo-compact-marking.gif) | ![Density](docs/media/demo-density-scanning.gif) | ![Size ladder](docs/media/demo-qr-ladder.gif) |
-
-| Marking | Reported bench read |
-|---|---|
-| QR | 5 × 5 mm, 16 characters |
-| Data Matrix | 4 × 4 mm, 16 characters |
-| Data Matrix | 8 × 8 mm, 96 characters |
-| QR | 10–12 mm, 96 characters remains a candidate; 128-character attempt failed |
-
-![Payload capacity](docs/figures/capacity.svg)
-
-These observations include quiet zones and are not qualified operating limits. Repeatability, working distance, print quality, lighting and maximum reliable payload remain uncharacterized. See [test report](docs/TEST_REPORT.md), [per-target evidence](docs/MARKED_RESULTS.md) and [verification plan](docs/VERIFICATION_PLAN.md).
-
-## Architecture
+A device serial connects component genealogy and test history. The scanner records the equipment identifier, measurement disposition and data reference, alongside operator and time information. In a production integration, the bench would upload raw measurements to a data repository and display a result code with the matching reference. The QMS or MES could join both records to investigate recurring failures by component lot, equipment or hardware revision.
 
 ```mermaid
-flowchart TD
- A[OV5640 full frame] --> B{Decoder mode}
- B -->|Browser| C[JPEG preview and ZXing WASM]
- B -->|Embedded| D[ESP32 ZXing C++ worker]
- D --> E[Last decoded image]
- C --> F[Device workflow engine]
- D --> F
- F --> G[Local journal]
- F --> H[LED / workflow warning]
- G --> I[JSON export]
+flowchart LR
+ A[Component and device labels] --> S[Embedded scanner]
+ B[Bench result code] --> S
+ S --> J[Local journal / JSON]
+ T[Bench raw measurements] -.-> R[Data repository]
+ J -.-> Q[QMS / MES]
+ R -.-> Q
+ Q -.-> F[Device history and failure analysis]
 ```
 
-![Decoder field of view](docs/figures/scan-area.svg)
+Solid paths represent prototype capabilities; dotted paths represent proposed external integration. The scanner does not currently operate instruments, retrieve raw signals or connect to a live QMS.
 
-- Both decoders: QR and Data Matrix; Code 128 workflow headers while idle. Browser also supports Code 39. VGA default, up to 1600 × 1200. No intentional center crop.
-- Browser: live preview. Embedded: standalone recognition and last decoded still image.
-- 192 KiB flash journal; 50 recent native records in RAM; browser-local rules and annotated images.
-- GPIO4 illumination, GPIO33 status LED, GPIO13 passive buzzer output. Password-protected dual-slot OTA.
+[Integration architecture, data examples and remaining requirements](docs/integration/README.md)
 
-[Hardware and firmware](docs/HARDWARE_AND_FIRMWARE.md) · [Operating instructions](docs/OPERATIONS.md) · [PCB inspection example](docs/inspection/README.md)
+## Optical characterization
 
-## Build
+Compact markings enable traceability on space-constrained PCBs. Our initial bench observations target QR footprints of 5–15 mm and Data Matrix down to 4 mm.
+
+| Compact marking | QR density | Size ladder |
+| :---: | :---: | :---: |
+| ![Compact marking](docs/media/demo-compact-marking.gif) | ![Density scanning](docs/media/demo-density-scanning.gif) | ![Size ladder](docs/media/demo-qr-ladder.gif) |
+
+| Format | Footprint | Payload / observation |
+| --- | --- | --- |
+| Data Matrix | 4 × 4 mm | 16 ASCII characters reported read |
+| Data Matrix | 8 × 8 mm | 96 characters reported read |
+| QR | 5 × 5 mm | 16 characters reported read |
+| QR | 10–12 mm | 96-character candidate; 128-character attempt failed |
+| QR | 15 × 15 mm | Short PCB identifier read in separate comparison |
+
+![Observed payload capacity](docs/figures/capacity.svg)
+
+The laser printer is a practical constraint for small, dense markings. Print quality, optics, focus and field of view have not been isolated experimentally. These are qualitative bench observations, not guaranteed operating limits.
+
+[Characterization, original test sheets and evidence](docs/characterization/README.md)
+
+## Browser vs. Embedded
+
+| | Browser | Embedded |
+| --- | --- | --- |
+| Recognition | ZXing WASM in connected browser | ZXing C++ on ESP32 |
+| Images | Live JPEG preview | Last decoded still |
+| Connected browser during scanning | Required | Not required after sign-on |
+| Formats | QR, Data Matrix, Code 128, Code 39 | QR, Data Matrix; Code 128 while idle |
+| Workflow validation and journal | On device | On device |
+
+Both modes decode the full selected frame, from QVGA up to UXGA (1600 × 1200); VGA is the default. The prototype has a 192 KiB local archive, 50 recent native records in RAM and password-protected dual-slot OTA.
+
+[Hardware and firmware architecture](docs/HARDWARE_AND_FIRMWARE.md) · [PCB inspection example](docs/inspection/README.md)
+
+## Getting started
+
+Build with PlatformIO, install through USB, configure Wi-Fi through the setup AP, and open the device address in a browser.
 
 ```sh
 pio run
 pio run -t upload --upload-port PORT
 ```
 
-Configure Wi-Fi using the device setup AP if needed, then open the scanner address. USB upload: 460800 baud; serial monitor: 115200 baud.
+USB upload: 460800 baud. Serial monitor: 115200 baud. Sign on, select Embedded, resume scanning and use the shared instruction PDF.
 
-## Repository
-
-| Path | Contents |
-|---|---|
-| `src/` | ESP32 firmware, camera, workflow engine and HTTP API |
-| `web/` | Dashboard, sign-on, parsing and recipe presentation |
-| `test/` | Regression tests and optical observations |
-| `docs/workflows/` | Process diagrams and recipe details |
-| `docs/test-sheets/` | Optical and pipeline test PDFs |
-| `docs/media/` | Prototype photographs, demonstrations and equipment illustrations |
+[Detailed operation and OTA](docs/OPERATIONS.md) · [Verification plan](docs/VERIFICATION_PLAN.md)
 
 ## Limits and next steps
 
-Engineering prototype, not production-qualified. Workflow verification checks scanned identifiers, not physical assembly, instrument readings or test execution. Active runs are lost on reboot; the aging example tracks one device per run. Operator sign-on is self-reported; use trusted LAN only. Continuous operation has caused heating. Browser mode reads QR, Data Matrix, Code 128 and Code 39. Embedded mode recognizes Code 128 workflow headers while idle, then uses QR and Data Matrix during an active run. Small printed marks still require physical verification.
+This is an engineering prototype, not a qualified manufacturing or regulated QMS system. It checks labels, sequence and reported outcomes, not physical installation or instrument accuracy. Active runs are lost on reboot; archive capacity is finite, sign-on is self-reported, and thermal performance requires validation. Use a trusted local network.
 
-Next: fixture API, automated measurement integration, durable run recovery, external storage and timed operator studies. No measured productivity improvement is claimed.
+Next: timed comparisons of manual and scanned workflows, controlled optical and reliability tests, durable run recovery, actual instrument integration and authenticated QMS connectivity.
 
-[Changelog](CHANGELOG.md) · [Third-party notices](docs/THIRD_PARTY.md)
+[Comparative validation protocol](docs/validation/README.md) · [Changelog](CHANGELOG.md) · [Third-party notices](docs/THIRD_PARTY.md)
