@@ -34,6 +34,26 @@ Manual recording creates two common problems:
 
 A low-cost, scan-driven traceability system designed to improve manufacturing and testing by reducing manual data entry, verifying required scan steps and capturing structured records.
 
+```mermaid
+flowchart TD
+    O["Business objectives"]
+    O --> E["Efficiency"]
+    O --> D["Data integrity"]
+    O --> Q["Quality management"]
+    O --> F["Failure investigation"]
+    E --> T["Scan-driven traceability"]
+    D --> T
+    Q --> T
+    F --> T
+    T --> M["Manufacturing"]
+    T --> V["Testing"]
+    M --> M1["Device traveler<br/>Component genealogy<br/>Assembly verification"]
+    V --> V1["Device and test equipment<br/>Procedure verification<br/>Results and data references"]
+    M1 --> S["Shared capabilities"]
+    V1 --> S
+    S --> S1["Barcode capture<br/>Operator guidance<br/>Macro inspection<br/>Local records and export"]
+```
+
 ### Business objectives
 
 | Objective | Business value |
