@@ -11,7 +11,7 @@ A compact ESP32-CAM station for identifying components, verifying assembly and t
 
 | Sign on | Scan and identify |
 | :---: | :---: |
-| <img src="docs/media/operator-sign-on.png" width="250" alt="Operator sign-on"> | <img src="docs/media/manufacturing-parser.png" width="550" alt="Manufacturing label parsing"> |
+| <img src="docs/media/operator-sign-on.png" width="250" alt="Operator sign-on"> | Scan the device or workflow code; the active recipe checks identity and step order. |
 
 Sign on, then scan the instruction-sheet header to launch its recipe or use Scanner for general identification. Correct scans give a short chirp and white LED flash; sequence errors produce a low beep. The final device scan closes the traceability record, including failed measurements. Export JSON for review.
 
