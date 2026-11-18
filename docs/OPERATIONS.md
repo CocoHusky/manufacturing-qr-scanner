@@ -31,3 +31,17 @@ Native decoder self-test: GET `/selftest` with standalone scanning stopped. Synt
 ### Audible feedback
 
 Advanced settings provides a base frequency (500–5000 Hz), volume level 0–10 (literal PWM duty percentage), warning duration, timeout gap and individual sound previews. Settings persist across restarts. The passive buzzer uses GPIO13 and an independent LEDC timer. Actual loudness depends on the transducer; zero mutes all sounds. The printed instruction sheet still shows the earlier vibration-based feedback legend.
+
+## Getting started
+
+Build with PlatformIO, install through USB, configure Wi-Fi through the setup AP, and open the device address in a browser.
+
+```sh
+pio run
+pio run -t upload --upload-port PORT
+```
+
+USB upload: 460800 baud. Serial monitor: 115200 baud. Sign on, select Embedded, resume scanning and use the shared instruction PDF.
+
+
+[Comparative validation protocol](validation/README.md) · [Changelog](../CHANGELOG.md) · [Third-party notices](THIRD_PARTY.md)

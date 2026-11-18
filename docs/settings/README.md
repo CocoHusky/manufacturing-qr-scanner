@@ -68,3 +68,20 @@ The initial dual-slot installation requires USB. See [operating instructions](..
 ## Inspection images
 
 Use [macro capture and annotation](../inspection/README.md) to create supporting visual evidence. Export saved images before clearing browser storage.
+
+## Audible feedback and operator usability
+
+Distinct sounds let operators keep their attention on the device, components and test equipment instead of repeatedly checking a screen. A short confirmation chirp provides immediate reassurance that each scan was accepted, while a rising completion melody gives a clear sense of progress and accomplishment. Lower warning tones draw attention to rejected scans, and a separate descending melody distinguishes a completed failed test from a passing one.
+
+| Sound | Operator meaning |
+| --- | --- |
+| Two rising notes | Procedure started; ready to scan |
+| Short high chirp | Scan accepted; continue |
+| Single low beep | Scan rejected; correct the item or sequence |
+| Two low beeps | Confirmation timed out |
+| Rising completion melody | Procedure complete successfully |
+| Low descending melody | Procedure complete; failed test result recorded |
+
+Distinct signals communicate scan acceptance and test disposition, allowing operators to focus on the device and equipment.
+
+[Operating instructions](../OPERATIONS.md) · [Audible settings and electrical details](../HARDWARE_AND_FIRMWARE.md)

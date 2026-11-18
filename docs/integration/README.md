@@ -34,3 +34,7 @@ The individual workflow pages include synthetic journal arrays generated from th
 ## Production requirements
 
 Authenticated operator identities, controlled recipes and revision approval, inventory and equipment lookup, instrument-calculated disposition, durable unique identifiers, reliable clock synchronization, recoverable runs, protected audit trail, secure transport and validated data retention. The current prototype does not establish regulatory compliance.
+
+## Failure investigation applications
+
+A device serial connects component genealogy and test history. The scanner records the equipment identifier, measurement disposition and data reference, alongside operator and time information. In a production integration, the bench would upload raw measurements to a data repository and display a result code with the matching reference. The QMS or MES could join both records to investigate recurring failures by component lot, equipment or hardware revision.

@@ -50,3 +50,15 @@ The device archive is bounded at 192 KiB and does not automatically overwrite ol
 The local interface uses unencrypted HTTP. Test sign-in is self-reported; it does not authenticate identity or provide a protected audit record. Wi-Fi credentials are stored in Preferences, and the setup AP password is printed to the serial monitor. Use a trusted local network and synthetic data for demonstrations.
 
 Before production, define and verify authenticated provisioning, credential protection, signed updates, secure boot, flash encryption, thermal limits, camera focus, and a recovery process.
+
+## Browser vs. Embedded
+
+| | Browser | Embedded |
+| --- | --- | --- |
+| Recognition | ZXing WASM in connected browser | ZXing C++ on ESP32 |
+| Images | Live JPEG preview | Last decoded still |
+| Connected browser during scanning | Required | Not required after sign-on |
+| Formats | QR, Data Matrix, Code 128, Code 39 | QR, Data Matrix; Code 128 while idle |
+| Workflow validation and journal | On device | On device |
+
+Both modes decode the full selected frame, from QVGA up to UXGA (1600 × 1200); VGA is the default. The prototype has a 192 KiB local archive, 50 recent native records in RAM and password-protected dual-slot OTA.
