@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 435" role="img" aria-labelledby="t d">
+<title id="t">Estimated documentation effort as production scales</title>
+<desc id="d">Manual handwriting and computer entry compared with scan-driven documentation at one, one hundred and one thousand devices. Estimates exclude error investigation.</desc>
+<rect width="1000" height="435" rx="14" fill="#ffffff"/>
+<rect x="18" y="62" width="637" height="330" rx="10" fill="#f4f6f8"/><rect x="669" y="62" width="313" height="330" rx="10" fill="#e8f5ed" stroke="#a3d5b5"/>
+<text x="25" y="33" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="700" fill="#20303c" text-anchor="start">Documentation effort as production scales</text>
+<text x="25" y="53" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="400" fill="#526473" text-anchor="start">Estimated recording and identifier-checking time only</text>
+<text x="28" y="90" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700" fill="#8a4d22" text-anchor="start">PROBLEM · MANUAL ENTRY</text>
+<text x="686" y="90" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700" fill="#176b43" text-anchor="start">SOLUTION · SCAN + VERIFY</text>
+<text x="202" y="120" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700" fill="#20303c" text-anchor="start">Handwritten</text>
+<text x="428" y="120" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700" fill="#20303c" text-anchor="start">Computer entry</text>
+<text x="686" y="120" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700" fill="#176b43" text-anchor="start">Our scanner</text>
+<text x="28" y="161" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="700" fill="#20303c" text-anchor="start">1 device</text>
+<text x="202" y="161" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" fill="#a96536" text-anchor="start">3–5 min</text>
+<rect x="202" y="174" width="184" height="10" rx="3" fill="#dbe3e7"/><rect x="202" y="174" width="184.0" height="10" rx="3" fill="#a96536" opacity=".42"/><rect x="202" y="174" width="110.4" height="10" rx="3" fill="#a96536"/>
+<text x="428" y="161" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" fill="#64748b" text-anchor="start">2–4 min</text>
+<rect x="428" y="174" width="184" height="10" rx="3" fill="#dbe3e7"/><rect x="428" y="174" width="147.2" height="10" rx="3" fill="#64748b" opacity=".42"/><rect x="428" y="174" width="73.6" height="10" rx="3" fill="#64748b"/>
+<text x="686" y="161" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" fill="#208354" text-anchor="start">10–60 sec</text>
+<rect x="686" y="174" width="184" height="10" rx="3" fill="#dbe3e7"/><rect x="686" y="174" width="36.8" height="10" rx="3" fill="#208354" opacity=".42"/><rect x="686" y="174" width="6.1" height="10" rx="3" fill="#208354"/>
+<path d="M28 217H645 M685 217H966" stroke="#d1dce1"/>
+<text x="28" y="244" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="700" fill="#20303c" text-anchor="start">100 devices</text>
+<text x="202" y="244" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" fill="#a96536" text-anchor="start">5–8.3 hr</text>
+<rect x="202" y="257" width="184" height="10" rx="3" fill="#dbe3e7"/><rect x="202" y="257" width="184.0" height="10" rx="3" fill="#a96536" opacity=".42"/><rect x="202" y="257" width="110.4" height="10" rx="3" fill="#a96536"/>
+<text x="428" y="244" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" fill="#64748b" text-anchor="start">3.3–6.7 hr</text>
+<rect x="428" y="257" width="184" height="10" rx="3" fill="#dbe3e7"/><rect x="428" y="257" width="147.2" height="10" rx="3" fill="#64748b" opacity=".42"/><rect x="428" y="257" width="73.6" height="10" rx="3" fill="#64748b"/>
+<text x="686" y="244" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" fill="#208354" text-anchor="start">17–100 min</text>
+<rect x="686" y="257" width="184" height="10" rx="3" fill="#dbe3e7"/><rect x="686" y="257" width="36.8" height="10" rx="3" fill="#208354" opacity=".42"/><rect x="686" y="257" width="6.1" height="10" rx="3" fill="#208354"/>
+<path d="M28 300H645 M685 300H966" stroke="#d1dce1"/>
+<text x="28" y="327" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="700" fill="#20303c" text-anchor="start">1,000 devices</text>
+<text x="202" y="327" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" fill="#a96536" text-anchor="start">50–83 hr</text>
+<rect x="202" y="340" width="184" height="10" rx="3" fill="#dbe3e7"/><rect x="202" y="340" width="184.0" height="10" rx="3" fill="#a96536" opacity=".42"/><rect x="202" y="340" width="110.4" height="10" rx="3" fill="#a96536"/>
+<text x="428" y="327" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" fill="#64748b" text-anchor="start">33–67 hr</text>
+<rect x="428" y="340" width="184" height="10" rx="3" fill="#dbe3e7"/><rect x="428" y="340" width="147.2" height="10" rx="3" fill="#64748b" opacity=".42"/><rect x="428" y="340" width="73.6" height="10" rx="3" fill="#64748b"/>
+<text x="686" y="327" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" fill="#208354" text-anchor="start">2.8–16.7 hr</text>
+<rect x="686" y="340" width="184" height="10" rx="3" fill="#dbe3e7"/><rect x="686" y="340" width="36.8" height="10" rx="3" fill="#208354" opacity=".42"/><rect x="686" y="340" width="6.1" height="10" rx="3" fill="#208354"/>
+<text x="28" y="410" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="400" fill="#526473" text-anchor="start">Bars use a separate common scale per volume; dark = low estimate, light = upper estimate.</text>
+<text x="28" y="426" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="400" fill="#526473" text-anchor="start">Planning estimates, not measured productivity. Physical assembly and investigation time excluded.</text>
+</svg>

@@ -26,22 +26,13 @@ For every device, teams need to connect its identity, component lots, test setup
 
 ### Estimated documentation time and potential savings
 
-For a six-component assembly traveler, compare manual documentation with our system’s scan-driven approach:
+Manual transcription scales with every device and every component. Scanning replaces repeated identifier entry with automated capture and workflow checks.
 
-| Documentation activity | Handwritten | Manual computer entry | **Our system (estimated)** |
-| --- | ---: | ---: | ---: |
-| Record and check identifiers | 3–5 min | 2–4 min | **10–60 s** |
-| Investigate a missing or incorrect identifier (per incident) | 10–60 min | 1–30 min | **0 min** |
+![Estimated documentation effort comparing manual entry with our scanner at 1, 100 and 1,000 devices](docs/figures/documentation-effort.svg)
 
-#### Estimated documentation effort — 100 devices
+At 1,000 devices, manual computer entry alone is estimated at **33–67 hours**, compared with **2.8–16.7 hours** using our scanner. Missing or incorrect identifiers can add further investigation time.
 
-| Activity | Handwritten | Manual computer entry | **Our system (estimated)** |
-| --- | ---: | ---: | ---: |
-| Record and check identifiers (100 devices) | 5–8 hr 20 min | 3 hr 20 min–6 hr 40 min | **17 min–1 hr 40 min** |
-| Investigate 10 manual-entry incidents | 1 hr 40 min–10 hr | 10 min–5 hr | **0 min* ** |
-| **Combined estimated time** | **6 hr 40 min–18 hr 20 min** | **3 hr 30 min–11 hr 40 min** | **17 min–1 hr 40 min** |
-
-Engineering estimates assume 10 manual-entry incidents per 100 devices. *Zero minutes: based on elimination of bad data enteries. See the [comparative validation protocol](docs/validation/README.md).
+[Detailed estimates, assumptions and comparative validation protocol](docs/validation/README.md#documentation-time-estimates)
 
 ## The Solution
 
