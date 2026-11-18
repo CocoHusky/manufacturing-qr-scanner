@@ -4,9 +4,9 @@ Reduce manual data entry, guide manufacturing and test workflows, and capture tr
 
 ## Contents
 
-- [The problem](#the-problem)
+- [The Problem](#the-problem)
   - [Estimated documentation time and potential savings](#estimated-documentation-time-and-potential-savings)
-- [The solution](#the-solution)
+- [The Solution](#the-solution)
 - [How it works](#how-it-works)
 - [Manufacturing and test examples](#manufacturing-and-test-examples)
 - [Macro inspection and defect documentation](#macro-inspection-and-defect-documentation)
@@ -20,7 +20,7 @@ Reduce manual data entry, guide manufacturing and test workflows, and capture tr
 - [Engineering reference](#engineering-reference)
 - [License](#license)
 
-## The problem
+## The Problem
 
 For every device, teams need to connect its identity, component lots, test setup, and result.
 
@@ -50,7 +50,7 @@ For a six-component assembly traveler, compare manual documentation with our sys
 
 Engineering estimates assume 10 manual-entry incidents per 100 devices. *Zero minutes models elimination of transcription-related investigations only. See the [comparative validation protocol](docs/validation/README.md).
 
-## The solution
+## The Solution
 
 A low-cost, scan-driven traceability system designed to improve manufacturing and testing by reducing manual data entry, verifying required scan steps and capturing structured records.
 
