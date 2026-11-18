@@ -137,21 +137,23 @@ The prototype demonstrates compact barcode recognition, guided manufacturing and
 
 QR density testing also suggests a 96-character candidate at 8–12 mm, but the maximum repeatable QR payload has not been established. The 128-character QR attempt reportedly exceeded one second in roughly half of attempts; sample count and conditions were not recorded.
 
-### Theoretical marking capacity
+### Estimated operating envelope with modified macro optics
 
-| Printing resolution | Minimum 16-byte Data Matrix | Data density | Maximum QR payload at 15 mm | Maximum DM payload at 15 mm |
-| ---: | ---: | ---: | ---: | ---: |
-| 600 DPI | 3.39 mm | 1.39 B/mm² | 412 bytes | 453 bytes |
-| 1200 DPI | 1.69 mm | 5.58 B/mm² | 2,099 bytes | 1,555 bytes |
-| 2400 DPI | 0.85 mm | 22.32 B/mm² | 2,331 bytes | 1,555 bytes |
+The 5 mm QR recognition image gives an estimated object-space sampling of **25 µm/pixel**, assuming VGA capture. A five-pixel module target (25% margin over four pixels) gives an estimated minimum module pitch of 125 µm. At the current nominal 600 DPI black print resolution, the four-dot printing target instead requires 169 µm. A 1200 DPI marking process could therefore move the limiting factor from printing toward camera sampling.
 
-These are print-limited estimates assuming four dots per module, square symbols including quiet zones, QR error correction M and byte-mode payloads. They are not measured scanner capacities.
+| Performance parameter | Engineering estimate |
+| --- | --- |
+| Smallest Data Matrix (1 byte) | 1.50 mm |
+| Useful Data Matrix (16 bytes) | 2.50 mm; 2.56 B/mm² |
+| Smallest QR V1/M (14 bytes) | 3.63 mm |
+| QR capacity at 15 mm | 412 bytes; 1.83 B/mm² |
+| Data Matrix capacity at 15 mm | 453 bytes; 2.01 B/mm² |
 
-The current Canon PIXMA MG3620 inkjet was used at its high-quality setting (nominal black resolution 600 × 600 DPI). Higher-fidelity marking could support submillimeter identifiers, provided the camera resolves the smaller modules. Focus, lighting, field of view and print fidelity still need to be characterized independently.
+Minimum sizes assume higher-fidelity printing (1200 DPI or better) and the same close-focus sampling. The 15 mm estimates assume VGA, 10% total frame clearance and five pixels per module at an increased working distance. These are modeled capacities, not successful-read measurements.
 
-**Conclusion:** Compact Data Matrix labels are a practical starting point for component identifiers; larger QR labels can carry richer manufacturing and test records. Linking short identifiers to a backend would reduce label size while preserving full device genealogy and measurement history.
+**Conclusion:** The demonstrated 4 mm Data Matrix carries 16 ASCII bytes. With higher-fidelity printing, the modified optics could potentially support the same payload in a 2.5 mm marking, reducing occupied area by approximately 61%. Larger codes can carry richer manufacturing and test records, while short identifiers linked to a backend can preserve full device genealogy and measurement history. Calibrated testing is needed to establish actual optical resolution and repeatable decode performance.
 
-[Full characterization, theoretical calculations and scanning demonstrations](docs/characterization/README.md)
+[Full characterization, camera sampling calculations, print-only estimates and scanning demonstrations](docs/characterization/README.md#combined-camera-and-printer-estimate)
 
 ## Future development
 

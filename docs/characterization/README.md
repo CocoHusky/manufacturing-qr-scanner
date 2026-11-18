@@ -60,6 +60,63 @@ Reported densities: 4 mm DM / 16 ASCII characters = 1.00 B/mm²; 8 mm DM / 96 = 
 
 These are printability and encoding estimates, not scanner performance guarantees. The Canon's anisotropic color rating is not equivalent to 4800 DPI in both axes. Camera sampling, focus, contrast and field of view must also support the marking. Test higher-fidelity targets, independently varying size and payload, and measure successful reads within a specified time. The 15 mm short-code read is a demonstrated footprint, not a proven maximum size or capacity.
 
+## Combined camera and printer estimate
+
+### Image-based spatial sampling
+
+![Recognized 5 mm QR target](../media/screenshots/scanner-detected.png)
+
+The recognized QR screenshot is 1600 × 1104 pixels. The detected green outline spans approximately 274 × 269 screenshot pixels; the displayed camera image spans approximately 1173 pixels horizontally. Assuming a full VGA (640 × 480) camera frame, the following estimates apply:
+
+| Parameter | Value |
+| --- | ---: |
+| Nominal QR footprint including quiet zone | 5 × 5 mm |
+| QR version / active modules | V1 / 21 × 21 |
+| Total modules per side with quiet zone | 29 |
+| Nominal module pitch | 172.4 µm |
+| Native pixels across active symbol | 274 × 640 / 1173 = 149.5 |
+| Native pixels per module | 7.12 |
+| Object-space sampling | 24.2 µm/pixel (rounded to 25 for design) |
+
+The separate [original macro PCB image](../inspection/macro-original.jpg) is 640 × 480 and demonstrates visible fine PCB detail, but does not establish a physical resolution without a calibrated feature dimension. The native resolution of the QR screenshot is assumed, and the green outline is an approximate active-symbol boundary. Sampling is not equivalent to optical resolving power.
+
+### Combined design constraint
+
+Use four camera pixels per module plus a 25% engineering margin, or five pixels per module. With the rounded sampling estimate, the camera design pitch is 125 µm. The margin is a design assumption, not a measured tolerance or confidence interval.
+
+Combined module pitch (mm) = max(101.6 / effective printer DPI, 5 × 0.025).
+
+| Effective printer DPI (both axes) | Printer pitch | Camera pitch | Combined pitch |
+| ---: | ---: | ---: | ---: |
+| 600 | 169.3 µm | 125 µm | 169.3 µm |
+| 1200 | 84.7 µm | 125 µm | 125 µm |
+| 2400 | 42.3 µm | 125 µm | 125 µm |
+| 4800 | 21.2 µm | 125 µm | 125 µm |
+
+The crossover is approximately 813 DPI. Further increases in print resolution alone would not improve this modeled sampling-limited minimum.
+
+| Format | Binary payload | 600 DPI | 1200 DPI or higher |
+| --- | ---: | ---: | ---: |
+| Data Matrix 10 × 10 | 1 byte | 2.03 mm | 1.50 mm |
+| Data Matrix 14 × 14 | 6 bytes | 2.71 mm | 2.00 mm |
+| Data Matrix 18 × 18 | 16 bytes | 3.39 mm | 2.50 mm |
+| Data Matrix 20 × 20 | 20 bytes | 3.73 mm | 2.75 mm |
+| QR V1/M | 14 bytes | 4.91 mm | 3.63 mm |
+| QR V2/M | 26 bytes | 5.59 mm | 4.13 mm |
+
+The 16-byte Data Matrix changes from 16 mm² demonstrated footprint to 6.25 mm² modeled footprint: 60.9% less area and 2.56 B/mm² versus 1.00 B/mm².
+
+### Capacity at a 15 mm footprint
+
+At 25 µm/pixel, the estimated VGA field of view is 16 × 12 mm. A 15 mm square cannot fit vertically at that sampling. At an increased working distance, reserving 10% of the frame height for clearance leaves 432 of 480 pixels for the entire symbol including quiet zones. Sampling becomes 15/432 = 34.72 µm/pixel, and a five-pixel design target requires 173.61 µm per module. At 600 DPI or higher the camera sampling constraint dominates. At most 86 complete modules including quiet zones fit within this budget.
+
+| Format | Largest fitting symbol | Binary payload | Density |
+| --- | --- | ---: | ---: |
+| QR, correction M | V15 (85 modules including quiet zone) | 412 bytes | 1.83 B/mm² |
+| Data Matrix ECC200 | 80 × 80 (82 including quiet zone) | 453 bytes | 2.01 B/mm² |
+
+These are geometric and encoding estimates only. The 15 mm QR demonstration carried seven ASCII characters; a dense symbol at this footprint has not been validated. Increased distance must retain focus and contrast. Test calibrated targets at fixed working distances, verify native frame resolution, and measure decode success and latency across repeated trials before establishing a production marking envelope.
+
 ## Recommended marking choices
 
 | Location | Initial design | Reason |
