@@ -28,9 +28,14 @@ For every device, teams need to connect its identity, component lots, test setup
 
 Manual transcription scales with every device and every component. Scanning replaces repeated identifier entry with automated capture and workflow checks.
 
-![Estimated documentation effort comparing manual entry with our scanner at 1, 100 and 1,000 devices](docs/figures/documentation-effort.svg)
+| Production volume | Handwritten | Manual computer entry | 🟢 Scan + verify |
+| --- | ---: | ---: | ---: |
+| 1 device | 3–5 min | 2–4 min | **10–60 sec** |
+| 10 devices | 30–50 min | 20–40 min | **1.7–10 min** |
+| 100 devices | 5–8.3 hr | 3.3–6.7 hr | **17–100 min** |
+| 1,000 devices | 50–83.3 hr | 33.3–66.7 hr | **2.8–16.7 hr** |
 
-![Estimated documentation hours versus production volume, with low and high estimate bands](docs/figures/documentation-scaling.svg)
+*Planning estimates for recording and checking identifiers; physical assembly and investigation time excluded.*
 
 At 1,000 devices, manual computer entry alone is estimated at **33–67 hours**, compared with **2.8–16.7 hours** using our scanner. Missing or incorrect identifiers can add further investigation time.
 
