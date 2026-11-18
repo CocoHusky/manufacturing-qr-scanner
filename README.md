@@ -10,6 +10,8 @@ Reduce manual data entry, guide manufacturing and test workflows, and capture tr
 - [How it works](#how-it-works)
 - [Manufacturing and test examples](#manufacturing-and-test-examples)
 - [Macro inspection and defect documentation](#macro-inspection-and-defect-documentation)
+- [Results and conclusion](#results-and-conclusion)
+- [Future development](#future-development)
 - [Technical documentation](#technical-documentation)
 - [License](#license)
 
@@ -111,6 +113,39 @@ The modified close-focus camera also captures macro-level PCB images for manual 
 ![Inspection capture interface with manual annotations](docs/media/screenshots/inspection-capture.png)
 
 Export original and annotated images from the browser and associate them with the relevant device or test record.
+
+## Results and conclusion
+
+The macro-modified scanner demonstrated compact printed barcode recognition, guided assembly and test workflows, and structured traceability records.
+
+| Format | Printed footprint | Payload | Bench result |
+| --- | ---: | ---: | --- |
+| QR | 5 × 5 mm | 4–16 characters | Smallest successful QR footprint |
+| QR | 8 × 8 mm | Up to 96 characters | Alphanumeric capacity inferred from the tested version cutoff |
+| QR | 10–12 mm | 96 characters | Candidate marking size for denser records |
+| Data Matrix | 4 × 4 mm | 16 characters | Smallest successful marking |
+| Data Matrix | 5–6 mm square | 32 characters | Reported read |
+| Data Matrix | 8 × 8 mm | 96 characters | Reported read |
+
+![Barcode payload versus printed footprint](docs/figures/capacity.svg)
+
+**Practical limits:** A 5 mm Version 1 QR code has a nominal module pitch of 172 µm, or approximately 4 printer dots per module at 600 DPI. Start with 600 DPI and evaluate 1200 DPI for smaller or denser markings. The current laser printer shows irregular module edges; its actual DPI is unverified. Print fidelity, focus, lighting and field of view jointly determine recognition. The 128-character QR attempt failed; the maximum repeatable payload remains to be established.
+
+For compact PCBs, use short Data Matrix identifiers linked to a richer device record. Larger QR labels can carry component details, test outcomes and measurement references directly.
+
+[Full characterization, print-resolution calculations and scanning demonstrations](docs/characterization/README.md)
+
+## Future development
+
+| Development area | Objective |
+| --- | --- |
+| Backend and QMS integration | Centralize device genealogy, test results, inspection images and measurement references across stations. |
+| Edge AI and segmentation | Localize components and inspect regions of interest using on-device inference. |
+| Anomaly detection | Flag potential assembly, soldering and visual defects for operator review. |
+| OCR | Capture printed markings, instrument displays and handwritten documentation. |
+| Automatic note transcription | Convert spoken operator observations into reviewable, timestamped test notes. |
+
+The next phase extends the scanner from structured code capture to assisted inspection and connected manufacturing records, with validation of recognition reliability and AI performance before deployment.
 
 ## Technical documentation
 
