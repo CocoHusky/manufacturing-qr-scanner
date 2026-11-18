@@ -107,16 +107,6 @@ flowchart LR
 
 [Watch the full 47-second demonstration with sound](docs/media/assembly-audible.mp4). The recorded example uses printed labels and the scanner’s embedded workflow. The firmware rejects wrong recipes, unexpected parts, duplicate components, and premature closure. The workflow also guides the operator through visual inspection.
 
-[All workflow details and acceptance criteria](docs/workflows/README.md)
-
-### Barcode scanning demonstrations
-
-| Compact marking | QR density | Size ladder |
-| :---: | :---: | :---: |
-| [![Compact marking](docs/media/demo-compact-marking.gif)](docs/media/demo-compact-marking.mp4) | [![Density scanning](docs/media/demo-density-scanning.gif)](docs/media/demo-density-scanning.mp4) | [![Size ladder](docs/media/demo-qr-ladder.gif)](docs/media/demo-qr-ladder.mp4) |
-
-Compact markings, information density and QR size-ladder testing. [Experimental results and test sheets](docs/characterization/README.md).
-
 ## Macro inspection and defect documentation
 
 The modified close-focus camera also captures macro-level PCB images for manual inspection and annotation. Preserve the original image and export the marked copy for test review.
@@ -128,6 +118,14 @@ The modified close-focus camera also captures macro-level PCB images for manual 
 Export original and annotated images from the browser and associate them with the relevant device or test record.
 
 ## What the scanner records
+
+[All workflow details and acceptance criteria](docs/workflows/README.md)
+
+| Compact marking | QR density | Size ladder |
+| :---: | :---: | :---: |
+| [![Compact marking](docs/media/demo-compact-marking.gif)](docs/media/demo-compact-marking.mp4) | [![Density scanning](docs/media/demo-density-scanning.gif)](docs/media/demo-density-scanning.mp4) | [![Size ladder](docs/media/demo-qr-ladder.gif)](docs/media/demo-qr-ladder.mp4) |
+
+Compact markings, information density and QR size-ladder testing. [Experimental results and test sheets](docs/characterization/README.md).
 
 ![Examples of Data Matrix, QR, Code 128 and Code 39](docs/barcodes/examples.svg)
 
