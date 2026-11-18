@@ -69,9 +69,10 @@ The prototype combines an ESP32 and a OV5640 camera, controlled white illuminati
 
 ## How it works
 
-<p align="center">
-  <img src="docs/media/prototype-front.jpg" width="300" alt="Front view of the embedded scanner prototype">
-</p>
+| Scanner prototype | Supported barcode formats |
+| :---: | :---: |
+| <img src="docs/media/prototype-front.jpg" width="260" alt="Embedded scanner prototype"> | <a href="docs/barcodes/README.md"><img src="docs/barcodes/examples.svg" width="550" alt="Data Matrix, QR, Code 128 and Code 39 examples"></a> |
+| Portable embedded hardware | [Barcode formats and encoded data examples](docs/barcodes/README.md) |
 
 ```mermaid
 flowchart LR
@@ -121,24 +122,34 @@ Export original and annotated images from the browser and associate them with th
 
 ## Results and conclusion
 
-The macro-modified scanner demonstrated compact printed barcode recognition, guided assembly and test workflows, and structured traceability records.
+The prototype demonstrates compact barcode recognition, guided manufacturing and test workflows, and structured traceability records using low-cost macro imaging.
 
-| Format | Printed footprint | Payload | Bench result |
-| --- | ---: | ---: | --- |
-| QR | 5 × 5 mm | 4–16 characters | Smallest successful QR footprint |
-| QR | 8 × 8 mm | Up to 96 characters | Alphanumeric capacity inferred from the tested version cutoff |
-| QR | 10–12 mm | 96 characters | Candidate marking size for denser records |
-| Data Matrix | 4 × 4 mm | 16 characters | Smallest successful marking |
-| Data Matrix | 5–6 mm square | 32 characters | Reported read |
-| Data Matrix | 8 × 8 mm | 96 characters | Reported read |
+### Demonstrated scanning results
 
-![Barcode payload versus printed footprint](docs/figures/capacity.svg)
+| Format | Footprint | Payload (ASCII) | Density (B/mm²) |
+| --- | ---: | ---: | ---: |
+| Data Matrix — smallest reported | 4 × 4 mm | 16 bytes | 1.00 |
+| Data Matrix — highest reported payload | 8 × 8 mm | 96 bytes | 1.50 |
+| QR — smallest reported | 5 × 5 mm | 4–16 bytes | 0.16–0.64 |
+| QR — largest demonstrated footprint | 15 × 15 mm | 7 bytes | 0.031 |
 
-**Practical limits:** A 5 mm Version 1 QR code has a nominal module pitch of 172 µm, or approximately 4 printer dots per module at 600 DPI. Test sheets were printed using a Canon PIXMA MG3620 inkjet at the high-quality setting (rated up to 600 × 600 DPI black and 4800 × 1200 DPI color; [Canon PIXMA MG3620 specifications](https://www.usa.canon.com/support/p/pixma-mg3620)). Irregular printed edges suggest print fidelity may constrain smaller or denser markings; effective resolution was not measured. Evaluate a higher-fidelity marking process next. Print fidelity, focus, lighting and field of view jointly determine recognition. The 128-character QR attempt failed to scan within 1 second 50% of the time. Based on field use reliability of this is not adequate in fast pace enviorments.
+QR density testing also suggests a 96-character candidate at 8–12 mm, but the maximum repeatable QR payload has not been established. The 128-character QR attempt reportedly exceeded one second in roughly half of attempts; sample count and conditions were not recorded.
 
-For compact PCBs, use short Data Matrix identifiers linked to a richer device record. Larger QR labels can carry component details, test outcomes and measurement references directly.
+### Theoretical marking capacity
 
-[Full characterization, print-resolution calculations and scanning demonstrations](docs/characterization/README.md)
+| Printing resolution | Minimum 16-byte Data Matrix | Data density | Maximum QR payload at 15 mm | Maximum DM payload at 15 mm |
+| ---: | ---: | ---: | ---: | ---: |
+| 600 DPI | 3.39 mm | 1.39 B/mm² | 412 bytes | 453 bytes |
+| 1200 DPI | 1.69 mm | 5.58 B/mm² | 2,099 bytes | 1,555 bytes |
+| 2400 DPI | 0.85 mm | 22.32 B/mm² | 2,331 bytes | 1,555 bytes |
+
+These are print-limited estimates assuming four dots per module, square symbols including quiet zones, QR error correction M and byte-mode payloads. They are not measured scanner capacities.
+
+The current Canon PIXMA MG3620 inkjet was used at its high-quality setting (nominal black resolution 600 × 600 DPI). Higher-fidelity marking could support submillimeter identifiers, provided the camera resolves the smaller modules. Focus, lighting, field of view and print fidelity still need to be characterized independently.
+
+**Conclusion:** Compact Data Matrix labels are a practical starting point for component identifiers; larger QR labels can carry richer manufacturing and test records. Linking short identifiers to a backend would reduce label size while preserving full device genealogy and measurement history.
+
+[Full characterization, theoretical calculations and scanning demonstrations](docs/characterization/README.md)
 
 ## Future development
 
