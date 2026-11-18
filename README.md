@@ -7,7 +7,6 @@ An ESP32 and camera-based scan-to-record prototype for manufacturing and test wo
 ## Contents
 
 - [The Problem](#the-problem)
-  - [Estimated documentation time and potential savings](#estimated-documentation-time-and-potential-savings)
 - [The Solution](#the-solution)
 - [How it works](#how-it-works)
 - [Manufacturing and test examples](#manufacturing-and-test-examples)
