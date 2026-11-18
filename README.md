@@ -137,6 +137,8 @@ The prototype demonstrates compact barcode recognition, guided manufacturing and
 
 QR density testing also suggests a 96-character candidate at 8–12 mm, but the maximum repeatable QR payload has not been established. The 128-character QR attempt reportedly exceeded one second in roughly half of attempts; sample count and conditions were not recorded.
 
+![Barcode payload versus printed footprint](docs/figures/capacity.svg)
+
 ### Estimated operating envelope with modified macro optics
 
 The 5 mm QR recognition image gives an estimated object-space sampling of **25 µm/pixel**, assuming VGA capture. A five-pixel module target (25% margin over four pixels) gives an estimated minimum module pitch of 125 µm. At the current nominal 600 DPI black print resolution, the four-dot printing target instead requires 169 µm. A 1200 DPI marking process could therefore move the limiting factor from printing toward camera sampling.
