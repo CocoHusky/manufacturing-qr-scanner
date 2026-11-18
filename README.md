@@ -33,20 +33,20 @@ For every device, teams need to connect its identity, component lots, test setup
 
 For a six-component assembly traveler, compare manual documentation with our system’s scan-driven approach:
 
-| Documentation activity | Handwritten | Manual computer entry | Our system (estimated) |
+| Documentation activity | Handwritten | Manual computer entry | **Our system (estimated)** |
 | --- | ---: | ---: | ---: |
 | Record and check identifiers | 3–5 min | 2–4 min | **10–60 s** |
-| Investigate a missing or incorrect identifier (per incident) | 10–60 min | 1–30 min | 0 min* |
+| Investigate a missing or incorrect identifier (per incident) | 10–60 min | 1–30 min | **0 min** |
 
 #### Estimated documentation effort — 100 devices
 
-| Activity | Handwritten | Manual computer entry | Our system (estimated) |
+| Activity | Handwritten | Manual computer entry | **Our system (estimated)** |
 | --- | ---: | ---: | ---: |
-| Record and check identifiers (100 devices) | 5–8 hr 20 min | 3 hr 20 min–6 hr 40 min | 17 min–1 hr 40 min |
-| Investigate 10 manual-entry incidents | 1 hr 40 min–10 hr | 10 min–5 hr | 0 min* |
+| Record and check identifiers (100 devices) | 5–8 hr 20 min | 3 hr 20 min–6 hr 40 min | **17 min–1 hr 40 min** |
+| Investigate 10 manual-entry incidents | 1 hr 40 min–10 hr | 10 min–5 hr | **0 min** |
 | **Combined estimated time** | **6 hr 40 min–18 hr 20 min** | **3 hr 30 min–11 hr 40 min** | **17 min–1 hr 40 min** |
 
-Engineering estimates assume 10 manual-entry incidents per 100 devices. *Zero minutes models elimination of transcription-related investigations only. See the [comparative validation protocol](docs/validation/README.md).
+Engineering estimates assume 10 manual-entry incidents per 100 devices. *Zero minutes: based on elimination of bad data enteries. See the [comparative validation protocol](docs/validation/README.md).
 
 ## The Solution
 
