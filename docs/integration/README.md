@@ -6,6 +6,8 @@ The scanner records a journal event for each accepted or rejected workflow label
 
 The station exports workflow records as JSON. The underlying journal is newline-delimited JSON; it is bounded local storage, not an authenticated audit ledger.
 
+The workflow page now presents the current run as a structured traceability record and exports it through the local `/workflow-record` endpoint. It includes the run and recipe IDs, scanner MAC, device and equipment, operator session, result fields, scanned label payloads, synchronized timestamps when available, and device uptime for offline timing. The summary is built from the current in-memory workflow; after a reboot, the local NDJSON journal retains individual events, but the UI does not yet reconstruct prior run summaries.
+
 ## Proposed production data flow
 
 ```mermaid

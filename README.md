@@ -104,6 +104,8 @@ flowchart LR
 
 🔊 **[Audible feedback](docs/settings/README.md#audible-feedback-and-operator-usability):** 🔊 A short chirp confirms each scan, a low tone signals an error, and a positive rising melody rewards successful completion — no need to keep watching the screen.
 
+The workflow view also builds a structured record for the current run, linking its device, bench or fixture, operator session, procedure steps, result and scanned labels. Review the record in the web UI or export it as JSON. The local journal retains the event sequence; when network time is unavailable, scanned labels include device uptime.
+
 ## Manufacturing and test examples
 
 [**Printable work instructions for experimental testing (PDF)**](docs/workflows/instructions.pdf) — print at 100% scale or display digitally.

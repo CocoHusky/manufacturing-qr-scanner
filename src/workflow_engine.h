@@ -5,7 +5,9 @@
 // One authoritative state machine for browser and embedded scan events.
 struct WorkflowState {
  String recipe,run,device,equipment,message,disposition,reason,resultId,dataReference;
+ String operatorName,department,test,sessionStarted,startedAt;
  String stepTimes[7],partTimes[6];
+ uint32_t startedUptimeMs=0,stepUptimeMs[7]{},partUptimeMs[6]{};
  String serials[6];
  String stepLabels[7],partLabels[6];
  uint8_t step=1,partMask=0;
@@ -31,8 +33,32 @@ static String workflowField(const String& raw,const String& key){
 }
 static String workflowJson(){
  uint64_t now=workflowNow();uint32_t remaining=workflow.deadline>now?(uint32_t)(workflow.deadline-now):0;
- String details="[",components="[",times="[",partTimes="[";for(int i=0;i<7;i++){if(i){details+=",";times+=",";}details+=jsString(workflow.stepLabels[i]);times+=jsString(workflow.stepTimes[i]);}details+="]";times+="]";for(int i=0;i<6;i++){if(i){components+=",";partTimes+=",";}components+=jsString(workflow.partLabels[i]);partTimes+=jsString(workflow.partTimes[i]);}components+="]";partTimes+="]";
- return "{\"id\":"+jsString(workflow.recipe)+",\"recipeRevision\":\"01\",\"disposition\":"+jsString(workflow.disposition)+",\"reason\":"+jsString(workflow.reason)+",\"resultId\":"+jsString(workflow.resultId)+",\"dataReference\":"+jsString(workflow.dataReference)+",\"run\":"+jsString(workflow.run)+",\"device\":"+jsString(workflow.device)+",\"equipment\":"+jsString(workflow.equipment)+",\"step\":"+String(workflow.step)+",\"active\":"+(workflow.active?"true":"false")+",\"complete\":"+(workflow.complete?"true":"false")+",\"expired\":"+(workflow.expired?"true":"false")+",\"error\":"+(workflow.error?"true":"false")+",\"partMask\":"+String(workflow.partMask)+",\"partCount\":"+String(partCount())+",\"remainingMs\":"+String(remaining)+",\"dwellSeconds\":"+String((unsigned long)((workflow.recipe=="AGE-01"&&workflow.step==3?now-workflow.loaded:workflow.dwell)/1000))+",\"message\":"+jsString(workflow.message) +",\"clockSynced\":"+(utcNow().length()?"true":"false")+",\"stepTimes\":"+times+",\"partTimes\":"+partTimes+",\"stepLabels\":"+details+",\"partLabels\":"+components+"}";
+ String details="[",components="[",times="[",partTimes="[",stepUptimes="[",partUptimes="[";
+ for(int i=0;i<7;i++){if(i){details+=",";times+=",";stepUptimes+=",";}details+=jsString(workflow.stepLabels[i]);times+=jsString(workflow.stepTimes[i]);stepUptimes+=String(workflow.stepUptimeMs[i]);}
+ details+="]";times+="]";stepUptimes+="]";
+ for(int i=0;i<6;i++){if(i){components+=",";partTimes+=",";partUptimes+=",";}components+=jsString(workflow.partLabels[i]);partTimes+=jsString(workflow.partTimes[i]);partUptimes+=String(workflow.partUptimeMs[i]);}
+ components+="]";partTimes+="]";partUptimes+="]";
+ String recordStatus=workflow.expired?"TIMED_OUT":workflow.complete?(workflow.disposition.length()?workflow.disposition:"COMPLETE"):workflow.active?(workflow.disposition.length()?"AWAITING_CONFIRMATION":"IN_PROGRESS"):"NOT_STARTED";
+ return "{\"id\":"+jsString(workflow.recipe)+",\"recipeRevision\":\"01\",\"disposition\":"+jsString(workflow.disposition)+",\"reason\":"+jsString(workflow.reason)+",\"resultId\":"+jsString(workflow.resultId)+",\"dataReference\":"+jsString(workflow.dataReference)+",\"run\":"+jsString(workflow.run)+",\"device\":"+jsString(workflow.device)+",\"equipment\":"+jsString(workflow.equipment)+",\"operator\":"+jsString(workflow.operatorName)+",\"department\":"+jsString(workflow.department)+",\"test\":"+jsString(workflow.test)+",\"sessionStartedAt\":"+jsString(workflow.sessionStarted)+",\"startedAt\":"+jsString(workflow.startedAt)+",\"startedUptimeMs\":"+String(workflow.startedUptimeMs)+",\"recordStatus\":"+jsString(recordStatus)+",\"step\":"+String(workflow.step)+",\"active\":"+(workflow.active?"true":"false")+",\"complete\":"+(workflow.complete?"true":"false")+",\"expired\":"+(workflow.expired?"true":"false")+",\"error\":"+(workflow.error?"true":"false")+",\"partMask\":"+String(workflow.partMask)+",\"partCount\":"+String(partCount())+",\"remainingMs\":"+String(remaining)+",\"dwellSeconds\":"+String((unsigned long)((workflow.recipe=="AGE-01"&&workflow.step==3?now-workflow.loaded:workflow.dwell)/1000))+",\"message\":"+jsString(workflow.message)+",\"clockSynced\":"+(utcNow().length()?"true":"false")+",\"stepTimes\":"+times+",\"partTimes\":"+partTimes+",\"stepUptimeMs\":"+stepUptimes+",\"partUptimeMs\":"+partUptimes+",\"stepLabels\":"+details+",\"partLabels\":"+components+"}";
+}
+static String workflowRecordJson(){
+ if(!workflow.run.length())return "";
+ String steps="[",components="[";
+ bool first=true;
+ for(int i=0;i<7;i++)if(workflow.stepLabels[i].length()){
+  if(!first)steps+=",";
+  steps+="{\"step\":"+String(i+1)+",\"payload\":"+jsString(workflow.stepLabels[i])+",\"recordedAt\":"+jsString(workflow.stepTimes[i])+",\"uptimeMs\":"+String(workflow.stepUptimeMs[i])+"}";
+  first=false;
+ }
+ first=true;
+ for(int i=0;i<6;i++)if(workflow.partLabels[i].length()){
+  if(!first)components+=",";
+  components+="{\"payload\":"+jsString(workflow.partLabels[i])+",\"recordedAt\":"+jsString(workflow.partTimes[i])+",\"uptimeMs\":"+String(workflow.partUptimeMs[i])+"}";
+  first=false;
+ }
+ steps+="]";components+="]";
+ String status=workflow.expired?"TIMED_OUT":workflow.complete?(workflow.disposition.length()?workflow.disposition:"COMPLETE"):workflow.active?(workflow.disposition.length()?"AWAITING_CONFIRMATION":"IN_PROGRESS"):"NOT_STARTED";
+ return "{\"schemaVersion\":1,\"recordType\":\"workflow-run\",\"scannerMac\":"+jsString(WiFi.macAddress())+",\"runId\":"+jsString(workflow.run)+",\"status\":"+jsString(status)+",\"recipe\":"+jsString(workflow.recipe)+",\"recipeRevision\":\"01\",\"deviceSerial\":"+jsString(workflow.device)+",\"equipmentId\":"+jsString(workflow.equipment)+",\"operator\":"+jsString(workflow.operatorName)+",\"department\":"+jsString(workflow.department)+",\"test\":"+jsString(workflow.test)+",\"sessionStartedAt\":"+jsString(workflow.sessionStarted)+",\"startedAt\":"+jsString(workflow.startedAt)+",\"startedUptimeMs\":"+String(workflow.startedUptimeMs)+",\"clockSynced\":"+(utcNow().length()?"true":"false")+",\"result\":{\"disposition\":"+jsString(workflow.disposition)+",\"failureReason\":"+jsString(workflow.reason)+",\"resultId\":"+jsString(workflow.resultId)+",\"dataReference\":"+jsString(workflow.dataReference)+"},\"steps\":"+steps+",\"components\":"+components+"}";
 }
 static bool workflowLog(const String& event,const String& raw,const String& reason,const WorkflowState* candidate=nullptr){
  const WorkflowState& record=candidate?*candidate:workflow;
@@ -41,7 +67,7 @@ static bool workflowLog(const String& event,const String& raw,const String& reas
 static bool startWorkflow(const String& id,const String& raw){
  if(!sessionStarted.length()){workflow.message="Sign on first";return false;}
  if(workflow.active&&!workflow.complete&&!workflow.expired){workflow.message="Active run: finish or cancel before starting another";return false;}
- WorkflowState prior=workflow;workflow=WorkflowState();workflow.recipe=id;workflow.run=String((unsigned long)workflowNow())+"-"+String(bootId);workflow.active=true;workflow.message="Scan first required label";
+ WorkflowState prior=workflow;workflow=WorkflowState();workflow.recipe=id;workflow.run=String((unsigned long)workflowNow())+"-"+String(bootId);workflow.operatorName=activeOperatorName.length()?activeOperatorName:activeOperator;workflow.department=sessionDepartment;workflow.test=sessionTest;workflow.sessionStarted=sessionStarted;workflow.startedAt=utcNow();workflow.startedUptimeMs=(uint32_t)workflowNow();workflow.active=true;workflow.message="Scan first required label";
  if(!workflowLog("started",raw,"")){workflow=prior;workflow.message="Unable to save new run";return false;}signalStart();return true;
 }
 static bool workflowReject(const String& raw,const String& message){
@@ -87,7 +113,7 @@ static bool workflowScan(const String& raw,const String& fmt=""){
   if(i<0)return workflowReject(raw,"Unexpected component "+pn);
   if(!sn.length()||!workflowField(raw,"LOT").length())return workflowReject(raw,"Component lot and serial required");
   for(int j=0;j<6;j++)if((workflow.partMask&(1<<j))&&(j==i||workflow.serials[j]==sn))return workflowReject(raw,"Duplicate component "+pn);
-  next.partMask|=(1<<i);next.serials[i]=sn;next.partLabels[i]=raw;next.partTimes[i]=utcNow();
+  next.partMask|=(1<<i);next.serials[i]=sn;next.partLabels[i]=raw;next.partTimes[i]=utcNow();next.partUptimeMs[i]=(uint32_t)workflowNow();
  }
  if(type=="RESULT"){
   if(workflowField(raw,"DEVICE")!=workflow.device||workflowField(raw,"BENCH")!=workflow.equipment||!workflowField(raw,"DATA").length())return workflowReject(raw,"Result must match device, equipment and data run");
@@ -104,8 +130,8 @@ static bool workflowScan(const String& raw,const String& fmt=""){
   if(at==2)next.loaded=workflowNow();
   if(at==3){if(id!=workflow.equipment)return workflowReject(raw,"Rescan the original chamber");uint64_t elapsed=workflowNow()-workflow.loaded;if(elapsed<5000)return workflowReject(raw,"Wait at least 5 seconds after chamber loading");next.dwell=elapsed;next.deadline=workflowNow()+60000;}
  }
+ if(type!="PART"){next.stepLabels[at-1]=raw;next.stepTimes[at-1]=utcNow();next.stepUptimeMs[at-1]=(uint32_t)workflowNow();}
  if(!workflowLog(closing?"completed":"accepted",raw,(closing||at==3)&&workflow.recipe=="AGE-01"?"Dwell seconds: "+String((unsigned long)(next.dwell/1000)):String(""),&next))return workflowReject(raw,"Cannot save workflow event; export/clear records");
- if(type!="PART"){next.stepLabels[at-1]=raw;next.stepTimes[at-1]=utcNow();}
  next.step=at+1;if(type=="PART"&&next.partMask!=63)next.step=at;
  next.error=false;next.complete=closing;if(closing)next.step=at;if(next.complete)next.deadline=0;
  next.message=next.complete?(next.disposition.length()?"Workflow complete — test "+next.disposition:String("Workflow complete")):("Accepted; scan next required label");
