@@ -85,7 +85,7 @@ flowchart LR
  H --> I[Export traceability]
 ```
 
-The scanner uses [distinct audible feedback](docs/settings/README.md#audible-feedback-and-operator-usability) to communicate scan acceptance, errors and completion without requiring operators to watch a screen.
+🔊 **[Audible feedback](docs/settings/README.md#audible-feedback-and-operator-usability):** A short chirp confirms each scan, a low tone signals an error, and a positive rising melody rewards successful completion — no need to keep watching the screen.
 
 ## Manufacturing and test examples
 
