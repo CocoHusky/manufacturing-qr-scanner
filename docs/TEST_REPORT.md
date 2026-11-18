@@ -6,7 +6,7 @@ Operator-reported bench tests, November 16–17, 2026. Supersedes earlier report
 
 The prototype uses a low-cost camera and lens modified for close-range macro imaging of compact markings and PCB features. The optical modification is part of the tested setup; its exact magnification, working distance and resolving power have not been independently measured.
 
-Original test sheets: QR sizes 4,5,6,8,10,12,15 mm with 4,16,32,64,96,128 ASCII characters; alphanumeric M, alphanumeric L and byte M. Data Matrix square ECC200 sizes 4–15 mm, payloads 7,16,32,64,96. Print at 100% scale, cover adjacent codes, present one at a time. Exact repeats, distance, printer DPI, exposure, light and camera parameters were not recorded for each sample. Results are qualitative successful reads, not measured reliability.
+Original test sheets: QR sizes 4,5,6,8,10,12,15 mm with 4,16,32,64,96,128 ASCII characters; alphanumeric M, alphanumeric L and byte M. Data Matrix square ECC200 sizes 4–15 mm, payloads 7,16,32,64,96. Print at 100% scale, cover adjacent codes, present one at a time. Test sheets were printed on a Canon PIXMA MG3620 inkjet using the high-quality computer print setting. Manufacturer ratings are up to 600 × 600 DPI black and 4800 × 1200 DPI color ([Canon PIXMA MG3620 specifications](https://www.usa.canon.com/support/p/pixma-mg3620)). Exact repeats, distance, effective printed resolution, exposure, light and camera parameters were not recorded for each sample. Results are qualitative successful reads, not measured reliability.
 
 QR V has 17+4V active modules and a four-module quiet zone on each edge: module pitch (µm) = 1000 × side_mm/(25+4V). Data Matrix with N modules and one-module quiet zone: pitch = 1000 × side_mm/(N+2). Area = side_mm². ASCII character count equals bytes in these samples.
 
@@ -61,7 +61,7 @@ Initial design: 5 mm ECC200 / 16 characters linked to a database; 8 mm ECC200 / 
 
 ## Print resolution and practical marking design
 
-The 5 mm QR V1/M size-ladder screenshot shows successful recognition despite irregular module edges. A separate 15 mm short QR read confirms that larger codes can be read when the complete symbol fits the camera view. The 4 mm Data Matrix with 16 characters remains the smallest reported compact marking. These observations do not isolate printer resolution from camera focus, illumination, compression or toner spread.
+The 5 mm QR V1/M size-ladder screenshot shows successful recognition despite irregular module edges. A separate 15 mm short QR read confirms that larger codes can be read when the complete symbol fits the camera view. The 4 mm Data Matrix with 16 characters remains the smallest reported compact marking. These observations do not isolate printer resolution from camera focus, illumination, compression or ink spread.
 
 For a square footprint including quiet zone, the module pitch equals footprint divided by total modules per side. Nominal printer dot pitch is 25.4 mm / DPI. The table estimates printer dots per module, not measured optical resolution.
 
@@ -72,7 +72,7 @@ For a square footprint including quiet zone, the module pitch equals footprint d
 | ECC200 18×18, 4 mm (20 modules) | 200 | 2.36 | 4.72 | 9.45 | 508 |
 | QR V1, 15 mm (29 modules) | 517 | 6.11 | 12.22 | 24.44 | 196 |
 
-The ECC200 row is an illustrative geometry; actual module count depends on encoding and payload. Four dots per module is an engineering planning target, not an acceptance standard. The printer's actual DPI remains unknown. A 600 DPI setting is a reasonable starting point for 5 mm V1 QR and compact 4 mm ECC200; 1200 DPI or another high-fidelity process is worth evaluating for smaller or denser symbols.
+The ECC200 row is an illustrative geometry; actual module count depends on encoding and payload. Four dots per module is an engineering planning target, not an acceptance standard. The MG3620's nominal black rating is 600 × 600 DPI; the effective resolution and ink-channel selection for these prints are unmeasured. This rating corresponds to about four dots per module for a 5 mm V1 QR. Compare against a 1200 DPI monochrome or other higher-fidelity process for smaller or denser symbols.
 
 ### Recommended production marking approach
 

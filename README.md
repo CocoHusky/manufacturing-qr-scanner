@@ -130,7 +130,7 @@ The macro-modified scanner demonstrated compact printed barcode recognition, gui
 
 ![Barcode payload versus printed footprint](docs/figures/capacity.svg)
 
-**Practical limits:** A 5 mm Version 1 QR code has a nominal module pitch of 172 µm, or approximately 4 printer dots per module at 600 DPI. Start with 600 DPI and evaluate 1200 DPI for smaller or denser markings. The current laser printer shows irregular module edges; its actual DPI is unverified. Print fidelity, focus, lighting and field of view jointly determine recognition. The 128-character QR attempt failed; the maximum repeatable payload remains to be established.
+**Practical limits:** A 5 mm Version 1 QR code has a nominal module pitch of 172 µm, or approximately 4 printer dots per module at 600 DPI. Test sheets were printed using a Canon PIXMA MG3620 inkjet at the high-quality setting (rated up to 600 × 600 DPI black and 4800 × 1200 DPI color; [Canon PIXMA MG3620 specifications](https://www.usa.canon.com/support/p/pixma-mg3620)). Irregular printed edges suggest print fidelity may constrain smaller or denser markings; effective resolution was not measured. Evaluate a higher-fidelity marking process next. Print fidelity, focus, lighting and field of view jointly determine recognition. The 128-character QR attempt failed; the maximum repeatable payload remains to be established.
 
 For compact PCBs, use short Data Matrix identifiers linked to a richer device record. Larger QR labels can carry component details, test outcomes and measurement references directly.
 
