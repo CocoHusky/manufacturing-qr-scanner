@@ -98,11 +98,12 @@ flowchart LR
 
 ### Assembly demonstration
 
-| Assembly demonstration with 6 components |
-| :---: |
-| [![Accelerated assembly demonstration preview](docs/media/assembly-audible-preview.gif)](docs/media/assembly-audible.mp4) |
+| Computer — six-component assembly | Mobile phone — six-component assembly |
+| :---: | :---: |
+| <a href="docs/media/assembly-audible.mp4"><img src="docs/media/assembly-audible-preview.gif" height="270" alt="Computer assembly demonstration"></a> | <a href="docs/media/assembly-phone.mp4"><img src="docs/media/assembly-phone-preview.gif" height="270" alt="Mobile phone assembly demonstration"></a> |
+| [Watch the full 47-second video with sound](docs/media/assembly-audible.mp4) | [Watch the full 1-minute 52-second video with sound](docs/media/assembly-phone.mp4) |
 
-[Watch the full 47-second demonstration with sound](docs/media/assembly-audible.mp4). The recorded example uses printed labels and the scanner’s embedded workflow. The firmware rejects wrong recipes, unexpected parts, duplicate components, and premature closure. The workflow also guides the operator through visual inspection.
+Both demonstrations use printed labels and the scanner’s embedded workflow. The firmware rejects wrong recipes, unexpected parts, duplicate components, and premature closure. The workflow also guides the operator through visual inspection.
 
 ## Macro inspection and defect documentation
 
