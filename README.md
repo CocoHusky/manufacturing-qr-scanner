@@ -96,10 +96,10 @@ flowchart LR
 
 | Application | Purpose |
 | --- | --- |
-| [01 — Component assembly](docs/workflows/01-component-assembly/README.md) | Capture device genealogy; prevent duplicate and missing components |
-| [02 — Benchtop functional test](docs/workflows/02-benchtop-functional-test/README.md) | Associate device, bench, PASS/FAIL result and measurement reference |
-| [03 — Thermal fixture test](docs/workflows/03-thermal-fixture-test/README.md) | Verify fixture, accessories and temperature result |
-| [04 — Environmental aging](docs/workflows/04-environmental-aging/README.md) | Record chamber exposure and confirm removal |
+| [01 — Component assembly](docs/workflows/01-component-assembly/README.md) | Capture device genealogy; prevent duplicate and missing components and record component information |
+| [02 — Benchtop functional test](docs/workflows/02-benchtop-functional-test/README.md) | Associate device, operator, timing, bench, PASS/FAIL result and measurement reference |
+| [03 — Thermal fixture test](docs/workflows/03-thermal-fixture-test/README.md) | Verify fixture, operator timing, accessories and temperature result |
+| [04 — Environmental aging](docs/workflows/04-environmental-aging/README.md) | Record chamber exposure time, operator, and confirm removal |
 
 ### Assembly demonstration
 
