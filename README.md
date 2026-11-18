@@ -36,7 +36,7 @@ At 1,000 devices, manual computer entry alone is estimated at **33–67 hours**,
 
 ## The Solution
 
-A low-cost, scan-driven traceability system designed to improve manufacturing and testing by reducing manual data entry, verifying required scan steps and capturing structured records.
+A low-cost, scan-driven traceability system designed to improve manufacturing and testing by reducing manual data entry, verifying required scan steps and capturing structured records. I will start by focusing on the 4 core business objectives 👑 
 
 ```mermaid
 flowchart TD
