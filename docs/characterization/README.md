@@ -48,6 +48,12 @@ Use a nominal 600 DPI or better print process as a starting point, actual-size o
 
 ## Evidence and reproduction
 
+| Compact marking | QR density | Size ladder |
+| :---: | :---: | :---: |
+| [![Compact marking](../media/demo-compact-marking.gif)](../media/demo-compact-marking.mp4) | [![Density scanning](../media/demo-density-scanning.gif)](../media/demo-density-scanning.mp4) | [![Size ladder](../media/demo-qr-ladder.gif)](../media/demo-qr-ladder.mp4) |
+
+Compact markings, information density and QR size-ladder testing.
+
 - [Compact marking demonstration](../media/demo-compact-marking.mp4)
 - [QR density demonstration](../media/demo-density-scanning.mp4)
 - [Size ladder demonstration](../media/demo-qr-ladder.mp4)

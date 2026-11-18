@@ -10,7 +10,6 @@ Reduce manual data entry, guide manufacturing and test workflows, and capture tr
 - [How it works](#how-it-works)
 - [Manufacturing and test examples](#manufacturing-and-test-examples)
 - [Macro inspection and defect documentation](#macro-inspection-and-defect-documentation)
-- [What the scanner records](#what-the-scanner-records)
 - [Technical documentation](#technical-documentation)
 - [License](#license)
 
@@ -113,31 +112,13 @@ The modified close-focus camera also captures macro-level PCB images for manual 
 
 Export original and annotated images from the browser and associate them with the relevant device or test record.
 
-## What the scanner records
-
-[All workflow details and acceptance criteria](docs/workflows/README.md)
-
-| Compact marking | QR density | Size ladder |
-| :---: | :---: | :---: |
-| [![Compact marking](docs/media/demo-compact-marking.gif)](docs/media/demo-compact-marking.mp4) | [![Density scanning](docs/media/demo-density-scanning.gif)](docs/media/demo-density-scanning.mp4) | [![Size ladder](docs/media/demo-qr-ladder.gif)](docs/media/demo-qr-ladder.mp4) |
-
-Compact markings, information density and QR size-ladder testing. [Experimental results and test sheets](docs/characterization/README.md).
-
-![Examples of Data Matrix, QR, Code 128 and Code 39](docs/barcodes/examples.svg)
-
-Capture device and component identifiers, lots, revisions, equipment, measurements, PASS/FAIL results, data references, operator context and timestamps.
-
-QR and Data Matrix are supported in both modes. Code 128 starts embedded workflows; Browser mode also reads general Code 128 and Code 39.
-
-[Supported formats, encoded payload examples and recognition screenshots](docs/barcodes/README.md)
-
 ## Technical documentation
 
 | Documentation | Contents |
 | --- | --- |
 | [Operator experience](docs/operator/README.md) | Sign-on, step-by-step screenshots, error handling and completion |
 | [Manufacturing and test workflows](docs/workflows/README.md) | Four procedures, acceptance criteria and example records |
-| [Barcode formats and recorded data](docs/barcodes/README.md) | Supported symbols, structured payloads and scan screenshots |
+| [What the scanner records](docs/barcodes/README.md) | Supported symbols, structured payloads and scan screenshots |
 | [Macro inspection](docs/inspection/README.md) | Capture, annotate and export inspection images |
 | [Scanner settings and audible feedback](docs/settings/README.md) | Camera, lighting, buzzer, Wi-Fi and OTA settings |
 | [Hardware and firmware](docs/HARDWARE_AND_FIRMWARE.md) | ESP32, camera, decoding modes, storage and security |
