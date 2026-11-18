@@ -62,6 +62,10 @@ The prototype combines an ESP32 and a OV5640 camera, controlled white illuminati
 
 ## How it works
 
+<p align="center">
+  <img src="docs/media/prototype-front.jpg" width="300" alt="Front view of the embedded scanner prototype">
+</p>
+
 ```mermaid
 flowchart LR
  A[Sign on] --> B[Scan recipe header]
