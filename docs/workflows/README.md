@@ -11,7 +11,7 @@
 
 Sign on, select Embedded mode and resume scanning. Scan the header, then present one label at a time; remove each from view before rescanning. Recipe revision 01 is encoded in the last two header digits. Labels contain WF, STEP, TYPE and SN or ID; result labels also contain DEVICE, BENCH, DATA, STATUS, measurement values and REASON.
 
-All four procedures share the same [audible operator feedback](../../README.md#audible-operator-feedback), allowing operators to follow workflow progress without continuously watching the screen.
+All four procedures share the same [audible operator feedback](../settings/README.md#audible-feedback-and-operator-usability), allowing operators to follow workflow progress without continuously watching the screen.
 
 A successful scan means the record was accepted, not that the physical test passed. PASS and FAIL dispositions both require final device confirmation. The operator performs the actual assembly, inspection and test; the scanner verifies scanned information. The shared PDF currently retains the earlier vibration legend until its vector-preserving revision is completed.
 
