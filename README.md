@@ -85,7 +85,7 @@ flowchart LR
  H --> I[Export traceability]
 ```
 
-🔊 **[Audible feedback](docs/settings/README.md#audible-feedback-and-operator-usability):** A short chirp confirms each scan, a low tone signals an error, and a positive rising melody rewards successful completion — no need to keep watching the screen.
+🔊 **[Audible feedback](docs/settings/README.md#audible-feedback-and-operator-usability):** 🔊 A short chirp confirms each scan, a low tone signals an error, and a positive rising melody rewards successful completion — no need to keep watching the screen.
 
 ## Manufacturing and test examples
 
