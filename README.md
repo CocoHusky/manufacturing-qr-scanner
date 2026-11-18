@@ -97,7 +97,7 @@ flowchart LR
 
 ### Assembly demonstration
 
-| Assembly demonstration |
+| Assembly demonstration with 6 components |
 | :---: |
 | [![Accelerated assembly demonstration preview](docs/media/assembly-audible-preview.gif)](docs/media/assembly-audible.mp4) |
 
