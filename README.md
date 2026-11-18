@@ -103,7 +103,7 @@ The scanner uses [distinct audible feedback](docs/settings/README.md#audible-fee
 | Computer — six-component assembly | Mobile phone — six-component assembly |
 | :---: | :---: |
 | <a href="docs/media/assembly-audible.mp4"><img src="docs/media/assembly-audible-preview.gif" height="270" alt="Computer assembly demonstration"></a> | <a href="docs/media/assembly-phone.mp4"><img src="docs/media/assembly-phone-preview.gif" height="270" alt="Mobile phone assembly demonstration"></a> |
-| [Watch the full 47-second video with sound](docs/media/assembly-audible.mp4) | [Watch the full 1-minute 52-second video with sound](docs/media/assembly-phone.mp4) |
+| [Watch the full video with sound](docs/media/assembly-audible.mp4) | [Watch the full video with sound](docs/media/assembly-phone.mp4) |
 
 Both demonstrations use printed labels and the scanner’s embedded workflow. The firmware rejects wrong recipes, unexpected parts, duplicate components, and premature closure. The workflow also guides the operator through visual inspection.
 
