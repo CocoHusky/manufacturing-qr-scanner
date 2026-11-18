@@ -22,9 +22,7 @@ Reduce manual data entry, guide manufacturing and test workflows, and capture tr
 
 ## The Problem
 
-For every device, teams need to connect its identity, component lots, test setup, and result.
-
-Manual recording creates two common problems:
+For every device, teams need to connect its identity, component lots, test setup, and result. Manual recording creates two common problems:
 
 | **Time spent recording information** | **Errors in manual records** |
 | --- | --- |
