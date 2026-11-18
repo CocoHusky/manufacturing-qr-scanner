@@ -71,10 +71,20 @@ The prototype combines an ESP32 and a OV5640 camera, controlled white illuminati
 
 ## How it works
 
-| Scanner prototype | Supported barcode formats |
-| :---: | :---: |
-| <img src="docs/media/prototype-front.jpg" width="260" alt="Embedded scanner prototype"> | <a href="docs/barcodes/README.md"><img src="docs/barcodes/examples-grid.svg" width="345" alt="Data Matrix, QR, Code 128 and Code 39 examples"></a> |
-| Portable embedded hardware | [Barcode formats and encoded data examples](docs/barcodes/README.md) |
+<table align="center">
+  <tr>
+    <th align="center">Scanner prototype</th>
+    <th align="center">Supported barcode formats</th>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/media/prototype-front.jpg" width="260" alt="Embedded scanner prototype"></td>
+    <td align="center"><a href="docs/barcodes/README.md"><img src="docs/barcodes/examples-grid.svg" width="345" alt="Data Matrix, QR, Code 128 and Code 39 examples"></a></td>
+  </tr>
+  <tr>
+    <td align="center">Portable embedded hardware</td>
+    <td align="center"><a href="docs/barcodes/README.md">Barcode formats and encoded data examples</a></td>
+  </tr>
+</table>
 
 ```mermaid
 flowchart LR
