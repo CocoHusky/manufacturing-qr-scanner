@@ -85,6 +85,14 @@ flowchart LR
  H --> I[Export traceability]
 ```
 
+### Audible operator feedback
+
+Distinct sound patterns let operators focus on assembly and testing without continuously looking at a computer or phone. Confirmation chirps, warning tones and completion melodies communicate workflow progress and test outcomes in real time.
+
+![Audible operator feedback for all manufacturing and test workflows](docs/figures/feedback-tones.svg)
+
+[Sound configuration and technical details](docs/settings/README.md#audible-feedback-and-operator-usability)
+
 ## Manufacturing and test examples
 
 [**Printable work instructions for experimental testing (PDF)**](docs/workflows/instructions.pdf) — print at 100% scale or display digitally.
