@@ -77,6 +77,7 @@ function configureWorkflows(){
  $('startWorkflow').onclick=()=>workflowRequest('start',recipe.value).catch(e=>$('workflowStatus').textContent=e.message);
  $('resetWorkflow').onclick=()=>{if(workflow?.active&&confirm('Cancel active workflow?'))workflowRequest('cancel').catch(e=>$('workflowStatus').textContent=e.message)};
  $('exportWorkflow').onclick=async()=>{try{let r=await fetch('/journal');if(!r.ok)throw Error(await r.text());let records=(await r.text()).split('\n').filter(Boolean).map(JSON.parse).filter(x=>x.engine==='Workflow');downloadFile('workflow-runs.json',JSON.stringify({operator:session,deviceMac,records,active:workflow},null,2),'application/json')}catch(e){$('workflowStatus').textContent=e.message}};
+ $('exportRunRecord').onclick=async()=>{try{let r=await fetch('/workflow-record',{cache:'no-store'});if(!r.ok)throw Error(await r.text());let record=await r.json(),id=String(record.runId||'run').replace(/[^A-Za-z0-9_-]/g,'_');downloadFile('traceability-'+id+'.json',JSON.stringify(record,null,2),'application/json')}catch(e){$('workflowStatus').textContent=e.message}};
  refreshWorkflow();setInterval(refreshWorkflow,750);
 }
 async function refreshWorkflow(){if(workflowPolling)return;workflowPolling=true;try{let r=await fetch('/workflow',{cache:'no-store'});if(r.ok)renderWorkflow(await r.json())}catch(e){}finally{workflowPolling=false}}
@@ -101,6 +102,23 @@ function renderComponentList(state){
   list.append(row);
  });
 }
+function renderTraceabilityRecord(state){
+ const panel=$('workflowRecordPanel'),summary=$('workflowRecordSummary'),payloads=$('workflowRecordPayloads');
+ panel.hidden=!state.run;
+ if(panel.hidden)return;
+ const rows=[
+  ['Run ID',state.run],['Status',state.recordStatus],['Scanner',deviceMac],['Recipe',state.id+' · rev '+state.recipeRevision],
+  ['Device',state.device],['Test bench / fixture',state.equipment],
+  ['Operator',state.operator],['Department',state.department],['Test',state.test],
+  ['Started',state.startedAt||'No synchronized clock'],['Start uptime',String(state.startedUptimeMs||0)+' ms'],['Clock synchronized',state.clockSynced?'Yes':'No'],
+  ['Result',state.disposition||'Not recorded'],['Failure reason',state.reason],
+  ['Result ID',state.resultId],['Measurement reference',state.dataReference]
+ ].filter(([,value])=>value!==undefined&&value!==null&&value!=='');
+ summary.replaceChildren(...rows.flatMap(([label,value])=>{const dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=label;dd.textContent=String(value);return [dt,dd]}));
+ const steps=(state.stepLabels||[]).map((payload,i)=>payload?{step:i+1,payload,recordedAt:state.stepTimes?.[i]||null,uptimeMs:state.stepUptimeMs?.[i]||0}:null).filter(Boolean);
+ const components=(state.partLabels||[]).map((payload,i)=>payload?{payload,recordedAt:state.partTimes?.[i]||null,uptimeMs:state.partUptimeMs?.[i]||0}:null).filter(Boolean);
+ payloads.textContent=JSON.stringify({steps,components},null,2);
+}
 let lastWorkflowRender='';
 function renderWorkflow(state){
  const newRun=state.active&&state.run&&state.run!==workflow?.run;workflow=state;const recipe=$('recipe');
@@ -114,8 +132,9 @@ function renderWorkflow(state){
  $('workflowStatus').textContent=state.active?state.message+(state.disposition==='FAIL'&&state.reason?' · '+state.reason:''):'Scan the workflow header or start a run.';
  $('workflowBanner').hidden=!state.active;$('workflowBanner').textContent=state.active?Workflows.recipes[state.id].name+' · '+state.message+(state.disposition==='FAIL'&&state.reason?' · '+state.reason:''):'';
  $('workflowTimer').textContent=[state.id==='AGE-01'&&state.active&&state.step>=3?'Elapsed exposure: '+Math.floor(state.dwellSeconds/3600)+'h '+Math.floor(state.dwellSeconds%3600/60)+'m '+state.dwellSeconds%60+'s':'',state.id==='AGE-01'&&state.step===3&&state.dwellSeconds<5?'Rescan chamber in '+(5-state.dwellSeconds)+' s':'',state.remainingMs?'Confirmation remaining: '+Math.ceil(state.remainingMs/1000)+' s':'',state.active?(state.clockSynced?'Clock synchronized':'Clock not yet synchronized'):''].filter(Boolean).join(' · ');
- const key=JSON.stringify([recipe.value,state.run,state.step,state.complete,state.error,state.partMask,state.stepLabels,state.partLabels,state.stepTimes,state.partTimes,state.disposition,state.expired]);
+ const key=JSON.stringify([recipe.value,state.run,state.step,state.complete,state.error,state.partMask,state.stepLabels,state.partLabels,state.stepTimes,state.partTimes,state.disposition,state.expired,state.recordStatus,deviceMac]);
  if(key===lastWorkflowRender)return;lastWorkflowRender=key;
+ renderTraceabilityRecord(state);
  renderComponentList(state);
  const root=$('workflowSteps');root.replaceChildren();
  const steps=Workflows.recipes[state.active?state.id:recipe.value]?.steps||[];

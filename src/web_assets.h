@@ -133,7 +133,6 @@ function renderComponentList(state){
   list.append(row);
  });
 }
-let lastWorkflowRender='';
 function renderTraceabilityRecord(state){
  const panel=$('workflowRecordPanel'),summary=$('workflowRecordSummary'),payloads=$('workflowRecordPayloads');
  panel.hidden=!state.run;
@@ -151,9 +150,11 @@ function renderTraceabilityRecord(state){
  const components=(state.partLabels||[]).map((payload,i)=>payload?{payload,recordedAt:state.partTimes?.[i]||null,uptimeMs:state.partUptimeMs?.[i]||0}:null).filter(Boolean);
  payloads.textContent=JSON.stringify({steps,components},null,2);
 }
+let lastWorkflowRender='';
 function renderWorkflow(state){
  const newRun=state.active&&state.run&&state.run!==workflow?.run;workflow=state;const recipe=$('recipe');
  if(newRun){recipe.value=state.id;$('workflowTab').click()}
+ if((state.complete||state.expired)&&recipe.value!==state.id)state={active:false};
  if(state.active&&!state.complete&&!state.expired&&recipe.value!==state.id)recipe.value=state.id;
  recipe.disabled=state.active&&!state.complete&&!state.expired;
  $('startWorkflow').disabled=recipe.disabled;$('resetWorkflow').disabled=!state.active||state.complete;

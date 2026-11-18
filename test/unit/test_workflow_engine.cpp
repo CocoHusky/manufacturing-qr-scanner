@@ -4,7 +4,9 @@
 #include <fstream>
 #include <vector>
 uint64_t fakeTime=10000;
-static String activeOperator="Tester",sessionStarted="2026-11-17",sessionDepartment="QA",sessionTest="Demo";
+static String activeOperator="Tester",activeOperatorName="",sessionStarted="2026-11-17",sessionDepartment="QA",sessionTest="Demo";
+struct FakeWiFi { String macAddress() const { return "02:00:00:00:00:01"; } };
+static FakeWiFi WiFi;
 static bool journalReady=true,writeOK=true;
 static uint32_t bootId=1;
 static int warnings=0,completed=0,timeouts=0;
