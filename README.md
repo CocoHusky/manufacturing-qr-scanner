@@ -138,19 +138,6 @@ Export original and annotated images from the browser and associate them with th
 
 The prototype demonstrates compact barcode recognition, guided manufacturing and test workflows, and structured traceability records using low-cost macro imaging.
 
-### Signal-quality test relevance and current evidence
-
-This build demonstrates **test-result traceability**, not signal-quality measurement. The scanner records bench-reported measurements and PASS/FAIL labels; it does not acquire raw signals, control instruments, calculate SNR/noise, or evaluate test limits. The voltage and current values in TEST-01 are illustrative workflow examples, not measurements made by the scanner.
-
-| Capability | Evidence in this build | High-priority metric still needed |
-| --- | --- | --- |
-| Optical code capture | Reported reads include 4 mm Data Matrix with 16 characters; current observations are qualitative. | First-pass decode rate and time-to-read across repeated trials, sizes, payloads, positions, lighting and print conditions. |
-| Workflow and record integrity | Recipes check sequence, identity and duplicate scans; events save to a local journal and export as JSON. | Error-detection and false-accept rates; completeness and correct device/bench/result association against ground truth. |
-| Test-result traceability | TEST-01 scans bench-reported values, disposition, failure reason and data reference into the device workflow. | Agreement between the bench source and exported record, including units, limits, result and unique run/data reference. Automated instrument capture is not implemented. |
-| Operator benefit | Documentation-time values are planning estimates only. | Matched operator trials measuring total time, corrections and persisted record errors. |
-
-Signal-quality metrics such as SNR, noise floor, bandwidth, repeatability and drift must come from the test instrument or analysis system. Add them to this project only when a bench integration supplies measured values and a defined reference method. The [validation protocol](docs/validation/README.md) and [verification plan](docs/VERIFICATION_PLAN.md) describe the next measurements; no production-performance claims have been established.
-
 ### Demonstrated scanning results
 
 | Format | Footprint | Payload (ASCII) | Density (B/mm²) |
