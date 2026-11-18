@@ -1,6 +1,8 @@
+# Manufacturing & Test Traceability Scanner
+
 ![Manufacturing and test traceability scanner — product overview](docs/media/manufacturing-traceability-overview.png)
 
-Reduce manual data entry, guide manufacturing and test workflows, and capture traceable records.
+An ESP32 and camera-based scan-to-record prototype for manufacturing and test workflows that reduces manual data entry, guides operators, and captures traceable records.
 
 ## Contents
 
@@ -35,7 +37,7 @@ Manual transcription scales with every device and every component. Scanning repl
 | 100 devices | 5–8.3 hr | 3.3–6.7 hr | **17–100 min** |
 | 1,000 devices | 50–83.3 hr | 33.3–66.7 hr | **2.8–16.7 hr** |
 
-*Planning estimates for recording and checking identifiers; physical assembly and investigation time excluded.*
+*Illustrative engineering estimates for recording and checking identifiers, not measured productivity results. Physical assembly, error correction and investigation time are excluded.*
 
 At 1,000 devices, manual computer entry alone is estimated at **33–67 hours**, compared with **2.8–16.7 hours** using our scanner. Missing or incorrect identifiers can add further investigation time.
 

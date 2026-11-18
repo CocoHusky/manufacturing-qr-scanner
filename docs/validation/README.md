@@ -27,19 +27,18 @@ No comparative results have been collected. Host regression tests validate workf
 
 ## Documentation time estimates
 
-For a six-component assembly traveler, compare manual documentation with our system’s scan-driven approach:
+Illustrative planning assumptions for a six-component assembly traveler. These are not measured comparative results.
 
-| Documentation activity | Handwritten | Manual computer entry | **Our system (estimated)** |
+| Documentation activity | Handwritten | Manual computer entry | Our system (estimated) |
 | --- | ---: | ---: | ---: |
-| Record and check identifiers | 3–5 min | 2–4 min | **10–60 s** |
-| Investigate a missing or incorrect identifier (per incident) | 10–60 min | 1–30 min | 0 min* |
+| Record and check identifiers | 3–5 min | 2–4 min | 10–60 s |
+| Investigate a missing or incorrect identifier (per incident) | 10–60 min | 1–30 min | To be measured |
 
 ### Estimated documentation effort — 100 devices
 
-| Activity | Handwritten | Manual computer entry | **Our system (estimated)** |
+| Activity | Handwritten | Manual computer entry | Our system (estimated) |
 | --- | ---: | ---: | ---: |
-| Record and check identifiers (100 devices) | 5–8 hr 20 min | 3 hr 20 min–6 hr 40 min | **17 min–1 hr 40 min** |
-| Investigate 10 manual-entry incidents | 1 hr 40 min–10 hr | 10 min–5 hr | 0 min* |
-| **Combined estimated time** | **6 hr 40 min–18 hr 20 min** | **3 hr 30 min–11 hr 40 min** | **17 min–1 hr 40 min** |
+| Record and check identifiers | 5–8 hr 20 min | 3 hr 20 min–6 hr 40 min | 17 min–1 hr 40 min |
+| Investigate 10 illustrative manual-entry incidents | 1 hr 40 min–10 hr | 10 min–5 hr | To be measured |
 
-Engineering estimates assume 10 manual-entry incidents per 100 devices. *Zero minutes models elimination of transcription-related investigations only; other errors and rework remain possible. These are planning assumptions, not measured results.
+The incident count is an illustrative scenario, not an observed error rate. Scanning may reduce transcription errors, but incorrect labels, retries and other record discrepancies can still require investigation. Compare total time including corrections only after collecting matched trial data.
