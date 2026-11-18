@@ -30,6 +30,8 @@ Manual transcription scales with every device and every component. Scanning repl
 
 ![Estimated documentation effort comparing manual entry with our scanner at 1, 100 and 1,000 devices](docs/figures/documentation-effort.svg)
 
+![Estimated documentation hours versus production volume, with low and high estimate bands](docs/figures/documentation-scaling.svg)
+
 At 1,000 devices, manual computer entry alone is estimated at **33–67 hours**, compared with **2.8–16.7 hours** using our scanner. Missing or incorrect identifiers can add further investigation time.
 
 [Detailed estimates, assumptions and comparative validation protocol](docs/validation/README.md#documentation-time-estimates)
