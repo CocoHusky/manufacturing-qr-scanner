@@ -34,6 +34,32 @@ The latest 5 mm QR V1/M size-ladder screenshot shows a recognized QR with visibl
 
 Four dots per module would require approximately 589 DPI; 600 DPI therefore matches the nominal black printer rating, but is not a measured effective resolution or validated minimum. The 4 mm ECC200 example (18 active modules plus two quiet-zone modules, if that symbol size applies) has 200 µm pitch, or 4.72 dots per module at 600 DPI. Ink spread, camera blur and compression cannot be separated from the screenshots alone. Measure a calibrated printed target to determine effective resolution; the color DPI rating does not establish monochrome detail.
 
+## Theoretical print-limited envelope
+
+At effective resolution R DPI and four printer dots per module, module pitch p = 101.6 / R mm. Footprints include quiet zones: (N + 2)p for square ECC200 Data Matrix and (25 + 4V)p for QR version V.
+
+| Effective DPI (both axes) | Minimum DM (1 byte) | DM (16 bytes) | QR V1/M (14 bytes) | QR V2/M (26 bytes) |
+| ---: | ---: | ---: | ---: | ---: |
+| 600 | 2.032 mm | 3.387 mm | 4.911 mm | 5.588 mm |
+| 1200 | 1.016 mm | 1.693 mm | 2.455 mm | 2.794 mm |
+| 2400 | 0.508 mm | 0.847 mm | 1.228 mm | 1.397 mm |
+| 4800 | 0.254 mm | 0.423 mm | 0.614 mm | 0.699 mm |
+
+For a fixed 15 × 15 mm footprint (225 mm²), choose the largest standard symbol that fits. QR uses byte mode and correction M; Data Matrix uses conservative Base256 capacities.
+
+| Effective DPI | QR version / bytes | QR B/mm² | DM modules / bytes | DM B/mm² |
+| ---: | --- | ---: | --- | ---: |
+| 600 | V15 / 412 | 1.83 | 80 × 80 / 453 | 2.01 |
+| 1200 | V38 / 2,099 | 9.33 | 144 × 144 / 1,555 | 6.91 |
+| 2400 | V40 / 2,331 | 10.36 | 144 × 144 / 1,555 | 6.91 |
+| 4800 | V40 / 2,331 | 10.36 | 144 × 144 / 1,555 | 6.91 |
+
+Capacity references: [QR byte capacity](https://qexqr.com/qr-code-versions) and [Data Matrix ECC200 symbol attributes](https://www.onbarcode.com/kb/barcode-faq/data-matrix/).
+
+Reported densities: 4 mm DM / 16 ASCII characters = 1.00 B/mm²; 8 mm DM / 96 = 1.50 B/mm²; 5 mm QR / 16 = 0.64 B/mm²; 15 mm QR / 7 = 0.031 B/mm². A theoretical 16-byte DM at 1200 DPI yields 5.58 B/mm², or 22.32 B/mm² at 2400 DPI.
+
+These are printability and encoding estimates, not scanner performance guarantees. The Canon's anisotropic color rating is not equivalent to 4800 DPI in both axes. Camera sampling, focus, contrast and field of view must also support the marking. Test higher-fidelity targets, independently varying size and payload, and measure successful reads within a specified time. The 15 mm short-code read is a demonstrated footprint, not a proven maximum size or capacity.
+
 ## Recommended marking choices
 
 | Location | Initial design | Reason |
