@@ -75,14 +75,17 @@ The prototype combines an ESP32 and a OV5640 camera, controlled white illuminati
   <tr>
     <th align="center">Scanner prototype</th>
     <th align="center">Supported barcode formats</th>
+    <th align="center">Manufacturing workflow</th>
   </tr>
   <tr>
-    <td align="center"><img src="docs/media/prototype-front.jpg" width="260" alt="Embedded scanner prototype"></td>
-    <td align="center"><a href="docs/barcodes/README.md"><img src="docs/barcodes/examples-grid.svg" width="345" alt="Data Matrix, QR, Code 128 and Code 39 examples"></a></td>
+    <td align="center"><img src="docs/media/prototype-front.jpg" width="200" alt="Embedded scanner prototype"></td>
+    <td align="center"><a href="docs/barcodes/README.md"><img src="docs/barcodes/examples-grid.svg" width="265" alt="Data Matrix, QR, Code 128 and Code 39 examples"></a></td>
+    <td align="center"><a href="docs/workflows/01-component-assembly/README.md"><img src="docs/media/screenshots/workflow-complete.png" width="360" alt="Completed assembly workflow showing three verified steps and six verified components"></a></td>
   </tr>
   <tr>
     <td align="center">Portable embedded hardware</td>
-    <td align="center"><a href="docs/barcodes/README.md">Barcode formats and encoded data examples</a></td>
+    <td align="center"><a href="docs/barcodes/README.md">Barcode formats and payloads</a></td>
+    <td align="center"><a href="docs/workflows/01-component-assembly/README.md">Six-component assembly example</a></td>
   </tr>
 </table>
 
